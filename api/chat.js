@@ -23,6 +23,9 @@ export default async function handler(req, res) {
   const openaiKey = process.env.OPENAI_API_KEY;
   const anthropicKey = process.env.ANTHROPIC_API_KEY;
 
+  console.log('OpenAI key exists:', !!openaiKey);
+  console.log('Request body:', JSON.stringify(req.body));
+
   // Validate request body
   const { message, provider = 'openai', systemPrompt } = req.body;
 
