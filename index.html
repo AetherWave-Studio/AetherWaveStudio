@@ -795,6 +795,11 @@
       const model = musicModel.value;
       const instrumental = musicInstrumental.checked;
 
+      console.log('=== Generate Music Called ===');
+      console.log('Custom Mode:', isCustomMode);
+      console.log('Model:', model);
+      console.log('Instrumental:', instrumental);
+
       let requestBody = {
         model: model,
         instrumental: instrumental
@@ -805,6 +810,10 @@
         const title = musicTitle.value.trim();
         const style = musicStyle.value.trim();
         const lyrics = musicLyrics.value.trim();
+
+        console.log('Custom Mode - Title:', title);
+        console.log('Custom Mode - Style:', style);
+        console.log('Custom Mode - Lyrics length:', lyrics.length);
 
         if (!title || !style) {
           alert('Please provide both Title and Style of Music for Custom Mode');
@@ -818,6 +827,8 @@
       } else {
         // Simple Mode - requires prompt
         const prompt = musicPromptSimple.value.trim();
+
+        console.log('Simple Mode - Prompt:', prompt);
 
         if (!prompt) {
           alert('Please describe your song');
@@ -834,6 +845,8 @@
 
       try {
 
+        console.log('Sending request to /api/generate-music:', requestBody);
+
         const response = await fetch('/api/generate-music', {
           method: 'POST',
           headers: {
@@ -842,11 +855,16 @@
           body: JSON.stringify(requestBody)
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to generate music');
-        }
+        console.log('Response status:', response.status, response.statusText);
 
         const data = await response.json();
+        console.log('Response data:', data);
+
+        if (!response.ok) {
+          const errorMsg = data.error || 'Failed to generate music';
+          const errorDetails = data.details || '';
+          throw new Error(`${errorMsg}${errorDetails ? ': ' + errorDetails : ''}`);
+        }
 
         musicResult.innerHTML = `
           <div class="result-box">
