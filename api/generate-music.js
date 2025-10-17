@@ -96,10 +96,16 @@ export default async function handler(req, res) {
     }
 
     const generateData = await generateResponse.json();
+    console.log('SUNO API Response:', JSON.stringify(generateData, null, 2));
+
     const taskId = generateData.data?.taskId;
 
     if (!taskId) {
-      return res.status(500).json({ error: 'No taskId returned from SUNO API' });
+      console.error('No taskId found. Full response:', generateData);
+      return res.status(500).json({
+        error: 'No taskId returned from SUNO API',
+        details: 'Response: ' + JSON.stringify(generateData)
+      });
     }
 
     console.log('Music generation started, taskId:', taskId);
