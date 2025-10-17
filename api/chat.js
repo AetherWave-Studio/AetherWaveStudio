@@ -81,7 +81,11 @@ Be friendly, informative, and help users discover our platform. Keep responses c
       if (!response.ok) {
         const error = await response.json();
         console.error('OpenAI API Error:', error);
-        return res.status(response.status).json({ error: 'OpenAI API request failed' });
+        return res.status(response.status).json({
+          error: 'OpenAI API request failed',
+          details: error.error?.message || 'Unknown error',
+          code: error.error?.code
+        });
       }
 
       const data = await response.json();
