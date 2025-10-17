@@ -378,8 +378,9 @@
     <nav>
       <a href="/ai-hub/">AI Hub</a>
       <a href="/playlists/">Playlists</a>
+      <a href="/featured-artist/">Featured Artist</a>
+      <a href="/virtual-artists/">Virtual Artists</a>
       <a href="/shop/">Shop</a>
-      <button class="nav-btn">Sign In</button>
     </nav>
   </header>
 
@@ -401,8 +402,8 @@
 
       <div class="chat-input-area">
         <div class="input-wrapper">
-          <input type="text" placeholder="Ask me anything about AetherWave Studio..." />
-          <button class="send-btn">Send</button>
+          <input type="text" id="chat-input" placeholder="Ask me anything about AetherWave Studio..." />
+          <button class="send-btn" id="send-btn">Send</button>
         </div>
         <div class="suggestions">
           <div class="suggestion-chip">Show me trending playlists</div>
@@ -412,5 +413,83 @@
       </div>
     </div>
   </main>
+
+  <script>
+    // Chat functionality
+    const chatMessages = document.querySelector('.chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const suggestionChips = document.querySelectorAll('.suggestion-chip');
+
+    // Add message to chat
+    function addMessage(content, type = 'user') {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${type}`;
+
+      messageDiv.innerHTML = `
+        <div class="message-label">${type === 'user' ? 'You' : 'AetherWave AI'}</div>
+        <div class="message-content">${content}</div>
+      `;
+
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Send message to API
+    async function sendMessage(message) {
+      if (!message.trim()) return;
+
+      // Add user message
+      addMessage(message, 'user');
+      chatInput.value = '';
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Sending...';
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: message,
+            provider: 'openai' // or 'anthropic'
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to get response');
+        }
+
+        const data = await response.json();
+        addMessage(data.message, 'assistant');
+
+      } catch (error) {
+        console.error('Chat error:', error);
+        addMessage('Sorry, I encountered an error. Please try again.', 'assistant');
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Send';
+      }
+    }
+
+    // Event listeners
+    sendBtn.addEventListener('click', () => {
+      sendMessage(chatInput.value);
+    });
+
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage(chatInput.value);
+      }
+    });
+
+    suggestionChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chatInput.value = chip.textContent;
+        sendMessage(chip.textContent);
+      });
+    });
+  </script>
 </body>
 </html>
