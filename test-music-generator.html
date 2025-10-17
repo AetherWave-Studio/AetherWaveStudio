@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Generator Test Page</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1625;
+      color: #e9e8ff;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #2d2640;
+      border-radius: 5px;
+      background: #0d0b15;
+      color: #e9e8ff;
+      font-size: 14px;
+    }
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #ff2ea6, #8b5cf6);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(139, 92, 246, 0.08);
+      border: 1px solid #2d2640;
+      border-radius: 8px;
+    }
+    .error {
+      background: rgba(255, 46, 166, 0.1);
+      border-color: rgba(255, 46, 166, 0.3);
+    }
+    .console-log {
+      margin-top: 20px;
+      padding: 15px;
+      background: #0d0b15;
+      border: 1px solid #2d2640;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .log-entry {
+      margin: 5px 0;
+      padding: 5px;
+      border-left: 3px solid #8b5cf6;
+      padding-left: 10px;
+    }
+    .log-error {
+      border-left-color: #ff2ea6;
+    }
+    audio {
+      width: 100%;
+      margin-top: 15px;
+    }
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .checkbox-wrapper input[type="checkbox"] {
+      width: auto;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎵 Music Generator Test Page</h1>
+  <p>This page tests the SUNO API music generation with detailed logging.</p>
+
+  <div class="form-group">
+    <label>Song Description <span id="char-count">(0/199)</span></label>
+    <textarea id="prompt" maxlength="199" placeholder="Describe the style of music and the topic you want, AI will generate lyrics for you"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Custom Lyrics (optional)</label>
+    <textarea id="lyrics" placeholder="Write your own lyrics, two verses (8 lines) for the best result"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Genre</label>
+    <select id="genre">
+      <option value="synthwave">Synthwave</option>
+      <option value="darkwave">Darkwave</option>
+      <option value="ambient">Ambient</option>
+      <option value="electronic">Electronic</option>
+      <option value="lofi">Lo-Fi</option>
+      <option value="chillwave">Chillwave</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Model Version</label>
+    <select id="model">
+      <option value="V5">V5 (Latest - Fastest)</option>
+      <option value="V4.5+">V4.5+ (Enhanced)</option>
+      <option value="V4.5">V4.5</option>
+      <option value="V4">V4</option>
+      <option value="V3.5">V3.5</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox-wrapper">
+      <input type="checkbox" id="instrumental">
+      <label for="instrumental" style="margin: 0;">Instrumental (no vocals)</label>
+    </div>
+  </div>
+
+  <button id="generate-btn">Generate Music</button>
+  <button onclick="clearLogs()" style="margin-left: 10px; background: #2d2640;">Clear Logs</button>
+
+  <div id="result" style="display: none;"></div>
+
+  <div class="console-log">
+    <h3>Console Logs:</h3>
+    <div id="logs"></div>
+  </div>
+
+  <script>
+    const promptEl = document.getElementById('prompt');
+    const lyricsEl = document.getElementById('lyrics');
+    const genreEl = document.getElementById('genre');
+    const modelEl = document.getElementById('model');
+    const instrumentalEl = document.getElementById('instrumental');
+    const generateBtn = document.getElementById('generate-btn');
+    const resultEl = document.getElementById('result');
+    const logsEl = document.getElementById('logs');
+    const charCountEl = document.getElementById('char-count');
+
+    // Character counter
+    promptEl.addEventListener('input', () => {
+      charCountEl.textContent = `(${promptEl.value.length}/199)`;
+    });
+
+    // Logging function
+    function log(message, isError = false) {
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = document.createElement('div');
+      logEntry.className = `log-entry ${isError ? 'log-error' : ''}`;
+      logEntry.textContent = `[${timestamp}] ${message}`;
+      logsEl.appendChild(logEntry);
+      logsEl.scrollTop = logsEl.scrollHeight;
+
+      if (isError) {
+        console.error(message);
+      } else {
+        console.log(message);
+      }
+    }
+
+    function clearLogs() {
+      logsEl.innerHTML = '';
+      log('Logs cleared');
+    }
+
+    // Test API connectivity
+    async function testAPI() {
+      log('Testing API connectivity...');
+      try {
+        const response = await fetch('/api/generate-music', {
+          method: 'OPTIONS'
+        });
+        log(`OPTIONS request status: ${response.status}`);
+      } catch (error) {
+        log(`OPTIONS request failed: ${error.message}`, true);
+      }
+    }
+
+    // Generate music
+    async function generateMusic() {
+      const prompt = promptEl.value.trim();
+      const lyrics = lyricsEl.value.trim();
+      const genre = genreEl.value;
+      const model = modelEl.value;
+      const instrumental = instrumentalEl.checked;
+
+      log('=== Starting Music Generation ===');
+      log(`Prompt: "${prompt}"`);
+      log(`Lyrics: "${lyrics}"`);
+      log(`Genre: ${genre}`);
+      log(`Model: ${model}`);
+      log(`Instrumental: ${instrumental}`);
+
+      if (!prompt && !lyrics) {
+        log('ERROR: No prompt or lyrics provided', true);
+        alert('Please provide a song description or custom lyrics');
+        return;
+      }
+
+      generateBtn.disabled = true;
+      generateBtn.textContent = 'Generating...';
+      resultEl.style.display = 'none';
+
+      try {
+        const requestBody = {
+          prompt: prompt,
+          genre: genre,
+          model: model,
+          instrumental: instrumental
+        };
+
+        if (lyrics) {
+          requestBody.lyrics = lyrics;
+          requestBody.customMode = true;
+          log('Custom mode enabled with lyrics');
+        }
+
+        log('Request body: ' + JSON.stringify(requestBody, null, 2));
+        log('Sending POST request to /api/generate-music...');
+
+        const startTime = Date.now();
+        const response = await fetch('/api/generate-music', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        });
+
+        const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+        log(`Response received in ${duration}s`);
+        log(`Response status: ${response.status} ${response.statusText}`);
+
+        const data = await response.json();
+        log('Response data: ' + JSON.stringify(data, null, 2));
+
+        if (!response.ok) {
+          log(`ERROR: ${data.error || 'Unknown error'}`, true);
+          if (data.details) {
+            log(`Details: ${data.details}`, true);
+          }
+
+          resultEl.innerHTML = `
+            <div class="result error">
+              <h3>❌ Error</h3>
+              <p><strong>Status:</strong> ${response.status}</p>
+              <p><strong>Error:</strong> ${data.error}</p>
+              ${data.details ? `<p><strong>Details:</strong> ${data.details}</p>` : ''}
+              ${data.taskId ? `<p><strong>Task ID:</strong> ${data.taskId}</p>` : ''}
+            </div>
+          `;
+          resultEl.style.display = 'block';
+          return;
+        }
+
+        log('✅ Music generated successfully!');
+        log(`Audio URL: ${data.audioUrl}`);
+        log(`Title: ${data.title}`);
+        log(`Duration: ${data.duration}s`);
+        log(`Task ID: ${data.taskId}`);
+
+        resultEl.innerHTML = `
+          <div class="result">
+            <h3>✅ Music Generated Successfully!</h3>
+            <p><strong>Title:</strong> ${data.title || 'Generated Track'}</p>
+            <p><strong>Duration:</strong> ${data.duration || 'Unknown'}s</p>
+            <p><strong>Task ID:</strong> ${data.taskId}</p>
+            <audio controls src="${data.audioUrl}"></audio>
+            <br><br>
+            <a href="${data.audioUrl}" download style="color: #8b5cf6; text-decoration: underline;">Download MP3</a>
+          </div>
+        `;
+        resultEl.style.display = 'block';
+
+      } catch (error) {
+        log(`FETCH ERROR: ${error.message}`, true);
+        log(`Error stack: ${error.stack}`, true);
+
+        resultEl.innerHTML = `
+          <div class="result error">
+            <h3>❌ Network Error</h3>
+            <p><strong>Message:</strong> ${error.message}</p>
+            <p>Check the console logs above for details.</p>
+          </div>
+        `;
+        resultEl.style.display = 'block';
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Generate Music';
+        log('=== Generation Complete ===');
+      }
+    }
+
+    generateBtn.addEventListener('click', generateMusic);
+
+    // Test API on page load
+    window.addEventListener('load', () => {
+      log('Test page loaded');
+      log('Environment: ' + window.location.origin);
+      testAPI();
+    });
+  </script>
+</body>
+</html>

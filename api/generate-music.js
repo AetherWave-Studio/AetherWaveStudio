@@ -1,5 +1,5 @@
 // Vercel Serverless Function - Music Generation API
-// Uses SUNO API to generate music from text prompts
+// Uses KIE.AI SUNO API to generate music from text prompts
 
 export default async function handler(req, res) {
   // Set CORS headers
@@ -26,53 +26,145 @@ export default async function handler(req, res) {
   }
 
   // Validate request body
-  const { prompt, genre = 'electronic' } = req.body;
+  const {
+    prompt,
+    title,
+    style,
+    model = 'V5',
+    instrumental = false,
+    customMode = false
+  } = req.body;
 
-  if (!prompt || typeof prompt !== 'string') {
-    return res.status(400).json({ error: 'Invalid prompt' });
+  if (!prompt && (!customMode || !title || !style)) {
+    return res.status(400).json({
+      error: 'Invalid request. Simple mode requires prompt. Custom mode requires title and style.'
+    });
   }
 
   // Rate limiting check
-  if (prompt.length > 1000) {
-    return res.status(400).json({ error: 'Prompt too long' });
+  if (prompt && prompt.length > 3000) {
+    return res.status(400).json({ error: 'Prompt/Lyrics too long (max 3000 characters)' });
   }
 
   try {
-    // TODO: Replace with actual SUNO API endpoint and logic
-    // This is a placeholder implementation
+    let requestPayload = {
+      model: model,
+      instrumental: instrumental,
+      customMode: customMode
+    };
 
-    // Example SUNO API call structure (adjust based on actual API docs):
-    // const response = await fetch('https://api.suno.ai/v1/generate', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': `Bearer ${sunoApiKey}`
-    //   },
-    //   body: JSON.stringify({
-    //     prompt: `${genre} music: ${prompt}`,
-    //     duration: 30, // 30 seconds
-    //     format: 'mp3'
-    //   })
-    // });
-
-    // Placeholder response for development
-    return res.status(501).json({
-      error: 'Music generation coming soon',
-      message: 'SUNO API integration is in progress. This feature will generate AI music based on your description.',
-      received: {
-        prompt: prompt,
-        genre: genre
+    if (customMode) {
+      // Custom Mode: title, style, and optional lyrics/prompt
+      requestPayload.title = title;
+      requestPayload.style = style;
+      if (prompt) {
+        requestPayload.prompt = prompt; // Lyrics
       }
+      console.log('Generating music with SUNO API (Custom Mode):', {
+        title,
+        style,
+        hasLyrics: !!prompt,
+        model,
+        instrumental
+      });
+    } else {
+      // Simple Mode: just prompt
+      requestPayload.prompt = prompt;
+      console.log('Generating music with SUNO API (Simple Mode):', {
+        prompt,
+        model,
+        instrumental
+      });
+    }
+
+    const generateResponse = await fetch('https://api.kie.ai/api/v1/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sunoApiKey}`
+      },
+      body: JSON.stringify(requestPayload)
     });
 
-    // Once implemented, return something like:
-    // const data = await response.json();
-    // return res.status(200).json({
-    //   audioUrl: data.audio_url,
-    //   duration: data.duration,
-    //   prompt: prompt,
-    //   genre: genre
-    // });
+    if (!generateResponse.ok) {
+      const error = await generateResponse.json();
+      console.error('SUNO Generate Error:', error);
+      return res.status(generateResponse.status).json({
+        error: 'Music generation request failed',
+        details: error.msg || 'Unknown error'
+      });
+    }
+
+    const generateData = await generateResponse.json();
+    const taskId = generateData.data?.taskId;
+
+    if (!taskId) {
+      return res.status(500).json({ error: 'No taskId returned from SUNO API' });
+    }
+
+    console.log('Music generation started, taskId:', taskId);
+
+    // Step 2: Poll for completion (with timeout)
+    const maxAttempts = 30; // 30 attempts
+    const pollInterval = 2000; // 2 seconds
+    let attempts = 0;
+    let musicData = null;
+
+    while (attempts < maxAttempts) {
+      await new Promise(resolve => setTimeout(resolve, pollInterval));
+      attempts++;
+
+      const statusResponse = await fetch(
+        `https://api.kie.ai/api/v1/generate/record-info?taskId=${taskId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${sunoApiKey}`
+          }
+        }
+      );
+
+      if (!statusResponse.ok) {
+        console.error('Status check failed');
+        continue;
+      }
+
+      const statusData = await statusResponse.json();
+      console.log(`Attempt ${attempts}: Status =`, statusData.data?.status);
+
+      // Check if generation is complete
+      if (statusData.data?.status === 'complete') {
+        musicData = statusData.data;
+        break;
+      }
+
+      // Check for errors
+      if (statusData.data?.status === 'error' || statusData.data?.status === 'failed') {
+        return res.status(500).json({
+          error: 'Music generation failed',
+          details: statusData.data?.errorMessage || 'Generation failed'
+        });
+      }
+    }
+
+    // Check if we got the music data
+    if (!musicData || !musicData.audioUrl) {
+      return res.status(408).json({
+        error: 'Music generation timeout',
+        message: 'Generation is taking longer than expected. Please try again.',
+        taskId: taskId
+      });
+    }
+
+    // Return successful response
+    return res.status(200).json({
+      audioUrl: musicData.audioUrl,
+      imageUrl: musicData.imageUrl,
+      title: musicData.title || title || 'Generated Track',
+      duration: musicData.duration,
+      prompt: prompt,
+      style: style,
+      taskId: taskId
+    });
 
   } catch (error) {
     console.error('Music Generation Error:', error);

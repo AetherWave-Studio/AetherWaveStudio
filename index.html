@@ -566,21 +566,59 @@
           <div class="panel-description">Create AI-generated music with SUNO</div>
         </div>
         <div class="panel-content">
+          <!-- Custom Mode Toggle -->
           <div class="form-group">
-            <label class="form-label">Describe your song</label>
-            <textarea id="music-prompt" placeholder="e.g., An uplifting synthwave track with retro vibes and energetic drums"></textarea>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="custom-mode-toggle" style="width: auto; cursor: pointer;">
+              <span class="form-label" style="margin: 0;">Custom Mode</span>
+            </label>
           </div>
+
+          <!-- Simple Mode Fields -->
+          <div id="simple-mode-fields">
+            <div class="form-group">
+              <label class="form-label">Song Description <span id="simple-char-count" style="color: var(--text-muted); font-size: 0.85rem;">(0/199)</span></label>
+              <textarea id="music-prompt-simple" maxlength="199" placeholder="Describe the style of music and the topic you want, AI will generate lyrics for you"></textarea>
+            </div>
+          </div>
+
+          <!-- Custom Mode Fields -->
+          <div id="custom-mode-fields" style="display: none;">
+            <div class="form-group">
+              <label class="form-label">Title</label>
+              <input type="text" id="music-title" placeholder="Song title" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Style of Music</label>
+              <input type="text" id="music-style" placeholder="e.g., ethereal, funk, dreamy, anthemic" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lyrics <span id="custom-char-count" style="color: var(--text-muted); font-size: 0.85rem;">(0/3000)</span></label>
+              <textarea id="music-lyrics" maxlength="3000" placeholder="Write your own lyrics, two verses (8 lines) for the best result" style="min-height: 120px;"></textarea>
+            </div>
+          </div>
+
+          <!-- Model Version (Always visible) -->
           <div class="form-group">
-            <label class="form-label">Genre</label>
-            <select id="music-genre">
-              <option value="synthwave">Synthwave</option>
-              <option value="darkwave">Darkwave</option>
-              <option value="ambient">Ambient</option>
-              <option value="electronic">Electronic</option>
-              <option value="lofi">Lo-Fi</option>
-              <option value="chillwave">Chillwave</option>
+            <label class="form-label">Model Version</label>
+            <select id="music-model">
+              <option value="V5">V5 (Latest - Fastest)</option>
+              <option value="V4.5+">V4.5+ (Enhanced)</option>
+              <option value="V4.5">V4.5</option>
+              <option value="V4">V4</option>
+              <option value="V3.5">V3.5</option>
             </select>
           </div>
+
+          <!-- Make Instrumental Toggle -->
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="music-instrumental" style="width: auto; cursor: pointer;">
+              <span class="form-label" style="margin: 0;">Make Instrumental</span>
+            </label>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.5rem;">Create a song without lyrics</div>
+          </div>
+
           <button class="btn-primary" id="generate-music-btn">Generate Music</button>
           <div id="music-result" style="display: none;"></div>
         </div>
@@ -645,17 +683,54 @@
   </main>
 
   <script>
+    // Error handling wrapper
+    window.addEventListener('error', (e) => {
+      console.error('Global error:', e.message, e.filename, e.lineno, e.colno);
+    });
+
     // Chat functionality
     const chatMessages = document.querySelector('.chat-messages');
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
     const suggestionChips = document.querySelectorAll('.suggestion-chip');
 
-    // Music generation
-    const musicPrompt = document.getElementById('music-prompt');
-    const musicGenre = document.getElementById('music-genre');
+    // Music generation - Elements
+    const customModeToggle = document.getElementById('custom-mode-toggle');
+    const simpleModeFields = document.getElementById('simple-mode-fields');
+    const customModeFields = document.getElementById('custom-mode-fields');
+    const musicPromptSimple = document.getElementById('music-prompt-simple');
+    const musicTitle = document.getElementById('music-title');
+    const musicStyle = document.getElementById('music-style');
+    const musicLyrics = document.getElementById('music-lyrics');
+    const musicModel = document.getElementById('music-model');
+    const musicInstrumental = document.getElementById('music-instrumental');
     const generateMusicBtn = document.getElementById('generate-music-btn');
     const musicResult = document.getElementById('music-result');
+    const simpleCharCount = document.getElementById('simple-char-count');
+    const customCharCount = document.getElementById('custom-char-count');
+
+    // Custom Mode Toggle
+    customModeToggle.addEventListener('change', () => {
+      if (customModeToggle.checked) {
+        simpleModeFields.style.display = 'none';
+        customModeFields.style.display = 'block';
+      } else {
+        simpleModeFields.style.display = 'block';
+        customModeFields.style.display = 'none';
+      }
+    });
+
+    // Character counter for Simple Mode
+    musicPromptSimple.addEventListener('input', () => {
+      const charCount = musicPromptSimple.value.length;
+      simpleCharCount.textContent = `(${charCount}/199)`;
+    });
+
+    // Character counter for Custom Mode Lyrics
+    musicLyrics.addEventListener('input', () => {
+      const charCount = musicLyrics.value.length;
+      customCharCount.textContent = `(${charCount}/3000)`;
+    });
 
     // Album art generation
     const artPrompt = document.getElementById('art-prompt');
@@ -716,12 +791,41 @@
 
     // Generate music
     async function generateMusic() {
-      const prompt = musicPrompt.value.trim();
-      const genre = musicGenre.value;
+      const isCustomMode = customModeToggle.checked;
+      const model = musicModel.value;
+      const instrumental = musicInstrumental.checked;
 
-      if (!prompt) {
-        alert('Please describe your song');
-        return;
+      let requestBody = {
+        model: model,
+        instrumental: instrumental
+      };
+
+      if (isCustomMode) {
+        // Custom Mode - requires title, style, and lyrics
+        const title = musicTitle.value.trim();
+        const style = musicStyle.value.trim();
+        const lyrics = musicLyrics.value.trim();
+
+        if (!title || !style) {
+          alert('Please provide both Title and Style of Music for Custom Mode');
+          return;
+        }
+
+        requestBody.customMode = true;
+        requestBody.title = title;
+        requestBody.style = style;
+        requestBody.prompt = lyrics || ''; // Lyrics can be optional
+      } else {
+        // Simple Mode - requires prompt
+        const prompt = musicPromptSimple.value.trim();
+
+        if (!prompt) {
+          alert('Please describe your song');
+          return;
+        }
+
+        requestBody.customMode = false;
+        requestBody.prompt = prompt;
       }
 
       generateMusicBtn.disabled = true;
@@ -729,15 +833,13 @@
       musicResult.style.display = 'none';
 
       try {
+
         const response = await fetch('/api/generate-music', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            prompt: prompt,
-            genre: genre
-          })
+          body: JSON.stringify(requestBody)
         });
 
         if (!response.ok) {
@@ -757,10 +859,21 @@
 
       } catch (error) {
         console.error('Music generation error:', error);
+        let errorMessage = 'Unable to generate music. ';
+
+        if (error.message.includes('Failed to fetch')) {
+          errorMessage += 'Please check your internet connection.';
+        } else if (error.message.includes('CORS')) {
+          errorMessage += 'CORS policy error. Check API configuration.';
+        } else {
+          errorMessage += 'Please try again later.';
+        }
+
         musicResult.innerHTML = `
           <div class="result-box">
             <div class="result-title">Error</div>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Music generation is coming soon! We're setting up the SUNO API integration.</p>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">${errorMessage}</p>
+            <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem;">Error: ${error.message}</p>
           </div>
         `;
         musicResult.style.display = 'block';
