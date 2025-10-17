@@ -1,0 +1,11 @@
+{
+  "name": "aetherwave-studio",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AetherWave Studio - All Intelligence is Welcome Here",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "vercel build"
+  }
+}
