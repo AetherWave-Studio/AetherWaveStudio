@@ -1,6 +1,8 @@
 // Vercel Serverless Function - Music Generation API
 // Uses KIE.AI SUNO API to generate music from text prompts
 
+const { HttpsProxyAgent } = require('https-proxy-agent');
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -46,6 +48,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Prompt/Lyrics too long (max 3000 characters)' });
   }
 
+  // Proxy setup - use your Webshare details here
+  const proxyUrl = 'http://mfvrmgdc:3281gl8vgvlp@142.111.48.253:7030';  // From Webshare
+  const agent = new HttpsProxyAgent(proxyUrl);
+
   try {
     let requestPayload = {
       model: model,
@@ -83,7 +89,8 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${sunoApiKey}`
       },
-      body: JSON.stringify(requestPayload)
+      body: JSON.stringify(requestPayload),
+      agent  // Route through proxy
     });
 
     if (!generateResponse.ok) {
@@ -125,7 +132,8 @@ export default async function handler(req, res) {
         {
           headers: {
             'Authorization': `Bearer ${sunoApiKey}`
-          }
+          },
+          agent  // Route through proxy
         }
       );
 
