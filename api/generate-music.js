@@ -49,7 +49,7 @@ export default async function handler(req, res) {
   }
 
   // Proxy setup - use your Webshare details here
-  const proxyUrl = 'http://mfvrmgdc:3281gl8vgvlp@142.111.48.253:7030';  // From Webshare
+  const proxyUrl = 'https://mfvrmgdc:3281gl8vgvlp@142.111.48.253:7030';  // From Webshare
   const agent = new HttpsProxyAgent(proxyUrl);
 
   try {
