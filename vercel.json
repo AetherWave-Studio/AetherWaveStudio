@@ -1,7 +1,13 @@
 {
   "functions": {
-    "api/**/*.js": {
+    "api/chat.js": {
       "maxDuration": 10
+    },
+    "api/generate-music.js": {
+      "maxDuration": 60
+    },
+    "api/generate-art.js": {
+      "maxDuration": 60
     }
   },
   "headers": [
