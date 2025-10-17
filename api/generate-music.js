@@ -1,7 +1,8 @@
 // Vercel Serverless Function - Music Generation API
 // Uses KIE.AI SUNO API to generate music from text prompts
 
-const { HttpsProxyAgent } = require('https-proxy-agent');
+// At the top, instead of const { HttpsProxyAgent } = require('https-proxy-agent');
+import { HttpsProxyAgent } from 'https-proxy-agent';
 
 export default async function handler(req, res) {
   // Set CORS headers
