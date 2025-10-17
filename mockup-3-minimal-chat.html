@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AetherWave Studio - Mockup 3: Minimal Chat-First</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --aetherwave-pink: #ff2ea6;
+      --aetherwave-purple: #8b5cf6;
+      --dark-bg: #0d0b15;
+      --darker-bg: #080610;
+      --card-bg: #1a1625;
+      --text-primary: #e9e8ff;
+      --text-muted: #b7b3d9;
+      --border-color: #2d2640;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--darker-bg);
+      color: var(--text-primary);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header */
+    header {
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--dark-bg);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple));
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 0.75rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 1.1rem;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--aetherwave-pink);
+      color: var(--text-primary);
+    }
+
+    .new-chat-btn {
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .new-chat-btn:hover {
+      background: var(--dark-bg);
+      border-color: var(--aetherwave-purple);
+    }
+
+    /* Main Chat Area */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Empty State */
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .empty-logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 60px rgba(255, 46, 166, 0.3);
+    }
+
+    .empty-state h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .empty-state p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 400px;
+      margin-bottom: 3rem;
+    }
+
+    .starter-prompts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    .prompt-card {
+      padding: 1.25rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .prompt-card:hover {
+      border-color: var(--aetherwave-pink);
+      background: rgba(255, 46, 166, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .prompt-card .icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .prompt-card .title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .prompt-card .description {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Messages */
+    .message {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.4s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .message.assistant .message-avatar {
+      background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple));
+      color: white;
+    }
+
+    .message.user .message-avatar {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .message-content {
+      flex: 1;
+      padding-top: 0.5rem;
+    }
+
+    .message-text {
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .message-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      padding: 0.25rem 0.5rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: var(--card-bg);
+      color: var(--text-primary);
+    }
+
+    /* Input Area */
+    .input-container {
+      padding: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      background: var(--dark-bg);
+    }
+
+    .input-wrapper {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .input-field {
+      width: 100%;
+      min-height: 52px;
+      max-height: 200px;
+      padding: 0.875rem 4rem 0.875rem 1.25rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      resize: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: var(--aetherwave-pink);
+    }
+
+    .input-field::placeholder {
+      color: var(--text-muted);
+    }
+
+    .input-actions {
+      position: absolute;
+      right: 0.5rem;
+      bottom: 0.5rem;
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .input-icon-btn {
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .input-icon-btn:hover {
+      background: var(--dark-bg);
+      color: var(--text-primary);
+    }
+
+    .send-btn {
+      background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple));
+      color: white;
+    }
+
+    .send-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(255, 46, 166, 0.4);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .input-footer {
+      margin-top: 0.75rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 0.75rem 1rem;
+      }
+
+      .chat-messages {
+        padding: 1.5rem 1rem;
+      }
+
+      .input-container {
+        padding: 1rem;
+      }
+
+      .starter-prompts {
+        grid-template-columns: 1fr;
+      }
+
+      .empty-state h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="logo">
+      <div class="logo-icon">AW</div>
+      <span>AetherWave Studio</span>
+    </a>
+    <div class="header-actions">
+      <button class="new-chat-btn">+ New Chat</button>
+      <button class="icon-btn" title="Menu">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="chat-container">
+      <div class="chat-messages">
+        <div class="empty-state">
+          <div class="empty-logo">AW</div>
+          <h1>All Intelligence is Welcome Here</h1>
+          <p>Start a conversation with AetherWave AI to discover music, explore tools, and connect with creativity.</p>
+
+          <div class="starter-prompts">
+            <div class="prompt-card">
+              <div class="icon">🎵</div>
+              <div class="title">Discover Music</div>
+              <div class="description">Explore curated playlists and find your next favorite track</div>
+            </div>
+
+            <div class="prompt-card">
+              <div class="icon">🤖</div>
+              <div class="title">AI Tools Hub</div>
+              <div class="description">Browse cutting-edge AI tools for creators and developers</div>
+            </div>
+
+            <div class="prompt-card">
+              <div class="icon">🎨</div>
+              <div class="title">Featured Artists</div>
+              <div class="description">Meet the talented artists in our community</div>
+            </div>
+
+            <div class="prompt-card">
+              <div class="icon">🛍️</div>
+              <div class="title">Shop Collections</div>
+              <div class="description">Find exclusive music collections and media toolkits</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-container">
+        <div class="input-wrapper">
+          <textarea
+            class="input-field"
+            placeholder="Message AetherWave AI..."
+            rows="1"
+          ></textarea>
+          <div class="input-actions">
+            <button class="input-icon-btn" title="Attach file">📎</button>
+            <button class="input-icon-btn send-btn" title="Send message">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="input-footer">
+          AetherWave AI can make mistakes. Consider checking important information.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Auto-resize textarea
+    const textarea = document.querySelector('.input-field');
+    textarea.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+    });
+
+    // Handle prompt card clicks
+    document.querySelectorAll('.prompt-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const title = this.querySelector('.title').textContent;
+        textarea.value = `Tell me about ${title}`;
+        textarea.focus();
+      });
+    });
+  </script>
+</body>
+</html>
