@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <title>AetherWave Audio player</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light only" />
+  <meta name="description" content="Streaming music player" />
+  <meta property="og:site_name" content="AetherWave Audio player" />
+  <meta property="og:title" content="AetherWave Audio player" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="Streaming music player" />
+  <meta property="og:image" content="https://aetherwaveaudio.carrd.co/assets/images/share.jpg?v=47789245" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://aetherwaveaudio.carrd.co" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://aetherwaveaudio.carrd.co" />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png?v=47789245" />
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png?v=47789245" />
+  <style>
+    /* Your existing styles here */
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="main">
+      <div class="inner">
+        <h1 id="text01">Music Player (Geatured Release)</h1>
+        <p id="text02">AetherWave Audio Player</p>
+        <!-- Your existing content here -->
+
+        <!-- Download Email Modal -->
+        <div id="downloadModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="downloadTitle">
+          <div class="modal-content" role="document">
+            <h2 id="downloadTitle">Get Your Download</h2>
+            <p>Please enter your email address:</p>
+            <form id="emailForm">
+              <input type="email" id="emailInput" placeholder="you@example.com" required />
+              <div class="modal-actions">
+                <button type="button" class="btn" onclick="closeDownloadModal()">Cancel</button>
+                <button type="submit" class="btn accent">Submit & Download</button>
+              </div>
+              <div class="privacy-note">We'll never share your email.</div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Toast container -->
+        <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+        <script>
+          const DOWNLOAD_URL = "https://www.dropbox.com/scl/fi/sbzgautxce2idqb8oqax7/Ghosts-Online.mp3?rlkey=r8ufm6z2vffronlbea27xeejc&st=ocxj8bax&dl=1";
+
+          const modal = document.getElementById('downloadModal');
+          const emailInput = document.getElementById('emailInput');
+          const form = document.getElementById('emailForm');
+
+          function openDownloadModal(e) {
+            if (e) e.preventDefault();
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => emailInput.focus(), 50);
+          }
+
+          function closeDownloadModal() {
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+          }
+
+          // Close on backdrop click
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeDownloadModal();
+          });
+
+          // Close on Escape key
+          window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('open')) closeDownloadModal();
+          });
+
+          // Show toast notification
+          function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.background = '#4caf50';
+            toast.style.color = 'white';
+            toast.style.padding = '10px 16px';
+            toast.style.marginTop = '8px';
+            toast.style.borderRadius = '6px';
+            toast.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
+            toast.style.fontSize = '14px';
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.4s ease';
+
+            document.getElementById('toast-container').appendChild(toast);
+
+            // Fade in
+            requestAnimationFrame(() => { toast.style.opacity = '1'; });
+
+            // Auto remove
+            setTimeout(() => {
+              toast.style.opacity = '0';
+              setTimeout(() => toast.remove(), 400);
+            }, 4000);
+          }
+
+          // Trigger the download
+          function startDownload(url) {
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "Ghosts-Online.mp3";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Show toast
+            showToast("✅ Your download has started!");
+          }
+
+          // Submit email and trigger download
+          form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+              alert('Please enter a valid email address');
+              emailInput.focus();
+              return;
+            }
+
+            try {
+              await fetch("https://proxy.aetherwavestudio.com/proxy", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+              });
+
+              closeDownloadModal();
+
+              startDownload(DOWNLOAD_URL);
+
+            } catch (error) {
+              showToast("❌ Something went wrong. Please try again.");
+            }
+          });
+        </script>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

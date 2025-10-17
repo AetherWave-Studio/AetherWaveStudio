@@ -1,0 +1,14 @@
+{
+  "_source_id": 2,
+  "sources": {
+    "AI Tools Data Extraction": {
+      "https://github.com/yousefebrahimi0/1000-AI-collection-tools": {
+        "id": 2,
+        "publisher": "yousefebrahimi0",
+        "url": "https://github.com/yousefebrahimi0/1000-AI-collection-tools",
+        "title": "1000 AI Collection Tools - GitHub Repository",
+        "info": "Successfully extracted 935 AI tools from this comprehensive repository. Data includes tool names, descriptions, links, categories, and free version status across 35 different categories including Art & Image Generation, Content Creation, Avatars, and more."
+      }
+    }
+  }
+}

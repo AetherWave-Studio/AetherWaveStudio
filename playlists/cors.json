@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://YOUR_SUBMISSION_SITE"],
+    "method": ["GET", "HEAD", "PUT"],
+    "responseHeader": ["Content-Type", "x-goog-resumable"],
+    "maxAgeSeconds": 3600
+  }
+]

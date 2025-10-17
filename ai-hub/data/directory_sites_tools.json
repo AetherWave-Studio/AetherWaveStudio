@@ -1,0 +1,1211 @@
+{
+  "metadata": {
+    "total_tools": 147,
+    "sources": [
+      "topai.tools",
+      "aitools.fyi",
+      "toolify.ai",
+      "theresanaiforthat.com",
+      "manual_curation"
+    ],
+    "collection_date": "2025-08-21",
+    "description": "Comprehensive AI tools dataset collected from major AI tool directory websites",
+    "extraction_method": "web_scraping_with_fallbacks"
+  },
+  "tools": [
+    {
+      "name": "GoodTime",
+      "description": "GoodTime is an AI-powered interview scheduling software that automates candidate screening and coord.",
+      "website": "https://topai.tools/t/goodtime",
+      "category": [],
+      "source": "topai.tools"
+    },
+    {
+      "name": "MemeClip",
+      "description": "MemeClip is an AI-driven meme maker that instantly transforms text into customized image and video m.",
+      "website": "https://topai.tools/t/memeclip",
+      "category": [],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Nanobanana.co",
+      "description": "Nanobanana.co is an AI image editing tool for precise character and scene manipulation using text de.",
+      "website": "https://topai.tools/t/nanobanana-co",
+      "category": [],
+      "source": "topai.tools"
+    },
+    {
+      "name": "NSocks.com",
+      "description": "NSocks.com is a residential proxy service providing access to over 80 million global IPs for high-an.",
+      "website": "https://topai.tools/t/nsocks-com",
+      "category": [],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Shoe Size Converter",
+      "description": "Shoe Size Converter is a tool for converting shoe sizes between international standards like US, EU,.",
+      "website": "https://topai.tools/t/shoe-size-converter",
+      "category": [],
+      "source": "topai.tools"
+    },
+    {
+      "name": "GenQwenImage",
+      "description": "Gen Qwen Image is an AI image generator that creates images from text prompts using a 20 billion par.",
+      "website": "https://topai.tools/t/genqwenimage",
+      "category": [],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Image to Image AI",
+      "description": "Image to Image AI is a tool that intelligently edits and transforms your photos based on simple text.",
+      "website": "https://topai.tools/t/image-to-image-ai",
+      "category": [],
+      "source": "topai.tools"
+    },
+    {
+      "name": "PromptWall",
+      "description": "PromptWallis an AI LinkedIn Photo Generator that creates studio-quality headshots from a single self.",
+      "website": "https://topai.tools/t/promptwall",
+      "category": [],
+      "source": "topai.tools"
+    },
+    {
+      "name": "IdolCrush",
+      "description": "IdolCrush is an interactive AI platform for creating and customizing virtual ido..",
+      "website": "https://topai.tools/t/idolcrush",
+      "category": [
+        "Ai Characters"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Trickle Magic Canvas",
+      "description": "Trickle is an all-in-one platform for building AI apps, websites, and forms easi..",
+      "website": "https://topai.tools/t/trickle-ai",
+      "category": [
+        "No-Code"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Fizzly AI",
+      "description": "Fizzly AI allows creators to develop virtual influencers and content using advan..",
+      "website": "https://topai.tools/t/fizzly-ai",
+      "category": [
+        "Social Media Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "ThumbnailCreator.com",
+      "description": "ThumbnailCreator.com is an AI-powered tool that generates professional YouTube t..",
+      "website": "https://topai.tools/t/thumbnailcreator-com",
+      "category": [
+        "Social Media Engagement",
+        "Youtube"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "MagicLight",
+      "description": "MagicLight is an AI art generator that creates long, consistent videos from text..",
+      "website": "https://topai.tools/t/magiclight",
+      "category": [
+        "Art Generation"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "EzSolve: AI Homework Helper",
+      "description": "Ezsolve: AI Homework Helper is an AI-powered tool that scans or uploads homework..",
+      "website": "https://topai.tools/t/ezsolve-ai-homework-helper",
+      "category": [
+        "Homework Assistant"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Earnr.ai",
+      "description": "Earnr.ai is an AI-powered educational platform helping entrepreneurs build profi..",
+      "website": "https://topai.tools/t/earnr-ai",
+      "category": [
+        "Education"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "ChatGPT",
+      "description": "ChatGPT is an AI chatbot based on large language models family cr..",
+      "website": "https://topai.tools/t/chatgpt-openai",
+      "category": [
+        "Ai Assistant"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Microsoft Copilot",
+      "description": "Copilot allows users to ask questions, receive complete answers, ..",
+      "website": "https://topai.tools/t/microsoft-copilot",
+      "category": [
+        "Ai Assistant"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Google Gemini",
+      "description": "Gemini is an AI assistant and chatbot provided by google based on..",
+      "website": "https://topai.tools/t/google-gemini",
+      "category": [
+        "Ai Assistant"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Claude",
+      "description": "Claude is an advanced AI assistant designed for a variety of task..",
+      "website": "https://topai.tools/t/claude",
+      "category": [
+        "Ai Assistant"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Dropbox Sign",
+      "description": "Dropbox Sign is an AI-powered e-signature tool enhancing agreeme..",
+      "website": "https://topai.tools/t/dropbox-sign",
+      "category": [
+        "Ai Assistant"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Poe.com",
+      "description": "Poe.com is a web tool for chatting with multiple AI models from o..",
+      "website": "https://topai.tools/t/poe-com",
+      "category": [
+        "Ai Assistant"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Manus AI",
+      "description": "Manus is a next-generation AI agent that...",
+      "website": "https://topai.tools/t/manus-im",
+      "category": [
+        "AI Agents"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "AiAgent.app",
+      "description": "AI Agent is a web app that allows users ...",
+      "website": "https://topai.tools/t/aiagent-app",
+      "category": [
+        "AI Agents"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "AgentGPT",
+      "description": "AgentGPT is a tool that enables users to...",
+      "website": "https://topai.tools/t/agentgpt",
+      "category": [
+        "AI Agents"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Cheat Layer Agents",
+      "description": "Cheat Layer is an AI tool that uses cust...",
+      "website": "https://topai.tools/t/cheat-layer",
+      "category": [
+        "AI Agents"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "TaskingAI",
+      "description": "TaskingAI is an innovative AI app devel...",
+      "website": "https://topai.tools/t/taskingai",
+      "category": [
+        "AI Agents"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Agency Swarm",
+      "description": "Agency Swarm is an AI-powered framework ...",
+      "website": "https://topai.tools/t/agency-swarm",
+      "category": [
+        "AI Agents"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Teammately",
+      "description": "Teammately is an autonomous AI agent tha...",
+      "website": "https://topai.tools/t/teammately",
+      "category": [
+        "AI Agents"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "botonomous.ai",
+      "description": "Botonomous is an AI-powered platform tha...",
+      "website": "https://topai.tools/t/botonomous-ai",
+      "category": [
+        "AI Agents"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Agentic",
+      "description": "Agentic Mission Control Blog is an AI to...",
+      "website": "https://topai.tools/t/agentic",
+      "category": [
+        "AI Agents"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "AgentHub",
+      "description": "Gumloop is an AI automation framework en...",
+      "website": "https://topai.tools/t/agenthub",
+      "category": [
+        "AI Agents"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Reclaim AI",
+      "description": "Reclaim is an AI-powered scheduling tool...",
+      "website": "https://topai.tools/t/reclaim-ai",
+      "category": [
+        "Productivity",
+        "AI Assistants"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Personal AI",
+      "description": "The platform provides a suite of tools t...",
+      "website": "https://topai.tools/t/personal-ai",
+      "category": [
+        "Productivity",
+        "AI Assistants"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Ai Pal",
+      "description": "Ultim AI Power is an AI tool that can as...",
+      "website": "https://topai.tools/t/ai-pal",
+      "category": [
+        "Productivity",
+        "AI Assistants"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "AIAssistant",
+      "description": "AI Assistant is an AI tool that boosts p...",
+      "website": "https://topai.tools/t/aiassistant",
+      "category": [
+        "Productivity",
+        "AI Assistants"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Aki",
+      "description": "Aki is an AI-powered executive assistant...",
+      "website": "https://topai.tools/t/aki",
+      "category": [
+        "Productivity",
+        "AI Assistants"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "AI Perfect Assistant",
+      "description": "ChatGPT for Microsoft Office 365. Genera...",
+      "website": "https://topai.tools/t/ai-perfect-assistant",
+      "category": [
+        "Productivity",
+        "AI Assistants"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "ASSISTA AI",
+      "description": "Assista AI is a virtual assistant that a...",
+      "website": "https://topai.tools/t/assista-ai",
+      "category": [
+        "Productivity",
+        "AI Assistants"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Mano AI",
+      "description": "Mano AI is an AI-powered tool that autom...",
+      "website": "https://topai.tools/t/mano-ai",
+      "category": [
+        "Productivity",
+        "AI Assistants"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "MyTask",
+      "description": "Mytask is an AI tool that simplifies tas...",
+      "website": "https://topai.tools/t/mytask",
+      "category": [
+        "Productivity",
+        "AI Assistants"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Savvy Planner",
+      "description": "Savvy Planner is an AI task manager that...",
+      "website": "https://topai.tools/t/savvy-planner",
+      "category": [
+        "Productivity",
+        "AI Assistants"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "VideoGen.io",
+      "description": "Videogen is an AI-powered video generati...",
+      "website": "https://topai.tools/t/videogen-io",
+      "category": [
+        "Video Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "InVideo",
+      "description": "Invideo AI is an AI-powered text-to-vide...",
+      "website": "https://topai.tools/t/invideo",
+      "category": [
+        "Video Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "HeyGen",
+      "description": "Heygen is an AI video generation tool th...",
+      "website": "https://topai.tools/t/heygen",
+      "category": [
+        "Video Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "HiggsField AI",
+      "description": "Higgsfield.ai is a platform focused on c...",
+      "website": "https://topai.tools/t/higgsfield-ai",
+      "category": [
+        "Video Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Vidgo AI",
+      "description": "Vidgo AI is a versatile image and video ...",
+      "website": "https://topai.tools/t/vidgo-ai",
+      "category": [
+        "Video Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "VidGenesis",
+      "description": "Vidgenesis AI Video Generator revolutio...",
+      "website": "https://topai.tools/t/vidgenesis",
+      "category": [
+        "Video Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Freepik AI Video Generator",
+      "description": "Freepik AI Video Generator enables users...",
+      "website": "https://topai.tools/t/freepik-ai-video-generator",
+      "category": [
+        "Video Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "ShortVideoGen",
+      "description": "ShortVideoGen is an efficient text-to-vi...",
+      "website": "https://topai.tools/t/shortvideogen",
+      "category": [
+        "Video Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Vidduo Agent",
+      "description": "Vidduo Agent is an AI video generator th...",
+      "website": "https://topai.tools/t/vidduo-agent",
+      "category": [
+        "Video Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "ClipVideo.AI",
+      "description": "ClipVideoAI is a video generation platfo...",
+      "website": "https://topai.tools/t/clipvideo-ai",
+      "category": [
+        "Video Tools"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Gamma.ai",
+      "description": "Gamma is an AI-driven security awareness...",
+      "website": "https://topai.tools/t/gamma-ai",
+      "category": [
+        "Cybersecurity"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "White Hat",
+      "description": "White Hat Experience Future Ethical Hack...",
+      "website": "https://topai.tools/t/white-hat",
+      "category": [
+        "Cybersecurity"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Seek",
+      "description": "Seek AI is an AI tool that enables busin...",
+      "website": "https://topai.tools/t/seek",
+      "category": [
+        "Cybersecurity"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "AI or Not",
+      "description": "AI Detector identifies AI-generated imag...",
+      "website": "https://topai.tools/t/ai-or-not",
+      "category": [
+        "Cybersecurity"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Swift Security",
+      "description": "Swift Security Platform Solutions offers...",
+      "website": "https://topai.tools/t/swift-security",
+      "category": [
+        "Cybersecurity"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "AI ShieldNet",
+      "description": "AI ShieldNet offers AI-driven cybersecur...",
+      "website": "https://topai.tools/t/ai-shieldnet",
+      "category": [
+        "Cybersecurity"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "ShieldForce",
+      "description": "ShieldForce is an AI-driven cybersecuri...",
+      "website": "https://topai.tools/t/shieldforce",
+      "category": [
+        "Cybersecurity"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "DeepSentinel AI",
+      "description": "DeepSentinel AI offers a secure platform...",
+      "website": "https://topai.tools/t/deepsentinel-ai",
+      "category": [
+        "Cybersecurity"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Ai bot eye",
+      "description": "AI Bot Eye enhances CCTV surveillance wi...",
+      "website": "https://topai.tools/t/ai-bot-eye",
+      "category": [
+        "Cybersecurity"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Personal Cybersecurity Assistant",
+      "description": "Personal Cybersecurity Assistant\" is a c...",
+      "website": "https://topai.tools/t/personal-cybersecurity-assistant",
+      "category": [
+        "Cybersecurity"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Clearmind",
+      "description": "ClearMind is a personalized AI therapy p...",
+      "website": "https://topai.tools/t/clearmind",
+      "category": [
+        "Health & Wellness"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Therapy with AI",
+      "description": "AI Therapist, an AI therapy tool that re...",
+      "website": "https://topai.tools/t/free-ai-therapist",
+      "category": [
+        "Health & Wellness"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "ChatCoach",
+      "description": "Chatcoach.io is an AI platform that pro...",
+      "website": "https://topai.tools/t/chatcoach",
+      "category": [
+        "Health & Wellness"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Therapy Talk",
+      "description": "Therapy Talk is a mental health platform...",
+      "website": "https://topai.tools/t/therapy-talk",
+      "category": [
+        "Health & Wellness"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "AI Therapist Online",
+      "description": "AI-Powered Online Therapy provides 24/7 ...",
+      "website": "https://topai.tools/t/ai-therapist-online",
+      "category": [
+        "Health & Wellness"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "PSY - AI Therapists",
+      "description": "AI Therapists is a mental health chatbot...",
+      "website": "https://topai.tools/t/psy-ai-therapists",
+      "category": [
+        "Health & Wellness"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "AllyChat",
+      "description": "AllyChat is an AI chat platform that off...",
+      "website": "https://topai.tools/t/allychat",
+      "category": [
+        "Health & Wellness"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "AITherapistFree",
+      "description": "The Free Online AI Therapist Chatbot off...",
+      "website": "https://topai.tools/t/aitherapistfree",
+      "category": [
+        "Health & Wellness"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Reassurance AI (Beta)",
+      "description": "Reassurance AI features an empathetic c...",
+      "website": "https://topai.tools/t/reassurance-ai-beta",
+      "category": [
+        "Health & Wellness"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Aitherapy",
+      "description": "Aitherapy is an AI-driven mental health ...",
+      "website": "https://topai.tools/t/aitherapy",
+      "category": [
+        "Health & Wellness"
+      ],
+      "source": "topai.tools"
+    },
+    {
+      "name": "Invoice Mama",
+      "description": "InvoiceMama is a free invoice generator designed to simplify the invoicing process for freelancers and small businesses. Its core functionality all...",
+      "website": "https://invoicemama.com/?ref=aitools.fyi&utm_source=aitools.fyi&utm_campaign=aitools.fyi&utm_medium=sponsorship",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "Expertise.ai",
+      "description": "Expertise.ai offers AI-powered business solutions designed to transform how companies engage with their website visitors and manage sales leads. Th...",
+      "website": "https://aitools.fyi/expertiseai",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "Mexty",
+      "description": "Mexty is a no-code, AI-powered platform that helps you create learning content fast. Whether you're a teacher, trainer, instructional designer, or ...",
+      "website": "https://aitools.fyi/mexty",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "VDraw",
+      "description": "VDraw is an AI-powered tool designed to transform various types of content into visually appealing carousel posts for social media. It caters prima...",
+      "website": "https://aitools.fyi/vdraw",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "GPTHumanizer",
+      "description": "GPTHumanizer is a tool designed to transform AI-generated content into text that appears authentically human. Its main function is to help users by...",
+      "website": "https://aitools.fyi/gpthumanizer",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "AISaver",
+      "description": "AISaver is an online platform that specializes in AI-powered face swapping and video generation. It allows users to swap faces in videos, photos, a...",
+      "website": "https://aitools.fyi/aisaver",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "WonderShare ToMoviee AI",
+      "description": "ToMoviee AI is a comprehensive creative platform designed to empower content creators across various fields including marketers, filmmakers, design...",
+      "website": "https://aitools.fyi/wondershare-tomoviee-ai",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "AniFun AI",
+      "description": "AniFun AI is a platform designed to simplify the creation of anime art, comics, and videos through artificial intelligence. It targets users who wa...",
+      "website": "https://aitools.fyi/anifun-ai",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "Vozart AI",
+      "description": "Vozart AI Music & Lyrics Generator is an online platform that transforms text prompts or lyrics into original music tracks using artificial intelli...",
+      "website": "https://aitools.fyi/vozart-ai",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "Pykaso AI",
+      "description": "Pykaso is a powerful AI platform made to help creators build ultra-realistic AI characters and content that gets attention online. Whether you're m...",
+      "website": "https://aitools.fyi/pykaso-ai",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "Dext Vault",
+      "description": "Vault is an electronic document management system designed to securely store and organize business documents. It leverages AI technology to help us...",
+      "website": "https://aitools.fyi/dext-vault",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "UnblurImage AI",
+      "description": "UnblurImage AI is an online tool designed to remove blur from photos and sharpen images using advanced AI technology. It focuses on enhancing image...",
+      "website": "https://aitools.fyi/unblurimage-ai",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "Unwatermark AI",
+      "description": "Unwatermark AI is a tool designed to remove watermarks from photos and videos quickly and efficiently. It automatically detects and removes waterma...",
+      "website": "https://aitools.fyi/unwatermark-ai",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "RightHair",
+      "description": "RightHair is a free AI-powered hairstyle changer that allows users to upload their photos and try on over 200 different haircuts and hair colors in...",
+      "website": "https://aitools.fyi/righthair",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "Deepfake Maker",
+      "description": "Deepfake Maker is an innovative online tool that allows users to swap faces in photos and videos using advanced AI technology. Its core functionali...",
+      "website": "https://aitools.fyi/deepfake-maker",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "HumanizerAI.com",
+      "description": "Humanizer AI is a powerful tool designed to transform AI-generated text into human-like content that is undetectable by AI detectors. Its core func...",
+      "website": "https://aitools.fyi/humanizeraicom",
+      "category": [],
+      "source": "aitools.fyi"
+    },
+    {
+      "name": "CodeRabbit",
+      "description": "Reduces manual efforts in first-pass during code-review process, helping to speed up the 'final check' before merging PRs.",
+      "website": "https://theresanaiforthat.com/ai/coderabbit/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Remy",
+      "description": "Personal AI assistant that summarizes newsletters into a single digest email, aiming to clear cluttered inboxes into concise briefings.",
+      "website": "https://theresanaiforthat.com/ai/remy-1755688804/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Renamer.ai",
+      "description": "Simple-to-use, powerful app for organizing scanned and downloaded files by renaming them.",
+      "website": "https://theresanaiforthat.com/ai/renamer-ai/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Unblur Image by Uluch",
+      "description": "Fixes blurry photos easily, offered for free with no signup and 5 free tries every 24 hours.",
+      "website": "https://theresanaiforthat.com/ai/unblur-image-by-uluch/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "BlogSEO",
+      "description": "Automates SEO for entrepreneurs by generating fresh, SEO-friendly content daily on their websites with zero setup, with customization options for keywords and competitors.",
+      "website": "https://theresanaiforthat.com/ai/blogseo/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "TranslateManga - Manga Translator & Manga Tracker",
+      "description": "Supports real-time comic translation on many websites and cross-platform progress synchronization across about 10 websites.",
+      "website": "https://theresanaiforthat.com/ai/translatemanga-1755522728/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Younet",
+      "description": "Social Media Manager Agent for Instagram insights, Google Trends integration, and tailored content creation. Includes enhanced user experience, interactive suggestions, editable hints, macro support, live status updates, smart notifications, and parallel chatting.",
+      "website": "https://theresanaiforthat.com/ai/younet/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Build Or Not",
+      "description": "Platform launched to refine and enhance user experience through feedback, ratings, and comments.",
+      "website": "https://theresanaiforthat.com/ai/build-or-not/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "remio: Your Personal AI Assistant",
+      "description": "Enhances user experience and helps manage knowledge, with frequent bug fixes and updates. Version 1.10.7 released 2 days ago.",
+      "website": "https://theresanaiforthat.com/ai/remio/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Explee",
+      "description": "Helps find B2B leads by scanning 64M+ websites to surface companies, merging major sources into a continuously updated company graph. Offers free AI enrichment for up to 5 columns simultaneously and a free lookalike feature to find similar businesses.",
+      "website": "https://theresanaiforthat.com/ai/explee/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "AI Song Generator",
+      "description": "Launched V2.0 model with advanced features like voice changer, vocal remover, and AI music video generator. Includes a 'send the song' feature to share music.",
+      "website": "https://theresanaiforthat.com/ai/ai-song-generator/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Stakly",
+      "description": "Provides Claude Code in the browser to ship real applications with lovable outcomes.",
+      "website": "https://theresanaiforthat.com/ai/stakly/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "2PR",
+      "description": "AI Ghostwriter for LinkedIn with a complete redesign for smoother experience. Features include Autopilot Mode, turning raw drafts into LinkedIn-ready content, a 10x larger Viral Post Library, reference-based generation, AI Image Generation optimized for LinkedIn, post scheduling, text formatter, hook & headline generators, and LinkedIn profile review.",
+      "website": "https://theresanaiforthat.com/ai/2pr/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "MCP Showcase",
+      "description": "Documentation generator for MCP, showing support for LM Studio. Follows best practices for MCP docs, and offers auto-generated use cases and sample chats.",
+      "website": "https://theresanaiforthat.com/ai/mcp-showcase/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "NegoWiz",
+      "description": "Converts ChatGPT into a third party in the room, acting as an interlocutor, listener, and mediator for human-AI communication.",
+      "website": "https://theresanaiforthat.com/ai/negowiz/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Autocoder.cc",
+      "description": "Builds complete websites (frontend + backend + database) without needing Supabase. Features include community showcase, manual controller editing, and new UI design.",
+      "website": "https://theresanaiforthat.com/ai/autocoder/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Fundraising with Evalyze Ai",
+      "description": "Matches users with investors aligned with their projects based on their pitch deck, saving weeks of search time.",
+      "website": "https://theresanaiforthat.com/ai/evalyze/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Lexi AI",
+      "description": "Facilitates managing meta ads and improves ROI.",
+      "website": "https://theresanaiforthat.com/ai/lexi-ai/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Autopilots by Athena AI",
+      "description": "Powered by GPT-5, offering enhanced capabilities for autonomous tasks. Features include cost estimation, log/report export, speed improvements, and a multi-chat freedom for AI Agents.",
+      "website": "https://theresanaiforthat.com/ai/athena-chatbot-autopilot/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Refont",
+      "description": "Free and simple to use for reformatting text like names or quotes.",
+      "website": "https://theresanaiforthat.com/ai/refont/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Specd.ai",
+      "description": "Production-ready AI-powered automotive market intelligence system delivering valuations, in-depth market insights, and intelligent recommendations. Features include advanced vehicle intelligence, expanded real-time data sources, professional user experience, Pro Features (PDF reports, enhanced depreciation analysis), enterprise-grade security, live analytics, and performance optimization.",
+      "website": "https://theresanaiforthat.com/ai/specd/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "BookScribi",
+      "description": "AI-powered platform that helps write complete non-fiction and poetry books/ebooks in less than a minute without writing. Offers a guide for publishing on Amazon.",
+      "website": "https://theresanaiforthat.com/ai/bookscribi/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Rendera AI",
+      "description": "Pay for actual use, no subscriptions.",
+      "website": "https://theresanaiforthat.com/ai/rendera-ai/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Voice to Notion",
+      "description": "Integrates with Notion for notes, reminders, and automations. Features include managing reminders and automations, subscription control, detailed logs, YouTube transcript extraction, flexible transcript/audio handling, and improved technical infrastructure. Uses Perplexity Deep Research model.",
+      "website": "https://theresanaiforthat.com/ai/notis-ai/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "MemeClip AI Meme Generator",
+      "description": "Tool for finding memes for TikTok videos.",
+      "website": "https://theresanaiforthat.com/ai/memeclip-ai-meme-generator/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Viddo AI",
+      "description": "Offers excellent AI video generation quality and value for money. Provides free consultation with professional advisors for video prompt optimization.",
+      "website": "https://theresanaiforthat.com/ai/viddo-ai/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Amical",
+      "description": "Features smart formatting and multi-language support, designed for real-world workflow integration.",
+      "website": "https://theresanaiforthat.com/ai/amical/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Voice cloning by AIVoiceGen",
+      "description": "Offers easy and quick voice cloning capabilities.",
+      "website": "https://theresanaiforthat.com/ai/voice-cloning-by-aivoicegen/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Videoinu",
+      "description": "Generates very consistent characters in videos.",
+      "website": "https://theresanaiforthat.com/ai/videoinu/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "InstantMind",
+      "description": "Provides a wonderful and delightful experience.",
+      "website": "https://theresanaiforthat.com/ai/instantmind/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Y2Doc",
+      "description": "Converts YouTube videos into documents by pasting the URL, useful for notes or quotes.",
+      "website": "https://theresanaiforthat.com/ai/youtube-to-doc/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Redesignr Ai - website redesign and landing page builder",
+      "description": "Useful for initial landing page design.",
+      "website": "https://theresanaiforthat.com/ai/redesignr/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "LyricEdits",
+      "description": "Combines music and software engineering passions, invites comments and suggestions.",
+      "website": "https://theresanaiforthat.com/ai/lyricedits/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "VisImagine - AI VIdeo Creation Platform",
+      "description": "Good platform to create short videos.",
+      "website": "https://theresanaiforthat.com/ai/visimagine/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "GeoFinderAI",
+      "description": "Identifies locations from images with high accuracy, even for specific trails.",
+      "website": "https://theresanaiforthat.com/ai/geofinderai/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "The Influencer AI",
+      "description": "Enables users to create professional-level visuals for various needs in minutes.",
+      "website": "https://theresanaiforthat.com/ai/the-influencer-ai/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Fluig AI",
+      "description": "Stays on topic, generates solid layouts quickly, and allows smooth format switching. Offers proper testing before a paywall.",
+      "website": "https://theresanaiforthat.com/ai/fluig/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Vizbull",
+      "description": "Offers free credit for generation. Works towards cheaper and better options.",
+      "website": "https://theresanaiforthat.com/ai/vizbull/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Pixelfox Objects Remover",
+      "description": "Removes objects from images quickly and effectively.",
+      "website": "https://theresanaiforthat.com/ai/pixelfox-objects-remover/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "ScriptMagic AI",
+      "description": "Creative design, great for scripts and options for video scripts.",
+      "website": "https://theresanaiforthat.com/ai/scriptmagic-ai/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Emergent",
+      "description": "First agentic vibecoding platform for serious builders. Transforms natural conversations into production-grade, full-stack applications without requiring developers, building end-to-end with real databases, working APIs, secure authentication, and production-ready infrastructure. Conducts thorough research and deep product planning.",
+      "website": "https://theresanaiforthat.com/ai/emergent/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "HateToCall",
+      "description": "Uses AI to handle tasks like canceling flights, though user advises caution for high-stakes tasks due to AI hallucination risk.",
+      "website": "https://theresanaiforthat.com/ai/hatetocall/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Fotol AI",
+      "description": "Handles prompts well, generating fast and super detailed images.",
+      "website": "https://theresanaiforthat.com/ai/fotol-ai-image-generator/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Bulk Image Generator",
+      "description": "Very useful for businesses that need AI images.",
+      "website": "https://theresanaiforthat.com/ai/bulk-image-generator/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "LoveStudy.ai",
+      "description": "Provides quick and well-organized results, helpful for turning content into something easier to study. It is free.",
+      "website": "https://theresanaiforthat.com/ai/lovestudy/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "OctoComics",
+      "description": "Good AI Comic generator that can easily create comic scripts and images with good effects.",
+      "website": "https://theresanaiforthat.com/ai/octocomics/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "TheLibrarian.io",
+      "description": "Very helpful in content production.",
+      "website": "https://theresanaiforthat.com/ai/the-librarian/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "Concierge AI",
+      "description": "A very useful tool if used properly.",
+      "website": "https://theresanaiforthat.com/ai/concierge-ai/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "SEObot",
+      "description": "Used for various projects.",
+      "website": "https://theresanaiforthat.com/ai/seobot/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "MyPicNow",
+      "description": "High computational costs of generating photos that capture one's look, exploring ways to offer a free trial.",
+      "website": "https://theresanaiforthat.com/ai/mypicnow/",
+      "category": [],
+      "source": "theresanaiforthat.com"
+    },
+    {
+      "name": "DALL-E 2",
+      "description": "AI system that creates realistic images and art from text descriptions",
+      "website": "https://openai.com/dall-e-2/",
+      "category": [
+        "Image Generation"
+      ],
+      "source": "manual_curation"
+    },
+    {
+      "name": "Stable Diffusion",
+      "description": "Open-source AI model for generating images from text prompts",
+      "website": "https://stability.ai/stable-diffusion",
+      "category": [
+        "Image Generation"
+      ],
+      "source": "manual_curation"
+    },
+    {
+      "name": "Notion AI",
+      "description": "AI-powered writing assistant integrated into Notion workspace",
+      "website": "https://www.notion.so/product/ai",
+      "category": [
+        "Writing Tools",
+        "Productivity"
+      ],
+      "source": "manual_curation"
+    },
+    {
+      "name": "Jasper AI",
+      "description": "AI content creation platform for marketing teams and creators",
+      "website": "https://www.jasper.ai/",
+      "category": [
+        "Content Tools",
+        "Marketing Tools"
+      ],
+      "source": "manual_curation"
+    },
+    {
+      "name": "Copy.ai",
+      "description": "AI-powered copywriting tool for marketing and content creation",
+      "website": "https://www.copy.ai/",
+      "category": [
+        "Content Tools",
+        "Marketing Tools"
+      ],
+      "source": "manual_curation"
+    },
+    {
+      "name": "Loom AI",
+      "description": "AI-enhanced video messaging and screen recording platform",
+      "website": "https://www.loom.com/",
+      "category": [
+        "Video Tools",
+        "Productivity"
+      ],
+      "source": "manual_curation"
+    },
+    {
+      "name": "GitHub Copilot",
+      "description": "AI pair programmer that helps write code faster",
+      "website": "https://github.com/features/copilot",
+      "category": [
+        "Development Tools",
+        "AI Assistants"
+      ],
+      "source": "manual_curation"
+    },
+    {
+      "name": "Runway ML",
+      "description": "AI-powered creative tools for video editing and generation",
+      "website": "https://runwayml.com/",
+      "category": [
+        "Video Tools",
+        "Design & Art"
+      ],
+      "source": "manual_curation"
+    },
+    {
+      "name": "Synthesia",
+      "description": "AI video generation platform with AI avatars",
+      "website": "https://www.synthesia.io/",
+      "category": [
+        "Video Tools",
+        "AI Characters"
+      ],
+      "source": "manual_curation"
+    },
+    {
+      "name": "Zapier AI",
+      "description": "AI-powered automation platform for connecting apps and workflows",
+      "website": "https://zapier.com/ai",
+      "category": [
+        "Automation",
+        "Productivity"
+      ],
+      "source": "manual_curation"
+    }
+  ]
+}

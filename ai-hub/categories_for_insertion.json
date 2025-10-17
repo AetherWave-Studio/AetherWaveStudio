@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Analytics",
+    "slug": "analytics",
+    "description": "AI tools in the Analytics category",
+    "tools_count": 7
+  },
+  {
+    "name": "Artificial Intelligence",
+    "slug": "artificial-intelligence",
+    "description": "AI tools in the Artificial Intelligence category",
+    "tools_count": 403
+  },
+  {
+    "name": "Chatbots",
+    "slug": "chatbots",
+    "description": "AI tools in the Chatbots category",
+    "tools_count": 27
+  },
+  {
+    "name": "Content Creation",
+    "slug": "content-creation",
+    "description": "AI tools in the Content Creation category",
+    "tools_count": 66
+  },
+  {
+    "name": "Customer Support",
+    "slug": "customer-support",
+    "description": "AI tools in the Customer Support category",
+    "tools_count": 8
+  },
+  {
+    "name": "Design",
+    "slug": "design",
+    "description": "AI tools in the Design category",
+    "tools_count": 116
+  },
+  {
+    "name": "Developer Tools",
+    "slug": "developer-tools",
+    "description": "AI tools in the Developer Tools category",
+    "tools_count": 66
+  },
+  {
+    "name": "Education",
+    "slug": "education",
+    "description": "AI tools in the Education category",
+    "tools_count": 22
+  },
+  {
+    "name": "Email",
+    "slug": "email",
+    "description": "AI tools in the Email category",
+    "tools_count": 6
+  },
+  {
+    "name": "Marketing",
+    "slug": "marketing",
+    "description": "AI tools in the Marketing category",
+    "tools_count": 66
+  },
+  {
+    "name": "Productivity",
+    "slug": "productivity",
+    "description": "AI tools in the Productivity category",
+    "tools_count": 66
+  },
+  {
+    "name": "Sales",
+    "slug": "sales",
+    "description": "AI tools in the Sales category",
+    "tools_count": 2
+  },
+  {
+    "name": "Social Media",
+    "slug": "social-media",
+    "description": "AI tools in the Social Media category",
+    "tools_count": 13
+  },
+  {
+    "name": "Video",
+    "slug": "video",
+    "description": "AI tools in the Video category",
+    "tools_count": 66
+  },
+  {
+    "name": "Writing",
+    "slug": "writing",
+    "description": "AI tools in the Writing category",
+    "tools_count": 66
+  }
+]

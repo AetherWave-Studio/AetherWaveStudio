@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aetherwave Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal[style*="display: flex"] {
+            display: flex !important;
+        }
+        body { margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; background-color: #2C003E; color: #F4F4F4; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        header { text-align: center; padding: 40px 0; }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 2.5em; color: #e15afd; margin-bottom: 10px; }
+        .tagline { font-size: 1.2em; color: #A6EFFF; }
+        .hero { text-align: center; padding: 5px 0; }
+		
+        .hero h1 { font-family: 'Orbitron', sans-serif; font-size: 3em; color: #00F5A0; margin-bottom: 20px; }
+        .hero p { font-size: 1.2em; max-width: 800px; margin: 0 auto 40px; color: #F4F4F4; }
+        .features { display: flex; justify-content: space-around; flex-wrap: wrap; margin-bottom: 60px; }
+        .feature { flex: 1 1 300px; margin: 20px; text-align: center; }
+        .feature h3 { font-family: 'Orbitron', sans-serif; color: #e15afd; font-size: 1.5em; }
+        .track-list { background-color: #1E1E2F; padding: 40px; border-radius: 10px; margin-bottom: 60px; }
+        .track-list h2 { font-family: 'Orbitron', sans-serif; color: #A6EFFF; text-align: center; margin-bottom: 30px; }
+        .track-list ul { list-style: none; padding: 0; max-width: 800px; margin: 0 auto; }
+        .track-list li { font-size: 1.1em; margin-bottom: 10px; color: #F4F4F4; display: flex; align-items: center; gap: 15px; }
+        .track-list img { width: 50px; height: 50px; object-fit: cover; border-radius: 5px; }
+        .track-list .track-info { flex-grow: 1; }
+        .play-sample { background-color: #00F5A0; color: #2C003E; font-family: 'Open Sans', sans-serif; font-size: 0.9em; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+        .play-sample:hover { background-color: #e15afd; }
+        .download-btn { background-color: #00F5A0; color: #2C003E; font-family: 'Orbitron', sans-serif; font-size: 0.9em; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; text-decoration: none; }
+        .download-btn:hover { background-color: #e15afd; }
+        .cta { text-align: center; padding: 60px 0; background-color: #1E1E2F; }
+        .cta h2 { font-family: 'Orbitron', sans-serif; color: #00F5A0; margin-bottom: 20px; }
+        .cta p { font-size: 1.2em; margin-bottom: 40px; }
+        #stripe-form { max-width: 400px; margin: 0 auto; }
+        .buy-button { background-color: #e15afd; color: #2C003E; font-family: 'Orbitron', sans-serif; font-size: 1.2em; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+        .buy-button:hover { background-color: #00F5A0; }
+        .code-input { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #A6EFFF; border-radius: 5px; background-color: #1E1E2F; color: #F4F4F4; font-size: 1em; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
+        .modal-content { background-color: #1E1E2F; margin: auto; padding: 20px; border: 1px solid #e15afd; width: 80%; max-width: 500px; border-radius: 10px; text-align: center; }
+        .close { color: #A6EFFF; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover, .close:focus { color: #00F5A0; text-decoration: none; }
+        audio { width: 100%; margin-top: 20px; }
+        #track-stripe-form { max-width: 400px; margin: 20px auto; }
+        #track-card-element { border: 1px solid #A6EFFF; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+        #track-submit { margin-top: 10px; }
+		.hero-video {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		z-index: -1;
+}
+.hero {
+    position: relative;
+    overflow: hidden;
+}
+    </style>
+	<style>
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 800px;
+    margin: 20px auto;
+    border-radius: 10px;
+    background-color: #1E1E2F;
+}
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #e15afd;
+}
+.track-item:hover {
+    background: rgba(225, 90, 253, 0.2); /* Subtle #e15afd glow */
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+}
+.play-sample:hover, .download-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px #00F5A0;
+}
+</style>
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.7);
+        justify-content: center;
+        align-items: center;
+    }
+    .modal[style*="display: flex"] {
+        display: flex !important;
+    }
+    body { margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; background-color: #2C003E; color: #F4F4F4; line-height: 1.6; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+    header { text-align: center; padding: 40px 0; }
+    .logo { font-family: 'Orbitron', sans-serif; font-size: 2.5em; color: #e15afd; margin-bottom: 10px; }
+    .tagline { font-size: 1.2em; color: #A6EFFF; }
+    .hero { text-align: center; padding: 20px 0; background: url('YOUR_DROPBOX_IMAGE_URL') center/cover no-repeat; }
+    .hero h1, .hero p { background: rgba(30, 30, 47, 0.7); padding: 10px; border-radius: 5px; }
+    .hero { position: relative; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); }
+    .features { display: flex; justify-content: space-around; flex-wrap: wrap; margin-bottom: 60px; }
+    .feature { flex: 1 1 300px; margin: 20px; text-align: center; }
+    .feature h3 { font-family: 'Orbitron', sans-serif; color: #e15afd; font-size: 1.5em; }
+    .track-list { background-color: #1E1E2F; padding: 40px; border-radius: 10px; margin-bottom: 60px; }
+    .track-list h2 { font-family: 'Orbitron', sans-serif; color: #A6EFFF; text-align: center; margin-bottom: 30px; }
+    .track-list ul { list-style: none; padding: 0; max-width: 800px; margin: 0 auto; }
+    .track-list li { width: 100%; font-size: 1.1em; margin-bottom: 10px; color: #F4F4F4; display: flex; align-items: center; gap: 15px; }
+    .track-list img { width: 50px; height: 50px; object-fit: cover; border-radius: 5px; }
+    .track-list .track-info { flex-grow: 1; }
+    .track-item { border: 2px solid #e15afd; border-radius: 8px; padding: 15px; width: 100%; box-sizing: border-box; }
+    .track-item:hover { background: rgba(225, 90, 253, 0.2); transform: scale(1.02); transition: all 0.3s ease; }
+    .play-sample { background-color: #00F5A0; color: #2C003E; font-family: 'Open Sans', sans-serif; font-size: 0.9em; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+    .play-sample:hover { background-color: #e15afd; transform: scale(1.1); box-shadow: 0 0 10px #00F5A0; }
+    .download-btn { background-color: #00F5A0; color: #2C003E; font-family: 'Orbitron', sans-serif; font-size: 0.9em; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; text-decoration: none; }
+    .download-btn:hover { background-color: #e15afd; transform: scale(1.1); box-shadow: 0 0 10px #00F5A0; }
+    .cta { text-align: center; padding: 60px 0; background-color: #1E1E2F; }
+    .cta h2 { font-family: 'Orbitron', sans-serif; color: #00F5A0; margin-bottom: 20px; }
+    .cta p { font-size: 1.2em; margin-bottom: 40px; }
+    #stripe-form { max-width: 400px; margin: 0 auto; }
+    .buy-button { background-color: #e15afd; color: #2C003E; font-family: 'Orbitron', sans-serif; font-size: 1.2em; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+    .buy-button:hover { background-color: #00F5A0; }
+    .code-input { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #A6EFFF; border-radius: 5px; background-color: #1E1E2F; color: #F4F4F4; font-size: 1em; }
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
+    .modal-content { background-color: #1E1E2F; margin: auto; padding: 20px; border: 1px solid #e15afd; width: 80%; max-width: 500px; border-radius: 10px; text-align: center; }
+    .close { color: #A6EFFF; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .close:hover, .close:focus { color: #00F5A0; text-decoration: none; }
+    audio { width: 100%; margin-top: 20px; }
+    #track-stripe-form { max-width: 400px; margin: 20px auto; }
+    #track-card-element { border: 1px solid #A6EFFF; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+    #track-submit { margin-top: 10px; }
+    .cta-banner { text-align: center; margin: 20px 0; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+</style>
+</head>
+<body>
+    <header>
+        <h1 class="logo">Aetherwave Studio</h1>
+        <p class="tagline">AI Music. Human Soul. Infinite Sound.</p>
+    </header>
+
+    <div class="container">
+		
+       <section class="hero">
+		<div class="hero-video">
+			<video autoplay loop muted playsinline>
+			<source src=".\Hero_Video.mp4" type="video/mp4">
+			</video>
+		</div>
+            <h1>Coastal Pulse</h1>
+            <p>Immerse yourself in the rhythmic waves of binaural beats designed to elevate your focus, relaxation, and creativity. This 12-track collection blends AI precision with human intuition, creating soundscapes perfect for creators, podcasters, and video producers who want immersive, royalty-free background music to enhance focus, relaxation, and storytelling.</p>
+    
+		
+		
+		<div class="video-container">
+			
+			<iframe 
+				width="560" 
+				height="315" 
+				src="https://firebasestorage.googleapis.com/v0/b/aetherwave-playlists.firebasestorage.app/o/Coastal%20Pulse%2FVideos%2FCoastal%20Pulse%20VoxBot%20Review.mp4?alt=media&token=db749d66-7354-48b0-8263-5621bb7fa23a" 
+				title="Coastal Pulse Preview" 
+				frameborder="0" 
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+				allowfullscreen>
+			</iframe>
+        </div>
+		
+	</section>
+
+        <section class="features">
+            <div class="feature">.
+                <h3>Binaural Magic</h3>
+                <p>Engineered frequencies to sync your brainwaves for deeper states of mind.</p>
+            </div>
+            <div class="feature">
+                <h3>AI + Human Craft</h3>
+                <p>Powered by cutting-edge AI, refined with a human touch for authentic vibes.</p>
+            </div>
+            <div class="feature">
+                <h3>Infinite Replay</h3>
+                <p>Immersive, royalty-free background music to enhance focus, relaxation, and storytelling</p>
+            </div>
+        </section>
+
+        <section class="track-list">
+            <h2>Track List</h2>
+            <ul id="track-list-container"></ul>
+        </section>
+
+        <section class="cta">
+            <h2>Get Your Copy Now</h2>
+            <p>For just $9.99, unlock the full collection and dive into infinite sound. Secure payment powered by Stripe.</p>
+            <form id="stripe-form">
+                <h3>Apply Promo Codes at checkout.</h2>
+                <!--<button type="submit" class="buy-button">Apply</button>-->
+                <a target="_blank" id="purchase-now-link" href="#" class="buy-button">Purchase Now</a>
+            </form>
+        </section>
+    </div>
+
+    <footer align=center>
+        <p>© 2025 Aetherwave Studio. All rights reserved. | <a target="_blank" href="https://privacy.aetherwavestudio.com">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        <p>Created by Andrew Froehlich, CEO Aetherwave Studio & Founder, The AI Music Report</p>
+    </footer>
+
+    <div id="sample-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>30-Second Sample</h2>
+            <audio controls id="sample-audio">
+                <source src="#" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+    </div>
+
+    <div id="download-ready-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Download Ready!</h2>
+            <p>Your AetherWave Theme Collection is ready! Click below to download the full package.</p>
+            <a href="#" class="download-btn">Download Now</a>
+        </div>
+    </div>
+
+    <div id="track-download-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Download Track</h2>
+            <p>$1.99 download this track + extras!</p>
+            <a id="track-download-link" href="#" class="download-btn">Download Now</a>
+        </div>
+    </div>
+
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw_7rpfeNtN0zhvECa-l7XB6P8KGv6x-kVgnkqXSoCsaose95HiSOzNBrMzFGPlLdV7/exec';
+        fetch(WEB_APP_URL)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    return;
+                }
+                window.playlistData = data;
+
+                // Set Purchase Now link
+                document.getElementById('purchase-now-link').href = data.zip_download || '#';
+
+                // Render track list
+                const trackListContainer = document.getElementById('track-list-container');
+                trackListContainer.innerHTML = data.tracks.map(track => `
+                    <li class="track-item" data-track-id="${track.id}">
+                        <img src="${track.cover_art || 'https://via.placeholder.com/50'}" alt="${track.title} cover">
+                        <div class="track-info">
+                            <span>${track.title}</span>
+                            ${track.description ? `<p>${track.description}</p>` : ''}
+                        </div>
+                        <button class="play-sample" data-sample-url="${track.sample_url}">Play Sample</button>
+                        <a target="_blank" href="${track.download_url || '#'}" class="download-btn">Buy Now</a>
+                    </li>
+                `).join('');
+
+                // Add click listeners for track download modal
+                document.querySelectorAll('.track-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('play-sample') || e.target.classList.contains('download-btn')) return;
+                        const trackId = item.dataset.trackId;
+                        const track = window.playlistData.tracks.find(t => t.id == trackId);
+                        document.getElementById('track-download-link').href = track?.download_url || '#';
+                        document.getElementById('track-download-modal').style.display = 'flex';
+                    });
+                });
+
+                // Add click listeners for sample playback
+                document.querySelectorAll('.play-sample').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const sampleUrl = btn.dataset.sampleUrl;
+                        const audio = document.getElementById('sample-audio');
+                        audio.src = sampleUrl;
+                        document.getElementById('sample-modal').style.display = 'flex';
+                        audio.play();
+                    });
+                });
+
+                // Close modals
+                document.querySelectorAll('.modal .close').forEach(closeBtn => {
+                    closeBtn.addEventListener('click', () => {
+                        closeBtn.closest('.modal').style.display = 'none';
+                        const audio = document.getElementById('sample-audio');
+                        if (audio) audio.pause();
+                    });
+                });
+            })
+            .catch(error => console.error('Fetch error:', error));
+    </script>
+</body>
+</html>

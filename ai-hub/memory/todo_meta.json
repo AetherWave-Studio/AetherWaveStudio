@@ -1,0 +1,20 @@
+{
+  "todos": {
+    "Coordinator": {
+      "1": {
+        "id": "1",
+        "content": "Research and collect 2024-2025 AI tools from Toolify.ai",
+        "details": "1. Extract content from https://www.toolify.ai/ to gather current AI tools. 2. Filter tools that were launched or significantly updated in 2024-2025. 3. Collect tool information including names, descriptions, categories, ratings, and launch dates. 4. Compile a comprehensive list of modern AI tools.",
+        "status": "completed",
+        "priority": "high"
+      },
+      "2": {
+        "id": "2",
+        "content": "Update AIverse website database with 2024-2025 tools only",
+        "details": "1. Replace the existing tools database with the newly researched 2024-2025 tools. 2. Maintain the same data structure and formatting. 3. Keep featured and top tools sections unchanged as requested. 4. Ensure all tools have proper categorization and metadata. 5. Test the updated website functionality.",
+        "status": "completed",
+        "priority": "high"
+      }
+    }
+  }
+}

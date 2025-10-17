@@ -1,0 +1,190 @@
+{
+  "metadata": {
+    "title": "Popular AI Tools Supplement Dataset",
+    "description": "A curated collection of 20 mainstream, highly-rated AI tools to supplement the main dataset",
+    "version": "1.0",
+    "creation_date": "2025-08-21",
+    "total_tools": 20,
+    "focus": "Top popular AI tools with high user adoption and recognition",
+    "criteria": [
+      "Mainstream recognition and adoption",
+      "High user ratings and reviews",
+      "Active development and support",
+      "Broad user base across industries",
+      "Official website availability"
+    ],
+    "categories_used": [
+      "Artificial Intelligence",
+      "Writing", 
+      "Video",
+      "Design",
+      "Productivity",
+      "Developer Tools",
+      "Marketing",
+      "Content Creation",
+      "Chatbots"
+    ]
+  },
+  "tools": [
+    {
+      "name": "ChatGPT",
+      "description": "AI-powered conversational assistant that helps with writing, analysis, coding, and creative tasks",
+      "link": "https://chatgpt.com",
+      "category": "Artificial Intelligence",
+      "logo_url": "https://logo.clearbit.com/chatgpt.com",
+      "popularity_score": 9.5
+    },
+    {
+      "name": "Midjourney",
+      "description": "AI image generator that creates stunning artwork and visuals from text descriptions",
+      "link": "https://www.midjourney.com",
+      "category": "Design",
+      "logo_url": "https://logo.clearbit.com/midjourney.com",
+      "popularity_score": 9.2
+    },
+    {
+      "name": "Jasper AI",
+      "description": "AI-powered marketing platform for creating brand-aligned content at scale",
+      "link": "https://www.jasper.ai",
+      "category": "Marketing",
+      "logo_url": "https://logo.clearbit.com/jasper.ai",
+      "popularity_score": 8.8
+    },
+    {
+      "name": "Notion AI",
+      "description": "AI writing assistant integrated into Notion for brainstorming, writing, and productivity",
+      "link": "https://www.notion.so",
+      "category": "Productivity",
+      "logo_url": "https://logo.clearbit.com/notion.so",
+      "popularity_score": 8.7
+    },
+    {
+      "name": "Synthesia",
+      "description": "AI video generator that creates professional videos with AI avatars in 140+ languages",
+      "link": "https://www.synthesia.io",
+      "category": "Video",
+      "logo_url": "https://logo.clearbit.com/synthesia.io",
+      "popularity_score": 8.9
+    },
+    {
+      "name": "Copy.ai",
+      "description": "AI copywriting tool that automates content creation and marketing workflows",
+      "link": "https://www.copy.ai",
+      "category": "Content Creation",
+      "logo_url": "https://logo.clearbit.com/copy.ai",
+      "popularity_score": 8.5
+    },
+    {
+      "name": "Canva AI",
+      "description": "AI-powered design platform with Magic Studio for creating graphics, presentations, and content",
+      "link": "https://www.canva.com",
+      "category": "Design",
+      "logo_url": "https://logo.clearbit.com/canva.com",
+      "popularity_score": 9.0
+    },
+    {
+      "name": "Loom AI",
+      "description": "AI-enhanced video messaging tool that auto-edits recordings and generates transcripts",
+      "link": "https://www.loom.com",
+      "category": "Video",
+      "logo_url": "https://logo.clearbit.com/loom.com",
+      "popularity_score": 8.4
+    },
+    {
+      "name": "Grammarly",
+      "description": "AI writing assistant that checks grammar, tone, and style across all your apps",
+      "link": "https://www.grammarly.com",
+      "category": "Writing",
+      "logo_url": "https://logo.clearbit.com/grammarly.com",
+      "popularity_score": 9.1
+    },
+    {
+      "name": "Claude",
+      "description": "Advanced AI assistant by Anthropic for analysis, writing, research, and complex reasoning",
+      "link": "https://claude.ai",
+      "category": "Artificial Intelligence",
+      "logo_url": "https://logo.clearbit.com/claude.ai",
+      "popularity_score": 9.0
+    },
+    {
+      "name": "GitHub Copilot",
+      "description": "AI pair programmer that suggests code completions and functions as you type",
+      "link": "https://github.com/features/copilot",
+      "category": "Developer Tools",
+      "logo_url": "https://logo.clearbit.com/github.com",
+      "popularity_score": 9.3
+    },
+    {
+      "name": "Figma AI",
+      "description": "AI-powered design tools integrated into Figma for enhanced creativity and workflow",
+      "link": "https://www.figma.com",
+      "category": "Design",
+      "logo_url": "https://logo.clearbit.com/figma.com",
+      "popularity_score": 8.6
+    },
+    {
+      "name": "Slack AI",
+      "description": "AI assistant built into Slack for summarizing conversations and boosting team productivity",
+      "link": "https://slack.com",
+      "category": "Productivity",
+      "logo_url": "https://logo.clearbit.com/slack.com",
+      "popularity_score": 8.3
+    },
+    {
+      "name": "Zoom AI",
+      "description": "AI Companion that summarizes meetings, drafts messages, and enhances video collaboration",
+      "link": "https://www.zoom.com",
+      "category": "Productivity",
+      "logo_url": "https://logo.clearbit.com/zoom.com",
+      "popularity_score": 8.4
+    },
+    {
+      "name": "Adobe Firefly",
+      "description": "Generative AI suite for creating images, videos, and graphics with creative control",
+      "link": "https://www.adobe.com/products/firefly.html",
+      "category": "Design",
+      "logo_url": "https://logo.clearbit.com/adobe.com",
+      "popularity_score": 8.8
+    },
+    {
+      "name": "Runway ML",
+      "description": "Advanced AI video generator with state-of-the-art models for professional content creation",
+      "link": "https://runwayml.com",
+      "category": "Video",
+      "logo_url": "https://logo.clearbit.com/runwayml.com",
+      "popularity_score": 8.7
+    },
+    {
+      "name": "DALL-E",
+      "description": "OpenAI's text-to-image generator that creates original artwork from detailed descriptions",
+      "link": "https://openai.com/dall-e-3",
+      "category": "Design",
+      "logo_url": "https://logo.clearbit.com/openai.com",
+      "popularity_score": 9.1
+    },
+    {
+      "name": "Perplexity AI",
+      "description": "AI-powered answer engine that provides real-time, cited responses to any question",
+      "link": "https://www.perplexity.ai",
+      "category": "Artificial Intelligence",
+      "logo_url": "https://logo.clearbit.com/perplexity.ai",
+      "popularity_score": 8.6
+    },
+    {
+      "name": "Character.AI",
+      "description": "Platform for creating and chatting with AI characters for entertainment and roleplay",
+      "link": "https://character.ai",
+      "category": "Chatbots",
+      "logo_url": "https://logo.clearbit.com/character.ai",
+      "popularity_score": 8.2
+    },
+    {
+      "name": "Stability AI",
+      "description": "Creator of Stable Diffusion and advanced AI models for image and multimodal generation",
+      "link": "https://stability.ai",
+      "category": "Artificial Intelligence",
+      "logo_url": "https://logo.clearbit.com/stability.ai",
+      "popularity_score": 8.5
+    }
+  ]
+}

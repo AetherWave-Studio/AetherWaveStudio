@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d0b15" />
+  <meta name="description" content="A Collaboration Space." />  
+  <meta property="og:title" content="AetherWave Studio" />
+  <meta property="og:description" content="All Intelligence Is Welcome Here" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/aetherwave-playlists.firebasestorage.app/o/global-assets%2FAetherWave%20Banner%20pinwhite1920.png?alt=media&token=256e0120-cd5b-46ce-9feb-95730bf34119" />
+  <meta property="og:url" content="https://aetherwavestudio.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+ 
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="/site.webmanifest">
+  
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600..900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Aetherwave Studio Splash Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://firebasestorage.googleapis.com/v0/b/aetherwave-playlists.firebasestorage.app/o/global-files%2Fnav.css?alt=media&token=d9ce7aa2-0609-46cc-92a8-169d8d8ca076" rel="stylesheet">
+  <link href="https://firebasestorage.googleapis.com/v0/b/aetherwave-playlists.firebasestorage.app/o/global-files%2Ffooter.css?alt=media&token=4f8bebd7-80e6-4bd6-8910-08b844e467f9" rel="stylesheet">
+  <style>
+  header {
+            text-align: center;
+            padding: 0px 0;
+            background-color: #1E1E2F; /* Deep Slate */
+        }
+      --ink:#e9e8ff;
+    :root{
+      --muted:#b7b3d9;
+    }
+    html, body { height: 100%; margin:0; }
+    body{
+      color:var(--ink);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow-x:hidden;
+      overflow-y:hidden;
+      background-attachment: fixed;
+    }
+		
+
+        :root {
+            --midnight-violet: #2C003E;
+            --aether-pink: #ff2ea6;
+            --deep-slate: #1E1E2F;
+            --sky-glint: #A6EFFF;
+            --electric-neon: #00F5A0;
+            --white-smoke: #F4F4F4;
+        }
+        
+        
+        
+     
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--midnight-violet);
+            color: var(--white-smoke);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            padding: 0px 0;
+            background: rgba(30, 30, 47, 0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(225, 90, 253, 0.3);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--white-smoke);
+            text-decoration: none;
+            position: relative;
+        }
+        
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--aether-pink), var(--sky-glint));
+            border-radius: 2px;
+        }
+        
+        .tagline {
+            font-size: 0.9rem;
+            color: var(--sky-glint);
+            margin-top: 5px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 180px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(225, 90, 253, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 245, 160, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px rgba(225, 90, 253, 0.7);
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--aether-pink), var(--sky-glint));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        
+        .hero h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            color: var(--white-smoke);
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .feature {
+            text-align: center;
+            max-width: 200px;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: rgba(225, 90, 253, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--aether-pink);
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, var(--aether-pink), var(--electric-neon));
+            color: var(--midnight-violet);
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(225, 90, 253, 0.5);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(225, 90, 253, 0.7);
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+            background: rgba(30, 30, 47, 0.5);
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--white-smoke);
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background: rgba(44, 0, 62, 0.6);
+            border: 1px solid rgba(225, 90, 253, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+		.service-card {
+		background-size: cover; /* scales to fit without distortion */
+		background-position: center; /* Centers the image */
+		background-repeat: no-repeat; /* Prevents tiling */
+		padding: 20px; /* Adjust for content spacing */
+		color: #ffffff; /* White text for contrast, adjust based on image */
+		text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Optional: improves text readability */
+		border-radius: 8px; /* Optional: softens edges for a modern look */
+		min-height: 200px;/* Ensure card has enough space for image */
+		background-color: #f0f0f0; /* Optional: Light gray background for the frame, adjust to match campaign */
+		}
+		.service-card.music {
+		  background-image: url('./assets/Audio_tracks.png');
+		}
+		.service-card.collection {
+		  background-image: url('./assets/Collections.png');
+		}
+		.service-card.toolkit {
+		  background-image: url('./assets/Media_toolkits.png');
+		}
+        
+
+        /*.service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--aether-pink), var(--sky-glint));
+        }*/
+		
+		.service-card::before {
+		  content: "";
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		  width: 100%;
+		  height: 100%;
+		  background-color: rgba(0, 0, 0, 0.1); /* Adjust opacity (0.4 is a good start—tweak for your images) */
+		  z-index: 1; /* Places overlay above the bg image but below content */
+		  border-radius: 8px; /* Matches the card's rounding */
+		}
+		.service-card > * {
+		  position: relative;
+		  z-index: 2;
+		}
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--aether-pink);
+        }
+        
+        .service-card h3 {
+            color: var(--sky-glint);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .price {
+            font-family: 'Orbitron', monospace;
+            color: var(--electric-neon);
+            font-size: 1.8rem;
+            margin: 15px 0;
+        }
+        
+        /* Clients Section */
+        .clients {
+            padding: 80px 0;
+        }
+        
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .client-card {
+            background: rgba(30, 30, 47, 0.6);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(166, 239, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .client-card:hover {
+            border-color: var(--sky-glint);
+            transform: translateY(-5px);
+        }
+        
+        .client-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--sky-glint);
+        }
+        
+        .client-card h3 {
+            color: var(--aether-pink);
+            margin-bottom: 10px;
+        }
+        
+        .music-types {
+            font-style: italic;
+            color: var(--white-smoke);
+            opacity: 0.8;
+        }
+        
+        /* Workflow Section */
+        .workflow {
+            padding: 80px 0;
+            background: rgba(30, 30, 47, 0.5);
+        }
+        
+        .workflow-steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 50px;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--aether-pink), var(--electric-neon));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--midnight-violet);
+        }
+        
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            right: -15px;
+            width: 30px;
+            height: 2px;
+            background: var(--aether-pink);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 50px 0;
+            text-align: center;
+            border-top: 1px solid rgba(225, 90, 253, 0.3);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .social-links a {
+            color: var(--sky-glint);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--aether-pink);
+            transform: translateY(-3px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.2rem;
+            }
+            
+            .features {
+                gap: 20px;
+            }
+            
+            .workflow-steps {
+                flex-direction: column;
+            }
+            
+            .step:not(:last-child)::after {
+                display: none;
+            }
+        
+    </style>
+</head>	
+<body>
+	<header>
+		<div>
+			<a href="https://aetherwavestudio.com/"><img src="https://firebasestorage.googleapis.com/v0/b/aetherwave-playlists.firebasestorage.app/o/global-assets%2FAetherWave%20Banner%20pinwhite1920x192.png?alt=media&token=0f9154af-2d16-4a4f-8822-4c641355c377" alt="Coastal Pulse Banner" style="width: 100%; max-width: 1920px; border-radius: 10px;"></a>
+			<nav class="aether-nav">
+				<ul>
+					<li><a href="https://ai-hub.aetherwavestudio.com">AI-Hub</a></li>
+					<li class="dropdown">
+						<a href="https://playlists.aetherwavestudio.com">Playlists</a>
+						<div class="dropdown-content">
+							<a href="https://playlists.aetherwavestudio.com/darkwave/">DarkWave Essentials</a>
+							<a href="https://playlists.aetherwavestudio.com/meditation/">Meditation Soundscapes</a>
+							<a href="https://playlists.aetherwavestudio.com/coastal-pulse">Coastal Pulse</a>
+							<a href="https://playlists.aetherwavestudio.com/synthwave-epic-loops">SynthWave Epic Loops</a>
+						</div>
+					</li>
+					<li><a href="https://featured-artist.aetherwavestudio.com/">Featured Artist</a></li>
+					<li class="dropdown">
+						<a class="active" href="#">Shop</a>
+						<div class="dropdown-content">
+							<a href="https://shop.aetherwavestudio.com/coastal-pulse">Coastal Pulse</a>
+							<a href="https://shop.aetherwavestudio.com/synthwave-epic-loops">SynthWave Epic Loops</a>
+						</div>
+					</li>
+					<li><a href="https://docs.google.com/forms/d/e/1FAIpQLSfHYRDb7iRmNFIneGJNsEhQ1wpi5QQYbXKy9mwFUMP4htvOoQ/viewform?usp=header" target="_blank">Submit Music</a></li>			
+				</ul>
+			</nav>
+		</div>
+</header>
+
+  <main class="wrap">
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title">Our Music Services</h2>
+            <div class="services-grid">
+                <a href="https://shop.aetherwavestudio.com/coastal-pulse/"><div class="service-card music">
+                    <h3></h3>
+					<br>
+                    <p></p>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+                    <div class="price">$4.95+</div>
+                    <p>For creators seeking the perfect track for the moment</p>
+                </div></a>
+                <div class="service-card collection">
+                    <h3></h3>
+					<br>
+                    <p></p>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+                    <div class="price">$29.95+</div>
+                    <p>Ideal for brands and filmmakers seeking a consistent and polished sound design</p>
+                </div>
+                <div class="service-card toolkit">
+                    <h3></h3>
+					<br>
+                    <p></p>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+                    <div class="price">$59.95+</div>
+                    <p>Complete audiovisual packages including sound design and extensive video and graphics library</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section class="clients">
+        <div class="container">
+            <h2 class="section-title">Who We Create For</h2>
+            <div class="clients-grid">
+                <div class="client-card">
+                    <div class="client-icon">🎬</div>
+                    <h3>Content Creators</h3>
+                    <p class="music-types">Neon Drift, Glass Hearts</p>
+                </div>
+                <div class="client-card">
+                    <div class="client-icon">🎮</div>
+                    <h3>Game Developers</h3>
+                    <p class="music-types">Pixel Dust, Trap Noire</p>
+                </div>
+                <div class="client-card">
+                    <div class="client-icon">🎥</div>
+                    <h3>Filmmakers</h3>
+                    <p class="music-types">Cinematic Pulse, Ghost Signal</p>
+                </div>
+                <div class="client-card">
+                    <div class="client-icon">🎤</div>
+                    <h3>Emerging Artists</h3>
+                    <p class="music-types">Voltage Bloom, Blacklight Ritual</p>
+                </div>
+                <div class="client-card">
+                    <div class="client-icon">🧘</div>
+                    <h3>Wellness Creators</h3>
+                    <p class="music-types">Midnight Loop, Echo Chamber</p>
+                </div>
+            </div>
+        </div>
+    </section>
+  
+
+  </main>
+  <footer>
+        <div class="container">
+            &copy; 2025 Aetherwave Studio. All rights reserved. | <a href="https://aetherwavestudio.com/privacy-policy">Privacy Policy</a> | <a href="https://aetherwavestudio.com/provacy-policy">Terms of Service</a>
+            <br>Created by Andrew Froehlich, CEO & Founder Aetherwave Studio | <a href="https://www.facebook.com/groups/2142548066240224">AI MUSIC ALLIANCE</a>
+        </div>
+    </footer>
+</body>
+</html>
+
+

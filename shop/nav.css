@@ -1,0 +1,103 @@
+	.black-bg { background-color: #050506; }
+	
+    .aether-nav {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 600;
+        text-align: right;
+        padding: 10px 10px;
+        background: rgba(44, 0, 62, 0.95);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+    }
+    .aether-nav ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    .aether-nav ul li {
+        position: relative; /* Required for dropdown positioning */
+    }
+    .aether-nav a {
+        text-decoration: none;
+        color: #fff;
+        font-size: clamp(0.9rem, 1.4vw, 1rem);
+        position: relative;
+        transition: color .3s;
+    }
+    .aether-nav a::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 100%;
+        height: 2px;
+        background: #00f5a0;
+        transform: scaleX(0);
+        transition: transform .3s, background .3s;
+    }
+    .aether-nav a:hover {
+        color: #ff2b70;
+    }
+    .aether-nav a:hover::after {
+        transform: scaleX(1);
+        background: #ff2b70;
+    }
+    .aether-nav a.active {
+        color: #ff2b70;
+    }
+    .aether-nav a.active::after {
+        transform: scaleX(1);
+        background: #ff2b70;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background: rgba(44, 0, 62, 0.95);
+        backdrop-filter: blur(10px);
+        min-width: 160px;
+        border: 1px solid #ff2b70;
+        border-radius: 5px;
+        z-index: 1000;
+        top: 100%;
+        left: 0;
+    }
+    .dropdown-content a {
+        display: block;
+        padding: 10px;
+        color: #fff;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 0.9rem;
+        text-decoration: none;
+        position: relative;
+    }
+    .dropdown-content a:hover {
+        background: rgba(255, 43, 112, 0.2);
+        color: #00f5a0;
+    }
+    .dropdown-content a:hover::after {
+        transform: scaleX(1);
+        background: #00f5a0;
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+    @media (max-width: 640px) {
+        .aether-nav {
+            padding: 8px 12px;
+        }
+        .aether-nav ul {
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .dropdown-content {
+            min-width: 140px;
+        }
+

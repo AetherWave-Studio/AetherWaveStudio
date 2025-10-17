@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AetherWave Audio Player</title>
+  <style>
+    body { font-family: sans-serif; background: #2C003E; color: #f3f4f6; padding: 2rem; }
+    h1 { margin-bottom: 1rem; }
+    form { max-width: 320px; }
+    input[type="email"] {
+      width: 100%; padding: 0.5rem; margin-bottom: 1rem; border-radius: 6px; border: 1px solid #444;
+      background: #0a0b10; color: #f3f4f6;
+    }
+    button {
+      background: #ff2a9e; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; color: white;
+      font-weight: bold; cursor: pointer;
+    }
+    button:disabled {
+      background: #a14a7a;
+      cursor: not-allowed;
+    }
+    #message { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Get Your Download</h1>
+  <form id="emailForm">
+    <input type="email" id="emailInput" placeholder="you@example.com" required />
+    <button type="submit">Submit & Download</button>
+  </form>
+  <div id="message"></div>
+
+  <script>
+    const form = document.getElementById('emailForm');
+    const emailInput = document.getElementById('emailInput');
+    const messageDiv = document.getElementById('message');
+    const DOWNLOAD_URL = "https://www.dropbox.com/s/yourfileid/Ghosts-Online.mp3?dl=1"; // Replace with your Dropbox direct link
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        messageDiv.textContent = "Please enter a valid email address.";
+        return;
+      }
+
+      messageDiv.textContent = "Submitting...";
+      form.querySelector('button').disabled = true;
+
+      try {
+        const res = await fetch("https://proxy.aetherwavestudio.com/proxy", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
+        if (!res.ok) throw new Error("Network response was not ok");
+
+        messageDiv.textContent = "Success! Your download will start shortly.";
+
+        // Trigger download
+        const a = document.createElement('a');
+        a.href = DOWNLOAD_URL;
+        a.download = "Ghosts-Online.mp3";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+      } catch (err) {
+        messageDiv.textContent = "Error submitting email. Please try again.";
+      } finally {
+        form.querySelector('button').disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

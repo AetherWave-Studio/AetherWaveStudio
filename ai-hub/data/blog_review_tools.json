@@ -1,0 +1,807 @@
+{
+  "metadata": {
+    "extraction_date": "2025-08-21",
+    "total_tools": 113,
+    "sources": [
+      "insidr_ai_tools",
+      "aiscout_tools",
+      "geeksforgeeks_ai_directory",
+      "perfectessaywriter_2025_tools",
+      "meetcody_directories"
+    ],
+    "description": "AI tools extracted from blog and review sites focusing on tool names, descriptions, and links"
+  },
+  "tools": [
+    {
+      "name": "10 Best AI Search Engines",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/best-ai-search-engines/",
+      "source": "geeksforgeeks.org",
+      "category": "Latest AI Tools and Resources"
+    },
+    {
+      "name": "5StarEssays.com AI Essay Writer",
+      "description": "AI essay writer with customization features.",
+      "link": "https://www.5staressays.com/ai-essay-writer",
+      "source": "perfectessaywriter.ai",
+      "category": "Content Creation and AI Writing Tools"
+    },
+    {
+      "name": "AdCreative",
+      "description": "The #1 AI tool for advertising. AdCreative.ai is an AI-powered tool that generates high-conversion ad creatives, texts, and headlines. It optimizes digital marketing campaigns, providing data-driven insights and competitor analysis to improve conversion rates by up to 14 times. Suitable for startups, e-commerce, agencies, and enterprises.",
+      "link": "",
+      "source": "insidr.ai",
+      "category": "General AI Tools"
+    },
+    {
+      "name": "Adobe Firefly",
+      "description": "AI-enhanced image and video editing.",
+      "link": "https://www.adobe.com/products/firefly.html",
+      "source": "perfectessaywriter.ai",
+      "category": "AI Image and Video Editing Tools"
+    },
+    {
+      "name": "Adobe Sensei",
+      "description": "AI-powered tools for creative workflows.",
+      "link": "https://business.adobe.com/products/sensei/adobe-sensei.html",
+      "source": "perfectessaywriter.ai",
+      "category": "AI Image and Video Editing Tools"
+    },
+    {
+      "name": "Advacheck",
+      "description": "Advacheck offers a sophisticated AI Detector with unmatched precision for identifying machine-generated texts….",
+      "link": "https://aiscout.net/listing/advacheck/",
+      "source": "aiscout.net",
+      "category": "AI Detector"
+    },
+    {
+      "name": "AI Scout",
+      "description": "Remarkable online directory with 1404 tools (at time of writing). Search feature allows typing tasks (e.g., 'write a blog post', 'help with my research paper'). Filter options include Pricing (Free Trial, Contact for Pricing, Waitlist, in addition to free/paid/freemium) and Platform (15 options: Web, Mobile, API, ChatGPT plugins, bots for Whatsapp and Telegram). Unique 'Find AI with AI' feature, an integrated AI chatbot for tool discovery.",
+      "link": "https://aiscout.net/?post_type=hp_listing&s=help+with+phd+thesis+paper+research&_category=",
+      "source": "meetcody.ai",
+      "category": "AI Tool Directory"
+    },
+    {
+      "name": "AIXcoder",
+      "description": "AI code assistant for software development.",
+      "link": "https://www.aixcoder.com/en/",
+      "source": "perfectessaywriter.ai",
+      "category": "Development and AI Coding Tools"
+    },
+    {
+      "name": "Alli AI",
+      "description": "AI for search engine optimization (SEO) and digital marketing.",
+      "link": "https://www.alliai.com/",
+      "source": "perfectessaywriter.ai",
+      "category": "Marketing and Sales AI Tools"
+    },
+    {
+      "name": "Amazon CodeWhisperer",
+      "description": "for code writing and debugging",
+      "link": null,
+      "source": "geeksforgeeks.org",
+      "category": "Common Types of AI Tools"
+    },
+    {
+      "name": "Amazon Transcribe",
+      "description": "Automatic speech recognition service for transcribing audio.",
+      "link": "https://aws.amazon.com/transcribe/",
+      "source": "perfectessaywriter.ai",
+      "category": "Voice and Speech Recognition AI Tools"
+    },
+    {
+      "name": "Anthropic AI Claude 3",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/artificial-intelligence/anthropic-ai-claude-3-the-new-chatgpt-4/",
+      "source": "geeksforgeeks.org",
+      "category": "Complete List of AI Chatbots"
+    },
+    {
+      "name": "Anti-AI Detectors & AI Detection Removers",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/artificial-intelligence/10-best-anti-ai-detectors-ai-detection-removers/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Detection Tools List"
+    },
+    {
+      "name": "Artificial Intelligence(AI) in Business",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/10-application-of-artificial-intelligenceai-in-business/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Powered Business Intelligence Tools"
+    },
+    {
+      "name": "Automation Tools for Data Analytics",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/data-science/top-15-automation-tools-for-data-analytics/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Automation Tools Directory"
+    },
+    {
+      "name": "BHuman.ai",
+      "description": "BHuman is an AI-powered platform that creates personalized videos at scale, helping businesses foster human co…",
+      "link": "https://aiscout.net/listing/bhuman-ai/",
+      "source": "aiscout.net",
+      "category": "Digital Marketing, Video & Animation"
+    },
+    {
+      "name": "Bland Turbo",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/websites-apps/what-is-bland-turbo-how-to-use/",
+      "source": "geeksforgeeks.org",
+      "category": "Complete List of AI Chatbots"
+    },
+    {
+      "name": "Caffe",
+      "description": "Deep learning framework for training neural networks.",
+      "link": "https://caffe.berkeleyvision.org/",
+      "source": "perfectessaywriter.ai",
+      "category": "Data Analysis and Visualization AI Tools"
+    },
+    {
+      "name": "Character AI",
+      "description": "AI-powered virtual characters for voice interaction.",
+      "link": "https://character.ai/",
+      "source": "perfectessaywriter.ai",
+      "category": "Voice and Speech Recognition AI Tools"
+    },
+    {
+      "name": "Chatbase",
+      "description": "Tailored ChatGPT for your content and data. Easily link your data sources to create a chatbot akin to ChatGPT, designed for your specific data. Afterwards, integrate it as a widget on your website or engage with it via our integrations or API.",
+      "link": "",
+      "source": "insidr.ai",
+      "category": "General AI Tools"
+    },
+    {
+      "name": "Chatbot Development Platforms for Conversational AI",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/artificial-intelligence/10-best-chatbot-development-platforms-for-conversational-ai-1/",
+      "source": "geeksforgeeks.org",
+      "category": "Complete List of AI Chatbots"
+    },
+    {
+      "name": "ChatGPT",
+      "description": "for text, images, and videos",
+      "link": null,
+      "source": "geeksforgeeks.org",
+      "category": "Common Types of AI Tools"
+    },
+    {
+      "name": "ChatGPT For Script Video Content",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/websites-apps/how-to-use-chatgpt-for-script-video-content/",
+      "source": "geeksforgeeks.org",
+      "category": "Best AI Copywriting Tools"
+    },
+    {
+      "name": "ChatGPT Operator",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/how-to-use-chatgpt-operator/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Automation Tools Directory"
+    },
+    {
+      "name": "ChatGPT vs. Bing vs. Bard",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/ai-chatbots-chatgpt-vs-bing-vs-bard/",
+      "source": "geeksforgeeks.org",
+      "category": "Complete List of AI Chatbots"
+    },
+    {
+      "name": "Chatsonic",
+      "description": "Advanced conversational AI with broader general knowledge.",
+      "link": "https://writesonic.com/chat",
+      "source": "perfectessaywriter.ai",
+      "category": "Content Creation and AI Writing Tools"
+    },
+    {
+      "name": "Cody",
+      "description": "Referred to as a 'virtual business assistant' in the context of AI tools.",
+      "link": "https://meetcody.ai/",
+      "source": "meetcody.ai",
+      "category": "Individual AI Tool"
+    },
+    {
+      "name": "CollegeEssay.org AI Essay Writer",
+      "description": "AI tool for crafting college-level essays.",
+      "link": "https://collegeessay.org/ai-essaywriter",
+      "source": "perfectessaywriter.ai",
+      "category": "Content Creation and AI Writing Tools"
+    },
+    {
+      "name": "ContentStudio",
+      "description": "Content discovery and social media management.",
+      "link": "https://contentstudio.io/",
+      "source": "perfectessaywriter.ai",
+      "category": "Content Creation and AI Writing Tools"
+    },
+    {
+      "name": "Copy.ai",
+      "description": "for ad copy, email automation, and lead generation",
+      "link": null,
+      "source": "geeksforgeeks.org",
+      "category": "Common Types of AI Tools"
+    },
+    {
+      "name": "Crayo",
+      "description": "Generate viral-ready clips in seconds. Your all-in-one tool for creating AI voiceovers, engaging subtitles, optimized gameplay, and more.",
+      "link": "",
+      "source": "insidr.ai",
+      "category": "General AI Tools"
+    },
+    {
+      "name": "DALL.E 3 Image Generator",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/techtips/how-to-use-dall-e-3-to-create-ai-images-with-chatgpt/",
+      "source": "geeksforgeeks.org",
+      "category": "List of the Best AI Image Generators & Drawings"
+    },
+    {
+      "name": "DALL·E",
+      "description": "for text, images, and videos",
+      "link": null,
+      "source": "geeksforgeeks.org",
+      "category": "Common Types of AI Tools"
+    },
+    {
+      "name": "Dante AI",
+      "description": "Personalized AI chatbots, trained using your data, without any coding required. Easily deploy on your website within minutes. Develop a GPT-4 chatbot swiftly, with the ability to train the AI, customize responses, and seamlessly integrate it onto your website.",
+      "link": "",
+      "source": "insidr.ai",
+      "category": "General AI Tools"
+    },
+    {
+      "name": "data visualization",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/data-visualization/data-visualization-and-its-importance/",
+      "source": "geeksforgeeks.org",
+      "category": "Best AI Productivity Tools"
+    },
+    {
+      "name": "Dialogflow",
+      "description": "AI for building conversational interfaces and chatbots.",
+      "link": "https://cloud.google.com/products/conversational-agents",
+      "source": "perfectessaywriter.ai",
+      "category": "Customer Service and Support AI Tools"
+    },
+    {
+      "name": "DreamStudio",
+      "description": "AI tools for creative video production and animation.",
+      "link": "https://beta.dreamstudio.ai/generate",
+      "source": "perfectessaywriter.ai",
+      "category": "AI Image and Video Editing Tools"
+    },
+    {
+      "name": "Duolingo",
+      "description": "AI-powered language learning.",
+      "link": "https://www.duolingo.com/",
+      "source": "perfectessaywriter.ai",
+      "category": "Education and Learning AI Tools"
+    },
+    {
+      "name": "ElevenLabs",
+      "description": "ElevenLabs is a versatile and realistic AI text-to-speech software that empowers creators and publishers with …",
+      "link": "https://aiscout.net/listing/elevenlabs/",
+      "source": "aiscout.net",
+      "category": "Music & Audio, Text to Speech"
+    },
+    {
+      "name": "FieldApps.ai",
+      "description": "FieldApps.ai is an innovative AI tool designed to replace outdated software systems by providing custom field …",
+      "link": "https://aiscout.net/listing/vp-of-marketing/",
+      "source": "aiscout.net",
+      "category": "Web & App Dev"
+    },
+    {
+      "name": "FreeEssayWriter.ai",
+      "description": "Free AI tool for generating essays.",
+      "link": "https://www.freeessaywriter.ai/",
+      "source": "perfectessaywriter.ai",
+      "category": "Content Creation and AI Writing Tools"
+    },
+    {
+      "name": "Future Tools",
+      "description": "Popular and comprehensive online directory listing more than 1,800 AI tools. Organized into 30 different categories, with keyword search functionality (e.g., 'SEO'). Publishes AI news and includes a learner’s section with articles and instructions on using AI tools.",
+      "link": "https://www.futuretools.io/",
+      "source": "meetcody.ai",
+      "category": "AI Tool Directory"
+    },
+    {
+      "name": "Futurepedia",
+      "description": "Massive library of almost 4,000 tools and applications, updated daily. Provides detailed info for each app including pricing (free, paid, freemium), mobile app availability, favorite option, official website link, ratings, reviews, and number of favorites. Features a search box for keywords/tasks, and sections for 'Tools Added Today' and 'News Added Today'. It is user-friendly and resourceful.",
+      "link": "https://www.futurepedia.io/",
+      "source": "meetcody.ai",
+      "category": "AI Tool Directory"
+    },
+    {
+      "name": "Gemini",
+      "description": "for text, images, and videos",
+      "link": null,
+      "source": "geeksforgeeks.org",
+      "category": "Common Types of AI Tools"
+    },
+    {
+      "name": "GitHub Copilot",
+      "description": "for code writing and debugging",
+      "link": null,
+      "source": "geeksforgeeks.org",
+      "category": "Common Types of AI Tools"
+    },
+    {
+      "name": "Google Cloud Speech-to-Text",
+      "description": "High-accuracy speech recognition and transcription.",
+      "link": "https://cloud.google.com/speech-to-text/",
+      "source": "perfectessaywriter.ai",
+      "category": "Voice and Speech Recognition AI Tools"
+    },
+    {
+      "name": "H2O.ai",
+      "description": "Open-source AI platform for data science and machine learning.",
+      "link": "https://h2o.ai/",
+      "source": "perfectessaywriter.ai",
+      "category": "Data Analysis and Visualization AI Tools"
+    },
+    {
+      "name": "h2oGPT",
+      "description": "H2O.ai introduces h2oGPT, a truly open-source generative AI platform designed to help organizations create the…",
+      "link": "https://aiscout.net/listing/h2ogpt/",
+      "source": "aiscout.net",
+      "category": "AI Models, Free AI Tools"
+    },
+    {
+      "name": "Homework AI Tools",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/artificial-intelligence/top-10-homework-ai-tools-to-get-answers-and-study-help-fast/",
+      "source": "geeksforgeeks.org",
+      "category": "AI & Education Directory of Tools"
+    },
+    {
+      "name": "HubSpot",
+      "description": "AI for inbound marketing and sales automation.",
+      "link": "https://www.hubspot.com/products/crm",
+      "source": "perfectessaywriter.ai",
+      "category": "Marketing and Sales AI Tools"
+    },
+    {
+      "name": "HubSpot AI",
+      "description": "for ad copy, email automation, and lead generation",
+      "link": null,
+      "source": "geeksforgeeks.org",
+      "category": "Common Types of AI Tools"
+    },
+    {
+      "name": "HuggingChat",
+      "description": "HuggingChat is an open-source AI-powered chatbot available for testing on Hugging Face, offering an alternativ…",
+      "link": "https://aiscout.net/listing/huggingchat/",
+      "source": "aiscout.net",
+      "category": "Chatbot, Free AI Tools"
+    },
+    {
+      "name": "I-JEPA: Meta's ‘Human-like’ AI Image Creation Model",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/i-jepa-meta-unveil-ai-image-creation-model/",
+      "source": "geeksforgeeks.org",
+      "category": "List of the Best AI Image Generators & Drawings"
+    },
+    {
+      "name": "IBM Watson",
+      "description": "Advanced data analytics and machine learning capabilities.",
+      "link": "https://www.ibm.com/watson",
+      "source": "perfectessaywriter.ai",
+      "category": "Data Analysis and Visualization AI Tools"
+    },
+    {
+      "name": "Image Generation using Generative Adversarial Networks",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/computer-vision/image-generation-using-generative-adversarial-networks-gans/",
+      "source": "geeksforgeeks.org",
+      "category": "List of the Best AI Image Generators & Drawings"
+    },
+    {
+      "name": "Insidr.ai",
+      "description": "Features a fancy and futuristic design and interface. Contains a wide range of 250+ popular and high-quality AI tools. Includes a blog section with guides and articles on efficient AI usage, covering trending topics like AI for marketing and starting a profitable blog.",
+      "link": "https://www.insidr.ai/ai-tools/",
+      "source": "meetcody.ai",
+      "category": "AI Tool Directory"
+    },
+    {
+      "name": "Iris AI",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/artificial-intelligence/meet-indias-first-saree-clad-ai-robot-teacher-iris/",
+      "source": "geeksforgeeks.org",
+      "category": "AI & Education Directory of Tools"
+    },
+    {
+      "name": "Janitor AI",
+      "description": "AI assistant for managing repetitive customer service tasks.",
+      "link": "https://janitorai.com/login",
+      "source": "perfectessaywriter.ai",
+      "category": "Customer Service and Support AI Tools"
+    },
+    {
+      "name": "Jasper AI",
+      "description": "for ad copy, email automation, and lead generation",
+      "link": null,
+      "source": "geeksforgeeks.org",
+      "category": "Common Types of AI Tools"
+    },
+    {
+      "name": "Jasper AI vs Writesonic: Which AI Writing Tool Leads the Area",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/websites-apps/jasper-ai-vs-writesonic/",
+      "source": "geeksforgeeks.org",
+      "category": "Best AI Copywriting Tools"
+    },
+    {
+      "name": "Jasper.ai",
+      "description": "Jasper is an AI marketing platform that accelerates content creation, ensuring brand consistency and personalization at scale. It offers AI-assisted content generation, analytics, and insights, helping teams produce high-quality marketing campaigns efficiently.",
+      "link": "",
+      "source": "insidr.ai",
+      "category": "General AI Tools"
+    },
+    {
+      "name": "Khan Academy",
+      "description": "AI-driven personalized learning experiences.",
+      "link": "https://www.khanacademy.org/",
+      "source": "perfectessaywriter.ai",
+      "category": "Education and Learning AI Tools"
+    },
+    {
+      "name": "LivePerson",
+      "description": "AI-powered messaging and customer engagement.",
+      "link": "https://www.liveperson.com/",
+      "source": "perfectessaywriter.ai",
+      "category": "Customer Service and Support AI Tools"
+    },
+    {
+      "name": "Low-Code Development Platforms To Build Apps",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/best-low-code-development-platforms-to-build-apps/",
+      "source": "geeksforgeeks.org",
+      "category": "Best No-Code Tools Directory"
+    },
+    {
+      "name": "MagicTrips",
+      "description": "MagicTrips is an innovative AI tool designed to create personalized travel itineraries effortlessly, ensuring …",
+      "link": "https://aiscout.net/listing/magictrips/",
+      "source": "aiscout.net",
+      "category": "Travel"
+    },
+    {
+      "name": "MeetGeek",
+      "description": "MeetGeek is an AI meeting assistant that automates the process of video recording, transcribing, summarizing, …",
+      "link": "https://aiscout.net/listing/meetgeek/",
+      "source": "aiscout.net",
+      "category": "Meeting Assistant, Notes"
+    },
+    {
+      "name": "Microsoft Copilot Image Creator",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/websites-apps/how-to-use-microsofts-copilot-image-creator/",
+      "source": "geeksforgeeks.org",
+      "category": "List of the Best AI Image Generators & Drawings"
+    },
+    {
+      "name": "MidJourney",
+      "description": "for text, images, and videos",
+      "link": null,
+      "source": "geeksforgeeks.org",
+      "category": "Common Types of AI Tools"
+    },
+    {
+      "name": "Most Interesting Chatbots",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/10-most-interesting-chatbots-in-the-world/",
+      "source": "geeksforgeeks.org",
+      "category": "Complete List of AI Chatbots"
+    },
+    {
+      "name": "My AskAI",
+      "description": "Add your own content and create your own ChatGPT, then add it to your own website or integrate it wherever you…",
+      "link": "https://aiscout.net/listing/my-askai/",
+      "source": "aiscout.net",
+      "category": "Chatbot, Customer Support"
+    },
+    {
+      "name": "MyEssayWriter.ai",
+      "description": "AI-driven essay writing tool tailored for academic use.",
+      "link": "https://www.myessaywriter.ai/",
+      "source": "perfectessaywriter.ai",
+      "category": "Content Creation and AI Writing Tools"
+    },
+    {
+      "name": "MyPerfectPaper.net AI Essay Writer",
+      "description": "AI essay writing tool focused on high-quality academic writing.",
+      "link": "https://www.myperfectpaper.net/ai-writing-tools",
+      "source": "perfectessaywriter.ai",
+      "category": "Content Creation and AI Writing Tools"
+    },
+    {
+      "name": "MyPerfectWords.com EssayBot",
+      "description": "AI-powered essay writing assistant.",
+      "link": "https://myperfectwords.com/essaybot",
+      "source": "perfectessaywriter.ai",
+      "category": "Content Creation and AI Writing Tools"
+    },
+    {
+      "name": "Neeva",
+      "description": "Neeva is an AI-powered search engine that prioritizes providing answers over ads, offering a unique and person…",
+      "link": "https://aiscout.net/listing/neeva/",
+      "source": "aiscout.net",
+      "category": "Personal Assistant, Search Engine"
+    },
+    {
+      "name": "No-Code Development Platforms",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/top-10-no-code-development-platforms/",
+      "source": "geeksforgeeks.org",
+      "category": "Best No-Code Tools Directory"
+    },
+    {
+      "name": "Open Source AI Libraries",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/top-open-source-ai-libraries/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Coding Tools"
+    },
+    {
+      "name": "Open Source AI Projects",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/top-open-source-projects-using-artificial-intelligence/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Coding Tools"
+    },
+    {
+      "name": "Open Source AI Tools for Linux",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/linux-unix/10-top-open-source-ai-tools-for-linux/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Coding Tools"
+    },
+    {
+      "name": "Open Source Artificial Intelligence Software",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/top-10-open-source-artificial-intelligence-software/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Coding Tools"
+    },
+    {
+      "name": "OpenAI Codex vs. GitHub Copilot",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/openai-codex-vs-github-copilot/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Coding Tools"
+    },
+    {
+      "name": "Paige",
+      "description": "Paige is an AI-powered platform that facilitates the management of Google Business Profiles (GBP). This fully …",
+      "link": "https://aiscout.net/listing/paige-automated-google-business-profile-software/",
+      "source": "aiscout.net",
+      "category": ""
+    },
+    {
+      "name": "PerfectEssayWriter.ai",
+      "description": "Essay writing tool with advanced research and writing capabilities.",
+      "link": "https://www.perfectessaywriter.ai/",
+      "source": "perfectessaywriter.ai",
+      "category": "Content Creation and AI Writing Tools"
+    },
+    {
+      "name": "Predictive Analytics Tools",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/artificial-intelligence/top-6-predictive-analytics-tools-for-2024/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Powered Business Intelligence Tools"
+    },
+    {
+      "name": "RankBot",
+      "description": "RankBot revolutionizes the world of SEO with its AI-driven tools that automate and optimize your search engine…",
+      "link": "https://aiscout.net/listing/rankbot/",
+      "source": "aiscout.net",
+      "category": "Digital Marketing"
+    },
+    {
+      "name": "RunwayML",
+      "description": "AI tools for video editing and special effects.",
+      "link": "https://www.imagine.art/dashboard/video?utm_source=google&utm_medium=cpc&utm_campaign=G_I_Web_WW_Vid_AI1.1&utm_term=runwayml&utm_campaign=&utm_source=adwords&utm_medium=ppc&hsa_acc=3029240990&hsa_cam=21453551905&hsa_grp=164481109396&hsa_ad=705108964251&hsa_src=g&hsa_tgt=kwd-1217688766738&hsa_kw=runwayml&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gad_source=1&gclid=Cj0KCQiAst67BhCEARIsAKKdWOmHPrRP40yyE1wk7giu0qnWKfh6OHj13vWZmwwLMgm4W8z9qm2KVW4aAmjJEALw_wcB",
+      "source": "perfectessaywriter.ai",
+      "category": "AI Image and Video Editing Tools"
+    },
+    {
+      "name": "SalesCred PRO",
+      "description": "SalesCred® PRO is an AI-powered toolkit designed to enhance the credibility of B2B sales professionals, enabl…",
+      "link": "https://aiscout.net/listing/salescred-pro/",
+      "source": "aiscout.net",
+      "category": "Business Assistant"
+    },
+    {
+      "name": "Salesforce Einstein",
+      "description": "AI for predictive analytics in sales and marketing.",
+      "link": "https://www.salesforce.com/ap/artificial-intelligence/",
+      "source": "perfectessaywriter.ai",
+      "category": "Marketing and Sales AI Tools"
+    },
+    {
+      "name": "SaneBox",
+      "description": "SaneBox is an AI-powered email management tool that uses intelligent filters to prioritize important emails an…",
+      "link": "https://aiscout.net/listing/sanebox/",
+      "source": "aiscout.net",
+      "category": "Emails, Organization"
+    },
+    {
+      "name": "Scribe AI",
+      "description": "Scribe AI is an AI tool that transforms any process into a step-by-step guide with just a few simple steps, en…",
+      "link": "https://aiscout.net/listing/scribe-ai/",
+      "source": "aiscout.net",
+      "category": "Business Assistant, Customer Support, Human Resources, Paraphraser"
+    },
+    {
+      "name": "SlidesAI",
+      "description": "AI tool for creating educational presentations.",
+      "link": "https://www.slidesai.io/",
+      "source": "perfectessaywriter.ai",
+      "category": "Education and Learning AI Tools"
+    },
+    {
+      "name": "Stylar AI",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/websites-apps/what-is-stylar-ai-and-how-to-use-it/",
+      "source": "geeksforgeeks.org",
+      "category": "Best No-Code Tools Directory"
+    },
+    {
+      "name": "Surfer",
+      "description": "Surfer is one of the absolute best SEO tools that will help write amazing SEO-optimized content. It will show you what you need to include in your articles, best keywords, current SEO score and how to improve, and basically makes sure every content piece is SEO-optimized and top notch. Comes with a free-trial.",
+      "link": "",
+      "source": "insidr.ai",
+      "category": "General AI Tools"
+    },
+    {
+      "name": "Synthesia",
+      "description": "AI-driven video creation platform.",
+      "link": "https://www.synthesia.io/",
+      "source": "perfectessaywriter.ai",
+      "category": "AI Image and Video Editing Tools"
+    },
+    {
+      "name": "Tableau",
+      "description": "Powerful data visualization and business intelligence.",
+      "link": "https://www.tableau.com/",
+      "source": "perfectessaywriter.ai",
+      "category": "Data Analysis and Visualization AI Tools"
+    },
+    {
+      "name": "Tabnine",
+      "description": "for code writing and debugging",
+      "link": null,
+      "source": "geeksforgeeks.org",
+      "category": "Common Types of AI Tools"
+    },
+    {
+      "name": "Taskade",
+      "description": "Taskade is an AI-powered productivity tool that enhances collaboration and efficiency. It allows users to build and deploy custom AI agents to automate tasks, manage projects, and create dynamic workflows. The platform supports mind maps, to-do lists, and real-time team collaboration with integrated video chat. Taskade streamlines work by integrating various tools and providing advanced task management features.",
+      "link": "",
+      "source": "insidr.ai",
+      "category": "General AI Tools"
+    },
+    {
+      "name": "TensorFlow",
+      "description": "End-to-end open-source machine learning platform.",
+      "link": "https://www.tensorflow.org/",
+      "source": "perfectessaywriter.ai",
+      "category": "Data Analysis and Visualization AI Tools"
+    },
+    {
+      "name": "There’s an AI for That",
+      "description": "Massive AI library with 5,642 tools (at time of writing). Tools are listed in chronological order of release date, from 2015 to the present. Offers various search and filter options.",
+      "link": "https://theresanaiforthat.com/",
+      "source": "meetcody.ai",
+      "category": "AI Tool Directory"
+    },
+    {
+      "name": "Tools for Data Science Beginners",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/best-tools-and-technologies-for-data-science/",
+      "source": "geeksforgeeks.org",
+      "category": "Best No-Code Tools Directory"
+    },
+    {
+      "name": "Top 10 AI Dataset Marketplaces",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/top-ai-dataset-marketplaces/",
+      "source": "geeksforgeeks.org",
+      "category": "Latest AI Tools and Resources"
+    },
+    {
+      "name": "Top 16 Instagram Growth Strategies Using AI",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/artificial-intelligence/top-16-instagram-growth-strategies-using-ai/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Tools for Social Media Content Creation"
+    },
+    {
+      "name": "Top 20 Applications of Artificial Intelligence",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/applications-of-ai/",
+      "source": "geeksforgeeks.org",
+      "category": "Latest AI Tools and Resources"
+    },
+    {
+      "name": "Top Tools",
+      "description": "Simple to use, single-page website with dynamic search and display functionality. Allows searching by app name or relevant tags (e.g., 'video editing'). Features a 'Show Tags' button and filtering search results by price (free, paid, freemium). Does not use cookies or store personal data. Offers a newsletter subscription.",
+      "link": "https://www.toptools.ai/",
+      "source": "meetcody.ai",
+      "category": "AI Tool Directory"
+    },
+    {
+      "name": "Tugan",
+      "description": "Tugan.ai is an AI tool that transforms any content, like YouTube videos or articles, into original, high-quality marketing material. It helps entrepreneurs and marketers create standout content effortlessly, eliminating the need for extensive manual writing and editing.",
+      "link": "",
+      "source": "insidr.ai",
+      "category": "General AI Tools"
+    },
+    {
+      "name": "Use AI in Google Docs",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/websites-apps/how-to-use-ai-in-google-docs/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Tools For Professionals"
+    },
+    {
+      "name": "VEED",
+      "description": "All-in-one AI video generator and editor. Convert your ideas into videos with VEED’s text-to-video AI tool, text-to-voice, stock footage, background music, and a lot more!",
+      "link": "",
+      "source": "insidr.ai",
+      "category": "General AI Tools"
+    },
+    {
+      "name": "Vizly",
+      "description": "Vizly is an AI-powered data analysis tool that allows users to command their data in plain English, enabling s…",
+      "link": "https://aiscout.net/listing/vizly/",
+      "source": "aiscout.net",
+      "category": "Data, Free AI Tools, Productivity, Spreadsheets"
+    },
+    {
+      "name": "WellSaid",
+      "description": "WellSaid Labs offers an AI voice generation platform that creates high-quality, natural-sounding voiceovers for various applications, including training, marketing, and video production. It ensures secure, scalable audio production with customizable voices, enhancing engagement and efficiency.",
+      "link": "",
+      "source": "insidr.ai",
+      "category": "General AI Tools"
+    },
+    {
+      "name": "What is AI For Social Media and How to Use it?",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/what-is-ai-for-social-media-and-how-to-use-it/",
+      "source": "geeksforgeeks.org",
+      "category": "AI Tools for Social Media Content Creation"
+    },
+    {
+      "name": "Wordtune: AI Writing Assistant",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/artificial-intelligence/wordtune-ai-writing-assistant/",
+      "source": "geeksforgeeks.org",
+      "category": "Best AI Copywriting Tools"
+    },
+    {
+      "name": "Writesonic vs Copy.ai - Which AI Writing Tool is Best",
+      "description": null,
+      "link": "https://www.geeksforgeeks.org/blogs/writesonic-vs-copy-ai-best-ai-writing-tool/",
+      "source": "geeksforgeeks.org",
+      "category": "Best AI Copywriting Tools"
+    },
+    {
+      "name": "YOYA",
+      "description": "YOYA.ai is an AI tool that enables users to build their own personalized generative AI apps without any coding…",
+      "link": "https://aiscout.net/listing/yoya/",
+      "source": "aiscout.net",
+      "category": "Business Assistant, Chatbot, Customer Support, Free AI Tools"
+    },
+    {
+      "name": "Zendesk AI",
+      "description": "AI-driven customer support automation.",
+      "link": "https://www.zendesk.com/service/ai/",
+      "source": "perfectessaywriter.ai",
+      "category": "Customer Service and Support AI Tools"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "enhancement_summary": {
+    "original_tools_count": 1000,
+    "github_tools_removed": 106,
+    "remaining_original_tools": 894,
+    "premium_tools_added": 30,
+    "additional_tools_added": 35,
+    "final_tools_count": 959,
+    "featured_tools_count": 911,
+    "average_popularity_score": 4.13
+  },
+  "category_distribution": {
+    "Artificial Intelligence": 330,
+    "Design": 122,
+    "Writing": 74,
+    "Video": 77,
+    "Productivity": 72,
+    "Marketing": 71,
+    "Social Media": 15,
+    "Email": 7,
+    "Customer Support": 11,
+    "Sales": 6,
+    "Chatbots": 27,
+    "Developer Tools": 46,
+    "Content Creation": 66,
+    "Analytics": 8,
+    "Education": 27
+  },
+  "top_10_tools": [
+    {
+      "name": "ChatGPT",
+      "category": "Artificial Intelligence",
+      "popularity_score": 9.8,
+      "featured": true
+    },
+    {
+      "name": "Midjourney",
+      "category": "Design",
+      "popularity_score": 9.5,
+      "featured": true
+    },
+    {
+      "name": "Jasper AI",
+      "category": "Writing",
+      "popularity_score": 9.2,
+      "featured": true
+    },
+    {
+      "name": "Synthesia",
+      "category": "Video",
+      "popularity_score": 9.1,
+      "featured": true
+    },
+    {
+      "name": "Claude",
+      "category": "Artificial Intelligence",
+      "popularity_score": 9.0,
+      "featured": true
+    },
+    {
+      "name": "Stable Diffusion",
+      "category": "Design",
+      "popularity_score": 8.9,
+      "featured": true
+    },
+    {
+      "name": "Copy.ai",
+      "category": "Writing",
+      "popularity_score": 8.8,
+      "featured": true
+    },
+    {
+      "name": "Runway ML",
+      "category": "Video",
+      "popularity_score": 8.7,
+      "featured": true
+    },
+    {
+      "name": "Grammarly",
+      "category": "Writing",
+      "popularity_score": 8.6,
+      "featured": true
+    },
+    {
+      "name": "Canva AI",
+      "category": "Design",
+      "popularity_score": 8.5,
+      "featured": true
+    }
+  ],
+  "github_tools_removed_sample": [
+    {
+      "name": "MemFree",
+      "link": "https://github.com/memfreeme/memfree",
+      "reason": "GitHub repository"
+    },
+    {
+      "name": "Open WebUI",
+      "link": "https://github.com/open-webui/open-webui",
+      "reason": "GitHub repository"
+    },
+    {
+      "name": "AutoGen",
+      "link": "https://github.com/microsoft/autogen",
+      "reason": "GitHub repository"
+    },
+    {
+      "name": "gptcomet",
+      "link": "https://github.com/belingud/gptcomet",
+      "reason": "GitHub repository"
+    },
+    {
+      "name": "poorcoder",
+      "link": "https://github.com/vgrichina/poorcoder",
+      "reason": "GitHub repository"
+    },
+    {
+      "name": "Vibe Compiler (vibec)",
+      "link": "https://github.com/Strawberry-Computer/vibe-compiler",
+      "reason": "GitHub repository"
+    },
+    {
+      "name": "AutoComplete.sh",
+      "link": "https://github.com/closedLoop-technologies/autocomplete-sh",
+      "reason": "GitHub repository"
+    },
+    {
+      "name": "code-collator",
+      "link": "https://github.com/tawandakembo/code-collator",
+      "reason": "GitHub repository"
+    },
+    {
+      "name": "GPT Migrate",
+      "link": "https://github.com/0xpayne/gpt-migrate",
+      "reason": "GitHub repository"
+    },
+    {
+      "name": "Bolt.diy",
+      "link": "https://github.com/stackblitz-labs/bolt.diy",
+      "reason": "GitHub repository"
+    }
+  ]
+}

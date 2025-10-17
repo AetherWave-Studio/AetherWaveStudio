@@ -1,0 +1,70 @@
+# AetherWave Global Playlist Player
+
+Live site: [https://player.aetherwavestudio.com](https://player.aetherwavestudio.com)
+
+---
+
+## Files
+- `index.html` → The player UI (fetches playlist.json and renders tracks).
+- `playlist.json` → The tracklist (static JSON served next to index.html).
+- `submission.html` → Local admin/editor tool to manage the playlist (not linked publicly).
+
+---
+
+## Workflow (Option A — Manual `playlist.json`)
+
+```mermaid
+flowchart LR
+    A[Submission Editor (submission.html)] -->|Download playlist.json| B[Commit to Repo]
+    B -->|Push to GitHub Pages| C[player.aetherwavestudio.com]
+    C -->|Fetches latest playlist.json| A
+```
+
+### Static Diagram (PNG Fallback)
+If Mermaid doesn’t render, here’s the workflow as an image:
+
+![Workflow Diagram](playlist_workflow.png)
+
+---
+
+### Steps
+1. **Prep your assets**
+   - Host audio files on **Dropbox** with `?raw=1` at the end of the URL.  
+   - Cover images should be **≥ 500×500px**.
+
+2. **Edit the playlist**
+   - Open `submission.html` (either locally in a browser, or via GH Pages if you commit it).  
+   - Add/edit tracks, drag to reorder.  
+   - Click **Download playlist.json** when finished.
+
+3. **Update the repo**
+   - Replace the existing `playlist.json` in the repo with the exported one.  
+   - Commit and push:
+     ```bash
+     git add playlist.json
+     git commit -m "Update playlist.json"
+     git push origin main
+     ```
+   - Or, to commit everything at once:
+     ```bash
+     git add .
+     git commit -m "Update playlist.json"
+     git push origin main
+     ```
+
+4. **Check live**
+   - Visit [https://player.aetherwavestudio.com](https://player.aetherwavestudio.com).  
+   - Hard refresh (Ctrl/Cmd+Shift+R) to see the new tracks.
+
+---
+
+## Notes
+- The player uses a **cache-busting fetch** (`playlist.json?v=TIMESTAMP`) so you don’t need to bump version numbers manually.  
+- `submission.html` is for **admin use only**; keep it unlinked from the public UI.  
+- Future options (if needed):
+  - **Option B**: GitHub Action to auto-sync from Google Sheets.  
+  - **Option C**: JSONP feed from Apps Script.  
+
+---
+
+✨ *AI Music. Human Soul. Infinite Sound.*

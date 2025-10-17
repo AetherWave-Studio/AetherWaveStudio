@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Standard Favicons -->
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48x48.png">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+<!-- Web App Manifest -->
+  <link rel="manifest" href="assets/site.webmanifest">
+  <meta name="theme-color" content="#FF1493">
+
+<!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+  <link rel="apple-touch-icon" href="assets/favicon-180.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#FF1493">
+  <title>AetherWave — Global Playlist Player</title>
+  <style>
+    :root{
+      --bg:#0b0b12; --ink:#eef1ff; --muted:#bfc1d3; --accent:#ff2fa6; --accent2:#35d0ff; --panel:#141428; --br:16px;
+      --aw-pink:#ff2fa6; --aw-neon:#00F5A0; --aw-ink:#eef1ff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; color:var(--ink); font-family:Inter,system-ui,sans-serif;
+      background:
+        radial-gradient(900px 600px at 90% -10%,rgba(255,47,166,.12),transparent 40%),
+        radial-gradient(700px 500px at -10% 110%,rgba(53,208,255,.10),transparent 40%),
+        linear-gradient(180deg,#0a0a12,#0a0a11);
+    }
+    header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px}
+    h1,.brand-title{font-family:Orbitron,Inter,system-ui,sans-serif}
+    h1{margin:0;font-size:18px}
+    .wrap{max-width:920px;margin:0 auto;padding:0 12px 28px}
+
+    /* Player layout: controls on top, grid of tracks below */
+    .player{display:grid;grid-template-rows:auto 1fr;gap:20px}
+    .player-top{grid-row:1}
+    .tracks-grid{grid-row:2;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media (max-width:1024px){.tracks-grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:680px){.tracks-grid{grid-template-columns:1fr}}
+
+    .card{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:var(--br);padding:14px}
+    .track{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:8px;border-radius:12px;cursor:pointer}
+    .track:hover{background:#0f0f1c}
+    .track.active{outline:1px solid rgba(255,255,255,.18);background:#0f0f1c}
+    .cover{width:56px;height:56px;border-radius:10px;background:#1a1a2a;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+    .cover img{width:100%;height:100%;object-fit:cover}
+    .meta{display:flex;flex-direction:column;gap:2px}
+    .title{font-weight:600}
+    .artist,.dur{font-size:12px;color:var(--muted)}
+    .controls{display:grid;grid-template-columns:1fr;gap:10px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap} /* allow wrap so nothing disappears */
+    button{padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:linear-gradient(180deg,rgba(255,47,166,.25),rgba(53,208,255,.15));color:#fff;cursor:pointer}
+    button.ghost{background:#0f0f1c;min-width:96px} /* prevent pill collapse */
+
+    .seek{display:flex;align-items:center;gap:8px}
+    .time{font-size:12px;color:var(--muted);width:64px;text-align:center}
+
+    .badge{padding:4px 8px;border-radius:999px;background:#0f0f1c;border:1px solid rgba(255,255,255,.15);font-size:12px;color:var(--muted)}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#0f0f1c;border:1px solid rgba(255,255,255,.15);padding:10px 12px;border-radius:12px;font-size:13px;color:var(--muted);display:none}
+
+    /* Admin panel */
+    .admin{position:fixed;inset:auto 12px 12px auto;max-width:380px;background:var(--panel);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:none}
+    .admin.show{display:block}
+    .admin label{display:block;font-size:12px;color:var(--muted);margin:8px 0 4px}
+    .admin .row{margin-top:8px}
+
+    /* Ultra-tight Masthead with proportional banner cap */
+    .masthead{
+      position:relative;width:100%;min-height:80px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background-image:
+        linear-gradient(180deg, rgba(10,10,18,.85), rgba(10,10,17,.90)),
+        url('assets/aetherwave-banner-1200x300.jpg');
+      background-repeat:no-repeat,no-repeat;
+      background-position:center,center;
+      /* gradient fills box; banner image shown at fixed height, keeps aspect ratio */
+      background-size:100% 100%, auto 72px;
+    }
+    .mast-inner{position:relative;z-index:1;text-align:center;padding:2px 6px}
+    .brand-image{display:block;margin:0 auto 2px;height:58px;filter:drop-shadow(0 6px 24px rgba(255,47,166,.18))}
+    .brand-title{margin:0;font-size:clamp(18px,2.4vw,26px);letter-spacing:.6px;color:var(--aw-ink)}
+    .tagline{margin-top:0;font-size:12px;color:#cfd3ff;opacity:.9;letter-spacing:.3px}
+    @media (min-width:900px){
+      .masthead{min-height:96px;background-size:100% 100%, auto 86px}
+      .brand-image{height:72px}
+    }
+	/* Slim Top Nav */
+.topnav {
+  background: rgba(20,20,35,0.85);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  padding: 4px 20px;   /* tight vertical spacing */
+}
+.topnav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: flex-end; /* right aligned */
+  gap: 24px;
+}
+.topnav a {
+  font-family: Orbitron, Inter, sans-serif;
+  font-size: 13px;
+  letter-spacing: .8px;
+  color: var(--aw-ink);
+  text-decoration: none;
+  transition: color .2s, text-shadow .2s;
+}
+.topnav a:hover {
+  color: var(--aw-pink);
+  text-shadow: 0 0 6px rgba(255,47,166,.6);
+}
+
+    /* Neon animations */
+    @keyframes pinkPulse{
+      0%,100%{box-shadow:0 0 8px rgba(255,47,166,.55),0 0 16px rgba(255,47,166,.35),0 0 24px rgba(255,47,166,.20)}
+      50%{box-shadow:0 0 14px rgba(255,47,166,.85),0 0 28px rgba(255,47,166,.55),0 0 42px rgba(255,47,166,.30)}
+    }
+    @keyframes coverPulse{
+      0%,100%{filter:drop-shadow(0 0 6px rgba(255,47,166,.85)) drop-shadow(0 0 14px rgba(255,47,166,.45))}
+      50%{filter:drop-shadow(0 0 10px rgba(255,47,166,1)) drop-shadow(0 0 22px rgba(255,47,166,.60))}
+    }
+    @keyframes neonBreath{
+      0%,100%{box-shadow:0 0 8px rgba(0,245,160,.55),0 0 16px rgba(0,245,160,.35)}
+      50%{box-shadow:0 0 16px rgba(0,245,160,.85),0 0 28px rgba(0,245,160,.55)}
+    }
+
+    /* Active card glow + cover aura */
+    .track.active{outline:1px solid rgba(255,47,166,.6);background:rgba(20,10,18,.92);animation:pinkPulse 2.2s ease-in-out infinite;transition:box-shadow .3s,outline .3s,background .3s}
+    .track .cover img{transition:filter .3s}
+    .track.active .cover img{animation:coverPulse 2.2s ease-in-out infinite}
+    .track:hover{box-shadow:0 0 6px rgba(255,47,166,.40),0 0 12px rgba(255,47,166,.25);transition:box-shadow .25s}
+    .track:hover .cover img{filter:drop-shadow(0 0 4px rgba(255,47,166,.5))}
+
+    /* Range sliders — base, centered thumbs, breathing, and JS-driven fill */
+    input[type="range"]{ -webkit-appearance:none; appearance:none; width:100%; height:14px; border-radius:999px; background:linear-gradient(90deg, rgba(0,245,160,.25), rgba(0,245,160,.10)); border:1px solid rgba(255,255,255,.12); outline:none}
+    input[type="range"]::-webkit-slider-runnable-track{height:6px}
+    input[type="range"]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:14px; height:14px; border-radius:50%; background:radial-gradient(circle at 40% 40%,#fff 0 25%, var(--aw-neon) 26% 100%); border:1px solid rgba(255,255,255,.35); box-shadow:0 0 8px rgba(0,245,160,.55); cursor:pointer; margin-top:-4px }
+    input[type="range"]::-moz-range-track{height:6px;border-radius:999px;background:rgba(0,245,160,.15)}
+    input[type="range"]::-moz-range-thumb{width:14px;height:14px;border:none;border-radius:50%;background:radial-gradient(circle at 40% 40%,#fff 0 25%, var(--aw-neon) 26% 100%);box-shadow:0 0 8px rgba(0,245,160,.55);cursor:pointer}
+
+    /* breathing while playing */
+    .playing #seek,.playing #vol{animation:neonBreath 2.4s ease-in-out infinite;background:linear-gradient(90deg, rgba(0,245,160,.35), rgba(0,245,160,.15))}
+
+    /* slider fill (will be updated by JS) */
+    #seek,#vol{
+      background:linear-gradient(to right,
+        var(--aw-neon) 0%,
+        var(--aw-neon) 0%,
+        rgba(255,255,255,0.1) 0%,
+        rgba(255,255,255,0.1) 100%);
+    }
+    #seek::-webkit-slider-runnable-track,#vol::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:transparent}
+    #seek::-moz-range-track,#vol::-moz-range-track{height:6px;border-radius:999px;background:transparent}
+
+    /* Hide Admin button by default; show in admin mode */
+    #btnAdmin { display: none; }
+    body.admin-mode #btnAdmin { display: inline-block; }
+  </style>
+</head>
+<body>
+
+  <div class="masthead">
+    <div class="mast-inner">
+      <a href="https://aetherwavestudio.com" class="mast-inner" style="text-decoration:none; color:inherit;">
+        <img class="brand-image" src="assets/aetherwave-banner.png" alt="AetherWave Studio">
+        <div class="tagline">AI Music · Human Soul · Infinite Sound</div>
+      </a>
+    </div>
+  </div>
+<!-- Slim Navigation -->
+<nav class="topnav">
+  <ul>
+    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSfHYRDb7iRmNFIneGJNsEhQ1wpi5QQYbXKy9mwFUMP4htvOoQ/viewform?usp=header-" target="_blank">Submit Music</a></li>
+    <li><a href="https://featured-artist.aetherwavestudio.com" target="_blank">Featured Artist</a></li>
+    <li><a href="https://privacy.aetherwavestudio.com/" target="_blank">Privacy</a></li>
+  </ul>
+</nav>
+
+  <header>
+    <h1>AetherWave — Global Playlist</h1>
+    <div class="row">
+      <span id="count" class="badge">0 tracks</span>
+      <button id="btnAdmin" class="ghost" title="Open Admin (Ctrl+.)">Admin</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="player">
+      <!-- Player controls on top -->
+      <div class="card player-top">
+        <div class="controls">
+          <div class="row">
+            <button id="prev">⏮</button>
+            <button id="play">▶️</button>
+            <button id="next">⏭</button>
+            <button id="shuffle" class="ghost">Shuffle</button>
+            <button id="repeat" class="ghost">Repeat: Off</button>
+            <button id="share" class="ghost">Share</button>
+          </div>
+          <div class="seek">
+            <span class="time" id="cur">0:00</span>
+            <input id="seek" type="range" min="0" max="1000" value="0" step="1"/>
+            <span class="time" id="dur">0:00</span>
+          </div>
+          <div class="row">
+            <label style="font-size:12px;color:var(--muted)">Vol</label>
+            <input id="vol" type="range" min="0" max="1" step="0.01"/>
+          </div>
+        </div>
+        <audio id="audio"></audio>
+      </div>
+
+      <!-- Tracks grid below -->
+      <div class="tracks-grid" id="list"></div>
+    </div>
+  </div>
+
+  <!-- Admin -->
+  <div id="admin" class="admin" role="dialog" aria-label="Admin">
+    <strong>Admin</strong>
+    <label>Remote playlist URL</label>
+    <input id="remoteUrl" placeholder="https://.../playlist.json OR .../exec?route=playlist&callback=awp" style="width:100%;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f0f1c;color:#fff"/>
+    <div class="row">
+      <button id="load">Load Remote</button>
+      <button id="save" class="ghost">Save as default</button>
+      <button id="clear" class="ghost">Clear</button>
+    </div>
+    <label><input type="checkbox" id="showPrivate"> Show private (adds &admin=1)</label>
+    <div class="fine" style="font-size:12px;color:var(--muted);margin-top:8px">Tip: If CORS blocks fetch, append <code>&callback=awp</code> for JSONP, or host <code>playlist.json</code> next to this file.</div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+  (function(){
+    const ls = (k,v)=> (v===undefined? localStorage.getItem(k): (localStorage.setItem(k,v),v));
+    const ss = (k,v)=> (v===undefined? sessionStorage.getItem(k): (sessionStorage.setItem(k,v),v));
+    const $ = id=>document.getElementById(id);
+    const fmt = s=>{s=Math.floor(s||0);const m=Math.floor(s/60),sec=('0'+(s%60)).slice(-2);return m+':'+sec};
+
+    const audio=$('audio'), listEl=$('list'), seek=$('seek'), vol=$('vol'), cur=$('cur'), dur=$('dur');
+    const btnPlay=$('play'), btnPrev=$('prev'), btnNext=$('next'), btnShuffle=$('shuffle'), btnRepeat=$('repeat'), btnShare=$('share');
+    const count=$('count'), admin=$('admin'), btnAdmin=$('btnAdmin'), remoteUrl=$('remoteUrl'), showPrivate=$('showPrivate');
+    const btnLoad=$('load'), btnSave=$('save'), btnClear=$('clear');
+    const toast=(m)=>{const t=$('toast'); t.textContent=m; t.style.display='block'; setTimeout(()=>t.style.display='none',1400);};
+
+    let tracks=[]; let idx=-1; let shuffle=false;
+
+    // --- Admin mode detection & UI gating ---
+    const params = new URLSearchParams(location.search);
+    const isAdmin = params.get('admin') === '1';
+    if (isAdmin) {
+      admin.classList.add('show');
+      document.body.classList.add('admin-mode'); // reveal #btnAdmin via CSS
+    }
+
+    // Preserve ?admin=1 on internal links (same-origin or relative)
+    if (isAdmin) {
+      const origin = location.origin;
+      document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('a[href]');
+        links.forEach(a => {
+          const href = a.getAttribute('href');
+          if (!href) return;
+          if (/^(mailto:|tel:|javascript:|#)/i.test(href)) return;
+          let url; try { url = new URL(href, location.href); } catch { return; }
+          if (url.origin !== origin) return;
+          if (!url.searchParams.has('admin')) {
+            url.searchParams.set('admin','1');
+            a.setAttribute('href', url.toString());
+          }
+        });
+      });
+    }
+
+    // restore settings
+    vol.value = ls('awp:vol') || 0.9; audio.volume = parseFloat(vol.value);
+    shuffle = ls('awp:shuffle')==='1'; btnShuffle.classList.toggle('active', shuffle);
+
+    // --- Robust repeat state (guards NaN/undefined) ---
+    function getStoredRepeat(){
+      const raw = ls('awp:repeat');
+      const n = parseInt(raw, 10);
+      return Number.isFinite(n) && [0,1,2].includes(n) ? n : 0;
+    }
+    let repeat = getStoredRepeat();
+    function setRepeat(val){
+      repeat = [0,1,2].includes(val) ? val : 0;
+      ls('awp:repeat', String(repeat));
+      btnRepeat.textContent = ['Repeat: Off','Repeat: All','Repeat: One'][repeat];
+    }
+    setRepeat(repeat);
+
+    remoteUrl.value = ls('awp:remotePlaylist') || '';
+
+    // autoplay helper (gesture unlock if blocked)
+    async function tryAutoplay(){
+      try{ await audio.play(); btnPlay.textContent='⏸'; }
+      catch(e){
+        const unlock=async()=>{ try{ await audio.play(); btnPlay.textContent='⏸'; } finally{
+          window.removeEventListener('pointerdown',unlock); window.removeEventListener('keydown',unlock);
+        }};
+        window.addEventListener('pointerdown',unlock,{once:true});
+        window.addEventListener('keydown',unlock,{once:true});
+      }
+    }
+    function setSrc(t){ if(!t) return; audio.src=t.url; tryAutoplay(); btnPlay.textContent='⏸'; }
+
+    function render(){
+      listEl.innerHTML='';
+      tracks.forEach((t,i)=>{
+        const row=document.createElement('div'); row.className='track'+(i===idx?' active':''); row.dataset.i=i;
+        const cov=document.createElement('div'); cov.className='cover'; cov.innerHTML=`<img alt="" src="${t.cover||''}">`;
+        const meta=document.createElement('div'); meta.className='meta'; meta.innerHTML=`<div class="title">${t.title||'Untitled'}</div><div class="artist">${t.artist||''}</div>`;
+        const d=document.createElement('div'); d.className='dur'; d.textContent=t.duration?fmt(t.duration):'';
+        row.append(cov,meta,d); listEl.appendChild(row);
+      });
+      count.textContent = tracks.length + (tracks.length===1?' track':' tracks');
+    }
+    function select(i){ if(i<0||i>=tracks.length) return; idx=i; render(); setSrc(tracks[idx]); ls('awp:lastTrackId', tracks[idx].id || ''); }
+
+    // interactions
+    listEl.addEventListener('click',(e)=>{ const row=e.target.closest('.track'); if(!row) return; select(parseInt(row.dataset.i,10)); });
+    btnPlay.addEventListener('click',()=>{ if(audio.paused){audio.play(); btnPlay.textContent='⏸';} else {audio.pause(); btnPlay.textContent='▶️';} });
+    btnPrev.addEventListener('click',()=>{ select(Math.max(0,idx-1)); });
+    btnNext.addEventListener('click', next);
+    btnShuffle.addEventListener('click',()=>{ shuffle=!shuffle; ls('awp:shuffle', shuffle?'1':'0'); btnShuffle.classList.toggle('active', shuffle); });
+    btnRepeat.addEventListener('click',()=> setRepeat((repeat+1)%3));
+    btnShare.addEventListener('click',()=>{
+      if(idx<0) return; const t=tracks[idx]; const u=new URL(location.href);
+      u.searchParams.set('track', t.id||idx); u.searchParams.set('t', Math.floor(audio.currentTime));
+      if (isAdmin) u.searchParams.set('admin','1');
+      navigator.clipboard.writeText(u.toString()); toast('Link copied');
+    });
+
+    // slider syncing + breathing toggle
+    audio.addEventListener('play', ()=>document.body.classList.add('playing'));
+    audio.addEventListener('pause',()=>document.body.classList.remove('playing'));
+    audio.addEventListener('ended',()=>document.body.classList.remove('playing'));
+
+    seek.addEventListener('input',()=>{ if(audio.duration){ audio.currentTime=(seek.value/1000)*audio.duration; } updateSliderFill(seek); });
+    audio.addEventListener('timeupdate',()=>{ if(audio.duration){ seek.value=Math.floor((audio.currentTime/audio.duration)*1000); cur.textContent=fmt(audio.currentTime); updateSliderFill(seek);} });
+    audio.addEventListener('loadedmetadata',()=>{ dur.textContent=fmt(audio.duration); });
+    audio.addEventListener('ended',()=>{ if(repeat===2){ audio.currentTime=0; audio.play(); return;} next(); });
+    vol.addEventListener('input',()=>{ audio.volume=parseFloat(vol.value); ls('awp:vol', vol.value); updateSliderFill(vol); });
+
+    function next(){
+      if(shuffle){ select(Math.floor(Math.random()*tracks.length)); return; }
+      const n = idx+1; if(n<tracks.length){ select(n); } else if(repeat===1){ select(0); } else { btnPlay.textContent='▶️'; }
+    }
+
+    // Admin panel toggler (button only visible in admin-mode)
+    function toggleAdmin(force){ admin.classList.toggle('show', force!==undefined?force:!admin.classList.contains('show')); }
+    btnAdmin.addEventListener('click',()=>toggleAdmin());
+    document.addEventListener('keydown',(e)=>{ if(e.ctrlKey && e.key=='.'){ e.preventDefault(); toggleAdmin(); } });
+    btnSave.addEventListener('click',()=>{ if(remoteUrl.value){ ls('awp:remotePlaylist', remoteUrl.value); toast('Saved'); }});
+    btnClear.addEventListener('click',()=>{ localStorage.removeItem('awp:remotePlaylist'); toast('Cleared'); });
+    btnLoad.addEventListener('click',async()=>{ if(!remoteUrl.value) return; await loadPlaylistFromUrl(remoteUrl.value,true); });
+    showPrivate.addEventListener('change',()=>{ sessionStorage.setItem('awp:private', showPrivate.checked?'1':'0'); toast('Private '+(showPrivate.checked?'on':'off')); });
+
+    // slider fill helper
+    function updateSliderFill(el){
+      const min=parseFloat(el.min||0), max=parseFloat(el.max||100), val=parseFloat(el.value||0);
+      const pct=((val-min)/(max-min))*100;
+      el.style.background = `linear-gradient(to right, var(--aw-neon) ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+    }
+
+    // loader with JSONP support + same-origin JSON
+    async function loadPlaylistFromUrl(url,andRender){
+      let u; try{ u=new URL(url,location.href);}catch{ toast('Bad URL'); return;}
+      if(sessionStorage.getItem('awp:private')==='1'){ u.searchParams.set('admin','1'); }
+      const isSameOrigin=u.origin===location.origin;
+      const hasCallback=u.searchParams.has('callback');
+
+      if(!isSameOrigin && hasCallback){ // JSONP
+        await new Promise((resolve,reject)=>{
+          const cb='awp_cb_'+Math.random().toString(36).slice(2);
+          u.searchParams.set('callback',cb);
+          const s=document.createElement('script');
+          window[cb]=(data)=>{ try{ applyPlaylist(data); if(andRender){render(); selectInitial();} toast('Playlist loaded'); resolve();}
+                               catch(e){ reject(e);} finally{ delete window[cb]; s.remove(); } };
+          s.onerror=()=>{ delete window[cb]; s.remove(); toast('Failed to load playlist'); reject(new Error('JSONP failed')); };
+          s.src=u.toString(); document.head.appendChild(s);
+        });
+        return;
+      }
+
+      try{
+        const res=await fetch(u.toString());
+        const data=await res.json();
+        applyPlaylist(data);
+        if(andRender){ render(); selectInitial(); }
+        toast('Playlist loaded');
+      }catch(e){ console.error(e); toast('Fetch failed'); }
+    }
+
+    function applyPlaylist(data){
+      tracks = Array.isArray(data?.tracks)? data.tracks : [];
+      tracks = tracks.map((t,i)=>({ id:t.id||String(i), title:t.title||'Untitled', artist:t.artist||'', url:t.url, cover:t.cover||'', duration:Number(t.duration||0) }))
+                     .filter(t=>!!t.url);
+    }
+
+    function selectInitial(){
+      const p=new URLSearchParams(location.search);
+      const tid=p.get('track'); const at=parseInt(p.get('t')||'0',10);
+      let i=0; if(tid){ i=tracks.findIndex(t=>(t.id||'')===tid); if(i<0) i=0; }
+      select(i); if(at>0 && audio.duration){ audio.currentTime=Math.min(at, audio.duration-1); }
+    }
+
+    // boot: use saved/URL playlist if present, else same-origin playlist.json
+    (async function(){
+      const q=new URLSearchParams(location.search);
+      const qUrl=q.get('playlist');
+      const saved=ls('awp:remotePlaylist');
+      if(qUrl){ remoteUrl.value=qUrl; }
+      else if(saved){ remoteUrl.value=saved; }
+
+      if(remoteUrl.value){ await loadPlaylistFromUrl(remoteUrl.value,true); }
+      else { await loadPlaylistFromUrl('playlist.json?v='+Date.now(), true); }
+
+      // init slider fills
+      updateSliderFill(seek); updateSliderFill(vol);
+    })();
+  })();
+  </script>
+</body>
+</html>

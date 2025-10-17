@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 50" width="220" height="50">
+  <defs>
+    <linearGradient id="premium-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8E24AA;stop-opacity:1" />
+      <stop offset="25%" style="stop-color:#7B1FA2;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#624DE3;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:#4527A0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#311B92;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="neural-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#624DE3;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#8E24AA;stop-opacity:0.7" />
+    </linearGradient>
+    
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="drop-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+      <feOffset dx="1" dy="2" result="offset"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.4"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g id="neural-network" transform="translate(8, 8)">
+    <circle cx="17" cy="17" r="15" fill="none" stroke="url(#neural-gradient)" stroke-width="2" opacity="0.5" filter="url(#glow)"/>
+    
+    <circle cx="10" cy="10" r="2.5" fill="#624DE3" filter="url(#drop-shadow)" opacity="0.9"/>
+    <circle cx="24" cy="10" r="2.2" fill="#8E24AA" filter="url(#drop-shadow)" opacity="0.9"/>
+    <circle cx="17" cy="24" r="2.5" fill="#624DE3" filter="url(#drop-shadow)" opacity="0.9"/>
+    <circle cx="6" cy="24" r="1.8" fill="#7B1FA2" opacity="0.8" filter="url(#drop-shadow)"/>
+    <circle cx="28" cy="24" r="1.8" fill="#7B1FA2" opacity="0.8" filter="url(#drop-shadow)"/>
+    <circle cx="17" cy="6" r="1.5" fill="#4527A0" opacity="0.7"/>
+    <circle cx="30" cy="17" r="1.2" fill="#6366F1" opacity="0.6"/>
+    <circle cx="4" cy="17" r="1.2" fill="#6366F1" opacity="0.6"/>
+    
+    <g stroke-width="1.5" opacity="0.7">
+      <line x1="10" y1="10" x2="17" y2="24" stroke="url(#neural-gradient)" opacity="0.8"/>
+      <line x1="24" y1="10" x2="17" y2="24" stroke="url(#neural-gradient)" opacity="0.8"/>
+      <line x1="10" y1="10" x2="24" y2="10" stroke="url(#neural-gradient)" opacity="0.6"/>
+      <line x1="6" y1="24" x2="17" y2="24" stroke="#7B1FA2" stroke-width="1.2" opacity="0.6"/>
+      <line x1="28" y1="24" x2="17" y2="24" stroke="#7B1FA2" stroke-width="1.2" opacity="0.6"/>
+      <line x1="17" y1="6" x2="17" y2="10" stroke="#4527A0" stroke-width="1.3" opacity="0.7"/>
+      <line x1="4" y1="17" x2="10" y2="10" stroke="#6366F1" stroke-width="1" opacity="0.5"/>
+      <line x1="30" y1="17" x2="24" y2="10" stroke="#6366F1" stroke-width="1" opacity="0.5"/>
+    </g>
+    
+    <circle cx="17" cy="17" r="4.5" fill="url(#premium-gradient)" filter="url(#glow)" opacity="0.95"/>
+    <circle cx="17" cy="17" r="2.2" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="17" cy="17" r="1" fill="url(#premium-gradient)" opacity="0.8"/>
+  </g>
+  
+  <g id="typography" transform="translate(50, 32)">
+    <text x="0" y="0" font-family="Space Grotesk, system-ui, -apple-system, sans-serif" font-size="28" font-weight="700" fill="url(#premium-gradient)" filter="url(#drop-shadow)" letter-spacing="-0.02em">AI</text>
+    <text x="36" y="0" font-family="Space Grotesk, system-ui, -apple-system, sans-serif" font-size="28" font-weight="500" fill="#4B5563" opacity="0.9" letter-spacing="-0.01em">verse</text>
+    <rect x="0" y="6" width="105" height="2" fill="url(#premium-gradient)" opacity="0.25" rx="1"/>
+  </g>
+</svg>

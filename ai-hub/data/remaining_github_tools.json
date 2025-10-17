@@ -1,0 +1,873 @@
+{
+  "metadata": {
+    "title": "AI Tools from GitHub Repositories",
+    "description": "Comprehensive collection of AI tools extracted from awesome-ai-tools, curated-list-of-generative-ai-tools, and awesome-ai-agents repositories",
+    "extraction_date": "2025-08-21",
+    "total_tools": 78,
+    "source_repositories": [
+      "e2b-dev/awesome-ai-agents",
+      "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    ],
+    "source_counts": {
+      "e2b-dev/awesome-ai-agents": 42,
+      "ParthaPRay/Curated-List-of-Generative-AI-Tools": 36
+    },
+    "category_distribution": {
+      "General purpose": 20,
+      "Build your own": 6,
+      "Multi-agent": 11,
+      "Generative AI": 36,
+      "AI Agents": 6,
+      "Framework": 10,
+      "Build-your-own": 5,
+      "Coding": 16,
+      "GitHub": 2,
+      "Personal assistant": 1,
+      "Productivity": 5,
+      "HR": 1,
+      "Business intelligence": 1,
+      "Data analysis": 1,
+      "Debugging": 1,
+      "Design": 1,
+      "SDK for AI apps": 1,
+      "Science": 2,
+      "Chemistry": 1,
+      "SDK for agents": 1,
+      "Research": 1
+    },
+    "note": "Data extracted from GitHub repositories focusing on AI agents and generative AI tools"
+  },
+  "tools": [
+    {
+      "name": "Adala",
+      "url": "https://github.com/HumanSignal/Adala",
+      "categories": [
+        "General purpose",
+        "Build your own",
+        "Multi-agent"
+      ],
+      "description": "Adala: Autonomous Data (Labeling) Agent framework\n*   **Reliable agents**: Built on ground truth data for consistent, trustworthy results.\n*   **Controllable output**: Tailor output with flexible constraints to fit your needs.\n*   **Specialized in data processing**: Agents excel in custom data labeling and processing tasks.\n*   **Autonomous learning**: Agents evolve through observations and reflections, not just automation.\n*   **Flexible and extensible runtime**: Adaptable framework with community-driven evolution for diverse needs.\n*   **Easily customizable**: Develop agents swiftly for unique challenges, no steep learning curve.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "agency-swarm",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "AI Agents",
+        "Framework"
+      ],
+      "description": "Agent orchestration framework based on OpenAI Assistants API.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Agent4Rec",
+      "url": "https://github.com/LehengTHU/Agent4Rec",
+      "categories": [
+        "General purpose",
+        "Build your own",
+        "Multi-agent"
+      ],
+      "description": "Recommender system simulator with 1,000 agents\n*   Agent4Rec is a recommender system simulator that utilizes 1,000 LLM-empowered generative agents.\n*   These agents are initialized from the MovieLens-1M dataset, embodying varied social traits and preferences.\n*   Each agent interacts with personalized movie recommendations in a page-by-page manner and undertakes various actions such as watching, rating, evaluating, exiting, and interviewing.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "AgentForge",
+      "url": "https://github.com/DataBassGit/AgentForge",
+      "categories": [
+        "General purpose",
+        "Build your own",
+        "Multi-agent"
+      ],
+      "description": "LLM-agnostic platform for agent building & testing\n*   A low-code framework designed for the swift creation, testing, and iteration of AI-powered autonomous agents and Cognitive Architectures, compatible with various LLM models.\n*   Facilitates building custom agents and cognitive architectures with ease.\n*   Supports multiple LLM models including OpenAI, Anthropic's Claude, and local Oobabooga, allowing flexibility in running different models for different agents based on specific requirements.\n*   Provides customizable agent memory management and on-the-fly prompt editing for rapid development and testing.\n*   Comes with a database-agnostic design ensuring seamless extensibility, with straightforward integration with different databases like ChromaDB for various AI projects.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "AgentGPT",
+      "url": "https://agentgpt.reworkd.ai/",
+      "categories": [
+        "General purpose"
+      ],
+      "description": "Browser-based no-code version of AutoGPT\n*   A no-code platform\n*   Process:\n    + Assigning a goal to the agent\n    + Witnessing its thinking process\n    + Formulation of an execution plan\n    + Taking actions accordingly\n*   Uses OpenAI functions\n*   Supports gpt-3.5-16k, pinecone and pg_vector databases\n*   Stack\n    + Frontend: NextJS + Typescript\n    + Backend: FastAPI + Python\n    + DB: MySQL through docker with the option of running SQLite locally",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "AgentOps",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "AI Agents"
+      ],
+      "description": "Python SDK for agent monitoring and LLM cost tracking.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "AgentPilot",
+      "url": "https://github.com/jbexta/AgentPilot",
+      "categories": [
+        "General purpose"
+      ],
+      "description": "Build, manage, and chat with agents in desktop app\n*   Integrated into Open Interpreter and MemGPT\n*   Group chats feature",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Agents",
+      "url": "https://github.com/aiwaves-cn/agents",
+      "categories": [
+        "General purpose",
+        "Build your own",
+        "Multi-agent"
+      ],
+      "description": "Library/framework for building language agents\n*   **Long-short Term Memory**: Language agents in the library are equipped with both long-term memory implemented via VectorDB + Semantic Search and short-term memory (working memory) maintained and updated by an LLM.\n*   **Tool Usage**: Language agents in the library can use any external tools via function-calling and developers can add customized tools/APIs here.\n*   **Web Navigation**: Language agents in the library can use search engines to navigate the web and get useful information.\n*   **Multi-agent Communication**: In addition to single language agents, the library supports building multi-agent systems in which language agents can communicate with other language agents and the environment. Different from most existing frameworks for multi-agent systems that use pre-defined rules to control the order for agents' action, **Agents** includes a *controller* function that dynamically decides which agent will perform the next action using an LLM by considering the previous actions, the environment, and the target of the current states. This makes multi-agent communication more flexible.\n*   **Human-Agent interaction**: In addition to letting language agents communicate with each other in an environment, our framework seamlessly supports human users to play the role of the agent by himself/herself and input his/her own actions, and interact with other language agents in the environment.\n*   **Symbolic Control**: Different from existing frameworks for language agents that only use a simple task description to control the entire multi-agent system over the whole task completion process, **Agents** allows users to use an **SOP (Standard Operation Process)** that defines subgoals/subtasks for the overall task to customize fine-grained workflows for the language agents.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "AgentVerse",
+      "url": "https://github.com/OpenBMB/AgentVerse",
+      "categories": [
+        "General purpose",
+        "Build your own",
+        "Multi-agent"
+      ],
+      "description": "Platform for task-solving & simulation agents\n*   Assembles multiple agents to collaboratively accomplish tasks.\n*   Allows custom environments for observing or interacting with multiple agents.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "AI Legion",
+      "url": "https://github.com/eumemic/ai-legion",
+      "categories": [
+        "Multi-agent",
+        "Build-your-own"
+      ],
+      "description": "Multi-agent TS platform, similar to AutoGPT\n*   An LLM-powered autonomous agent platform\n*   A framework for autonomous agents who can work together to accomplish tasks\n*   Interaction with agents done via console direct messages",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Aider",
+      "url": "https://github.com/paul-gauthier/aider",
+      "categories": [
+        "Coding",
+        "GitHub"
+      ],
+      "description": "Use command line to edit code in your local repo\n*   Aider is a command line tool that lets you pair program with GPT-3.5/GPT-4, to edit code stored in your local git repository\n*   You can start a new project or work with an existing repo. And you can fluidly switch back and forth between the aider chat where you ask GPT to edit the code and your own editor to make changes yourself\n*   Aider makes sure edits from you and GPT are committed to git with sensible commit messages. Aider is unique in that it works well with pre-existing, larger codebases",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "AIlice",
+      "url": "https://github.com/myshell-ai/AIlice",
+      "categories": [
+        "General purpose",
+        "Personal assistant",
+        "Productivity"
+      ],
+      "description": "Create agents-calling tree to execute your tasks\n*   \\",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "AutoGen",
+      "url": "https://github.com/microsoft/autogen",
+      "categories": [
+        "General purpose",
+        "Build your own",
+        "Multi-agent"
+      ],
+      "description": "Multi-agent framework with diversity of agents\n*   A framework for developing LLM (Large Language Model) applications with multiple conversational agents.\n*   These agents can collaborate to solve tasks and can interact seamlessly with humans.\n*   It simplifies complex LLM workflows, enhancing automation and optimization.\n*   It offers a range of working systems across various domains and complexities.\n*   It improves LLM inference with easy performance tuning and utility features like API unification and caching.\n*   It supports advanced usage patterns, including error handling, multi-config inference, and context programming.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "AutoGPT",
+      "url": "https://agpt.co/?utm_source=awesome-ai-agents",
+      "categories": [
+        "General purpose"
+      ],
+      "description": "Experimental attempt to make GPT4 fully autonomous\n*   An experimental open-source attempt to make GPT-4 fully autonomous, with >140k stars on GitHub\n*   Chains together LLM \\",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Automata",
+      "url": "https://github.com/emrgnt-cmplxty/automata",
+      "categories": [
+        "Coding"
+      ],
+      "description": "Generate code based on your project context\n*   Model: GPT 4\n*   Automata takes your project as a context, receives tasks, and executes the instructions seamlessly.\n*   Features\n    + Automata aims to evolve into a fully autonomous, self-programming Artificial Intelligence system.\n    + It's designed for seamless integration with all available agent platforms and LLM providers.\n    + Utilizes the novel code search algorithm, SymbolRank, and associated tools to build superior coding intelligence.\n    + Modular, fully configurable design with minimal reliance on external dependencies",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Autonomous HR Chatbot",
+      "url": "https://github.com/stepanogil/autonomous-hr-chatbot",
+      "categories": [
+        "HR",
+        "Business intelligence",
+        "Productivity"
+      ],
+      "description": "Agent that answers HR-related queries using tools\n*   A prototype enterprise application - an Autonomous HR Assistant powered by GPT-3.5.\n*   An agent that can answer HR related queries autonomously using the tools it has on hand.\n*   Powered by GPT-3.5\n*   Current tools assigned to the agent (with more on the way):\n    + Timekeeping Policy\n    + Employee Data\n    + Calculator",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "AutoPR",
+      "url": "https://github.com/irgolic/AutoPR",
+      "categories": [
+        "Coding",
+        "GitHub"
+      ],
+      "description": "AI-generated pull requests agent that fixes issues\n*   Triggered by adding a label containing AutoPR to an issue, AutoPR will:\n    + Plan a fix\n    + Write the code\n    + Push a branch\n    + Open a pull request",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BabyAGI",
+      "url": "https://github.com/yoheinakajima/babyagi",
+      "categories": [
+        "General purpose"
+      ],
+      "description": "A simple framework for managing tasks using AI\n*   A pared-down version of the original Task-Driven Autonomous Agent\n*   Creates tasks based on the result of previous tasks and a predefined objective.\n*   The script then uses OpenAI's NLP capabilities to create new tasks based on the objective\n*   Leverages OpenAI's GPT-4, pinecone vector search, and LangChainAI framework\n*   Default model is OpenAI GPT3-turbo\n*   The system maintains a task list for managing and prioritizing tasks\n*   It autonomously creates new tasks based on completed results and reprioritizes the task list accordingly, showcasing the adaptability of AI-powered language models",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BabyBeeAGI",
+      "url": "https://yoheinakajima.com/babybeeagi-task-management-and-functionality-expansion-on-top-of-babyagi/",
+      "categories": [
+        "General purpose",
+        "Productivity"
+      ],
+      "description": "Task management & functionality BabyAGI expansion\n*   A more advanced version of the original BabyAGI code\n*   + Improves upon the original framework, by introducing a more complex task management prompt, allowing for more comprehensive analysis and synthesis of information\n*   Designed to handle multiple functions within one task management prompt\n*   Built on top of the GPT-4 architecture, resulting in slower processing speeds and occasional errors\n*   Provides a framework that can be further built upon and improved, paving the way for more sophisticated AI applications\n*   One of the significant differences between BabyAGI and BabyBeeAGI is the complexity of the task management prompt",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BabyCatAGI",
+      "url": "https://replit.com/@YoheiNakajima/BabyCatAGI",
+      "categories": [
+        "General purpose"
+      ],
+      "description": "BabyCatAGI is a mod of BabyBeeAGI\n*   Just 300 lines of code\n*   This was built as a d iteration on the original BabyAGI code in a lightweight way. Differences to BabyAGI include the following:\n    + Task Creation Agent runs once\n    + Execution Agent loops through tasks\n    + Task dependencies for pulling relevant results\n    + Two tools: search tool and text completion\n    + “Mini-agent” as tool\n    + Search tool combines search, scrape, chunking, and extraction.\n    + Results combined to create summary report",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BabyCommandAGI",
+      "url": "https://github.com/saten-private/BabyCommandAGI",
+      "categories": [
+        "General purpose",
+        "Coding"
+      ],
+      "description": "Test what happens when you combine CLI and LLM\n*   gent designed to test what happens when you combine CLI and LLM, which are more traditional interfaces than GUI (created by @saten-private)\n*   An AI agent based on @yoheinakajima's BabyAGI which executes shell commands\n*   Automatic Programming, Successfully created an app automatically just by providing feedback. The procedure can be found here.\n*   Automatic Environment Setup, Successfully installed a Flutter environment on Linux in a container, created the Flutter app, and launched it. The procedure can be found here.\n*   Aside from setting up the environment, it seems to be able to handle a bit of general tasks such as Generating text, like poems, code, scripts, musical pieces, email, and letters, translating languages\n*   There is a risk of breaking the environment. Please run in a virtual environment such as Docker.\n*   GPT-4 or higher is recommended",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BabyDeerAGI",
+      "url": "https://twitter.com/yoheinakajima/status/1666313838868992001",
+      "categories": [
+        "General purpose"
+      ],
+      "description": "Mod of BabyAGI with only ~350 lines of code\n*   Features\n    + Parallel tasks (making it faster)\n    + 3.5-turbo only (GPT-4 not required)\n    + User input tool\n    + Query rewrite in web search tool\n    + Saves results",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BabyElfAGI",
+      "url": "https://twitter.com/yoheinakajima/status/1678443482866933760",
+      "categories": [
+        "General purpose"
+      ],
+      "description": "Mod of BabyDeerAGI, with ~895 lines of code\n*   Features\n    + Skills class allows for creation of new skills\n    + 'Dynamic task list' example with vector search\n    + Beta reflection agent\n    + Can read, write, and review its own code",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BabyFoxAGI",
+      "url": "https://github.com/yoheinakajima/babyagi/tree/main/classic/babyfoxagi",
+      "categories": [
+        "General purpose"
+      ],
+      "description": "Mod of BabyAGI with a new parallel UI panel\n*   A mod of BabyElfAGI, in a series of mods w the naming of BabyAGI in alphabetical order\n*   Self-improving task lists (FOXY method)\n    + By storing a final reflection at the end, and pulling the most relevant reflection to guide future runs, BabyAGI slowly generates better and better tasks lists\n*   Novel Chat UI w parallel tasks\n    + You can chat w BabyAGI! It has an experimental UI where the chat is separate from the tasks/output panel, allowing you to request multiple tasks in parallel\n    + The Chat UI can use a single skill quickly, or chain multiple skills together using a tasklist\n*   New skills\n    + 🎨 DALLE skill with prompt assist\n    + 🎶 Music player w Deezer\n    + 📊 Airtable search (add your own table/base ID)\n    + 🔍 Startup Analyst (example of beefy function call as a skill)\n*   It’s own README",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BambooAI",
+      "url": "https://github.com/pgalko/BambooAI",
+      "categories": [
+        "Data analysis"
+      ],
+      "description": "Data exploration and analysis for non-programmers\n*   BambooAI runs in a loop (until user decides to end it).\n*   Allows mixing of different models with different capabilities, token costs and context windows for different tasks.\n*   Maintains the memory of previous conversations.\n*   Builds the prompts dynamically utilising relevant context from Pinecone vector DB.\n*   Offers a narrative or asks follow up questions if required.\n*   For codified responses, the task is broken down into a list of steps and a pseudo-code algorithm is built.\n*   Based on the algorithm, it ises the python code for dataset analysis, modeling or plotting.\n*   Debugs the code which then executes, auto-corrects if needs to, and displays the output to user.\n*   Ranks the final answers, and asks user for feedback.\n*   Builds a vector DB knowledge-base, based on the rank and the user feedback.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BeeBot",
+      "url": "https://github.com/AutoPackAI/beebot",
+      "categories": [
+        "General purpose",
+        "Productivity"
+      ],
+      "description": "Early-stage project for wide range of tasks\n*   \\",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BentoML",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "Framework"
+      ],
+      "description": "Framework for building scalable AI applications.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "BitNet",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Implementation of",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Blinky",
+      "url": "https://github.com/seahyinghang8/blinky",
+      "categories": [
+        "Coding",
+        "Debugging"
+      ],
+      "description": "An open-source AI debugging agent for VSCode\n*   Blinky is an open-source AI debugging agent for VSCode that uses LLMs to help identify and fix backend code errors (inspired by SWE-agent).\n*   Blinky leverages the VSCode API, Language Server Protocol (LSP), and print statement debugging to triangulate and address bugs in real-world backend systems.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Bloop",
+      "url": "https://bloop.ai/",
+      "categories": [
+        "Coding"
+      ],
+      "description": "AI code search, works for Rust and Typescript\n*   A GPT-4 powered semantic code search engine that uses an AI agent\n*   Precise code navigation\n*   Built on stack graphs and scope queries\n*   Fast code search and regex matching engine written in Rust\n*   Allows to find Code on Rust and Typescript\n*   Allows to stage changes\n*   The agent searches both your local and remote repositories with natural language, regex and filtered queries\n*   Bloop can be run via app (easy to download via GitHub)",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "BondAI",
+      "url": "https://bondai.dev/",
+      "categories": [
+        "Coding"
+      ],
+      "description": "Code interpreter with CLI & RESTful/WebSocket API\n*   A highly capable, autonomous AI Agent with an easy to use CLI, RESTful/WebSocket API, Pre-built Docker image and a robust suite of integrated tools.\n*   Support for all GPT-N, Embeddings and Dall-E OpenAI Models\n*   Support for Azure OpenAI Services\n*   Easy to use SDK for integration into any application\n*   Powerful **Code Interpreter** capabilities\n*   Powerful data query capabilities via Postgres DB integration\n*   Pre-built Docker image provides safe execution environment for code generation/execution\n*   Support for telephony applications (via BlandAI)\n*   Support for stock trading (via Alpaca Markets)\n*   Integrates with Gmail and Google Search\n*   Easy to install `pip install bondai`\n*   To start the CLI just run `bondai`\n*   To start the RESTful/WebSocket API just run `bondai --server`",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "bumpgen",
+      "url": "https://github.com/xeol-io/bumpgen",
+      "categories": [
+        "Coding"
+      ],
+      "description": "AI agent that keeps npm dependencies up-to-date\n*   Put dependency management and upgrades on autopilot\n*   bumpgen BUMPs an npm package's version up then GENerates the code fixes for breaking changes\n*   Supports gpt-4-turbo\n*   Easy install > `npm install -g bumpgen`\n*   Easy start > `bumpgen @tanstack/react-query 5.28.14`",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Cal.ai",
+      "url": "https://cal.ai",
+      "categories": [
+        "Productivity"
+      ],
+      "description": "Open-source scheduling assistant built on Cal.com\n*   Cal.ai can book meetings, summarize your week, and find time with others based on natural language.\n*   Responds flexibly to unseen tasks eg. \\",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "CAMEL",
+      "url": "https://github.com/camel-ai/camel",
+      "categories": [
+        "General purpose"
+      ],
+      "description": "Architecture for “Mind” Exploration of agents\n*   CAMEL is an open-source library designed for the study of autonomous and communicative agents.\n1)AI user agent: give instructions to the AI assistant with the goal of completing the task.\n2. AI assistant agent: follow AI user’s instructions and respond with solutions to the task\n*   CAMEL also has an open-source community dedicated to the study of autonomous and communicative agents",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "ChatArena",
+      "url": "https://www.chatarena.org/",
+      "categories": [
+        "Design",
+        "Build-your-own",
+        "SDK for AI apps",
+        "Multi-agent"
+      ],
+      "description": "A chat tool for multi agent interaction\n*   ChatArena (or Chat Arena) is a Multi-Agent Language Game Environments for LLMs. The goal is to develop communication and collaboration capabilities of AIs.\nChatArena provides:\n*   A general framework for building interactive environments for multiple large language models (LLMs).\n*   A collection of pre-built or community-created environments.\n*   User-friendly interfaces with both Web UI and commandline interfaces.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "ChatDev",
+      "url": "https://github.com/OpenBMB/ChatDev",
+      "categories": [
+        "Coding",
+        "Multi-agent"
+      ],
+      "description": "Communicative agents for software development\n*   ChatDev is a virtual software company driven by a multitude of intelligent agents assuming different roles such as CEO, CPO, CTO, programmer, reviewer, tester, and art designer, each represented by unique icons.\n*   These agents collaborate in a structured organizational environment, fulfilling the company's mission to \\",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "ChemCrow",
+      "url": "https://github.com/ur-whitelab/chemcrow-public",
+      "categories": [
+        "Science",
+        "Chemistry"
+      ],
+      "description": "LangChain agent for chemistry-related tasks\n*   ChemCrow is an open source package for the accurate solution of reasoning-intensive chemical tasks\n*   It integrates 13 expert-design tools to augment LLM performance in chemistry and demonstrate effectiveness in automating chemical tasks\n*   Built with Langchain\n*   The LLM is provided with a list of tool names, descriptions of their utility, and details about the expected input/output. It is then instructed to answer a user-given prompt using the tools provided when necessary. The instruction suggests the model to follow the ReAct format - Thought, Action, Action Input, Observation. One interesting observation is that while the LLM-based evaluation concluded that GPT-4 and ChemCrow perform nearly equivalently, human evaluations with experts oriented towards the completion and chemical correctness of the solutions showed that ChemCrow outperforms GPT-4 by a large margin. This indicates a potential problem with using LLM to evaluate its own performance on domains that requires deep expertise. The lack of expertise may cause LLMs not knowing its flaws and thus cannot well judge the correctness of task results. (Source: Weng, Lilian. (Jun 2023). LLM-powered Autonomous Agents\\",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Clippy",
+      "url": "https://github.com/ennucore/clippy/",
+      "categories": [
+        "Coding"
+      ],
+      "description": "Agent that can plan, write, debug, and test code\n*   The purpose of Clippy is to elop code for or with the user.\n*   It can plan, write, debug, and test some projects autonomously.\n*   For harder tasks, the best way to use it is to look at its work and provide feedback to it.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "CodeFuse-ChatBot",
+      "url": "https://github.com/codefuse-ai/codefuse-chatbot",
+      "categories": [
+        "Coding"
+      ],
+      "description": "Agent serving entire SW development lifecycle\n*   An intelligent assistant serving the entire software development lifecycle, powered by a Multi-Agent Framework, working with DevOps Toolkits, Code&Doc Repo RAG, etc.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Cody by ajhous44",
+      "url": "https://github.com/ajhous44/cody",
+      "categories": [
+        "Coding"
+      ],
+      "description": "Query and navigate your codebase\n*   An AI assistant designed to let you interactively query your codebase using natural language.\n*   By utilizing vector embeddings, chunking, and OpenAI's language models, Cody can help you navigate through your code in an efficient and intuitive manner.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Cody by Sourcegraph",
+      "url": "https://docs.sourcegraph.com/cody",
+      "categories": [
+        "Coding"
+      ],
+      "description": "An AI code assistant from Sourcegraph that writes code and answers questions for you by reading your entire codebase and the code graph.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Continue",
+      "url": "https://continue.dev/",
+      "categories": [
+        "Coding"
+      ],
+      "description": "Open-source autopilot for software development\n*   An open-source autopilot for software development—bring the power of ChatGPT to VS Code\n*   Features:\n    + Answer coding questions\n    + Edit in natural language\n    + Generate files from scratch",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "CrewAI",
+      "url": "https://github.com/joaomdmoura/crewai",
+      "categories": [
+        "Build-your-own",
+        "SDK for agents",
+        "Multi-agent"
+      ],
+      "description": "Framework for orchestrating role-playing agents\n*   Cutting-edge framework for orchestrating role-playing, autonomous AI agents.\n*   By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks.\n*   Crew AI is a multi-agent framework built on LangChain, aiming to empower engineers to harness the collective power of AI agents. In contrast to traditional automation methods, Crew AI introduces a new approach to collaborative decision-making, enhanced creativity, and solving complex problems.\n*   The design philosophy of Crew AI advocates simplicity through modularity. Its main components include agents, tools, tasks, processes, and crews. Each agent is akin to a team member, possessing specific roles, background stories, goals, and memories. Through modular design, we make the intricate world of AI agents accessible, manageable, and more engaging.",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "data-to-paper",
+      "url": "https://github.com/Technion-Kishony-lab/data-to-paper",
+      "categories": [
+        "Science",
+        "Research",
+        "Multi-agent"
+      ],
+      "description": "AI-driven research from data to human-verifiable research papers\n*data-to-paper* is a framework for systematically navigating the power of AI to perform complete end-to-end\nscientific research, starting from raw data and concluding with comprehensive, transparent, and human-verifiable\nscientific papers.\nTowards this goal, *data-to-paper* systematically guides interacting\nLLM and rule-based agents through the conventional scientific path, from annotated data, through creating\nresearch hypotheses, conducting literature search, writing and debugging data analysis code,\ninterpreting the results, and ultimately the step-by-step writing of a complete research paper.\nThe *data-to-paper* framework is created as a research project to understand the\ncapacities and limitations of LLM-driven scientific research, and to develop ways of harnessing LLM to accelerate\nresearch while maintaining, and even enhancing, key scientific values, such as transparency, traceability and verifiability,\nand while allowing scientist to oversee and direct the process\n[see also: [living guidelines](https://www.nature.com/articles/d41586-023-03266-1)].",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Databerry",
+      "url": "https://www.databerry.ai/",
+      "categories": [
+        "Build-your-own"
+      ],
+      "description": "(Pivoted to Chaindesk) No-code chatbot building\n*   A super-easy no-code platform for creating AI chatbots trained on your own data\n*   After creating new agent, picking a model, data and other settings, they are ready to be deployed to website, Slack, Crisp, or Zapier\n*   Limit of agent in the free version\n*   Stack\n    + Next.js\n    + Joy UI\n    + LangchainJS\n    + PostgreSQL\n    + Prisma\n    + Qdrant\n*   Features\n    + Streamline customer support, onboard new team members, and more\n    + Load data from anywhere\n    + No-code: User-friendly interface to manage your datastores and chat with your data\n    + Secured API endpoint for querying your data\n    + Auto sync data sources (coming soon)\n    + Auto generates a ChatGPT Plugin for each datastore",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "DemoGPT",
+      "url": "https://github.com/melih-unsal/DemoGPT",
+      "categories": [
+        "Build-your-own",
+        "General purpose"
+      ],
+      "description": "Generates demo of a new app (of any purpose)\n*   DemoGPT leverages the power of Language Models (LLMs) to provide fast and effective demo creation for applications.\n*   Automates the prototyping process, making it more efficient and saving valuable time.\n*   Understandsand processes the given prompts to generate relevant applications.\n*   Integrated with LangChain for generating application code through iterative parsing of LangChain's documentation with a \\",
+      "additional_links": [],
+      "source_repository": "e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "Faster Whisper",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Transcription tool based on OpenAI's Whisper model and CTranslate2.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Flowwise AI",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "AI Agents"
+      ],
+      "description": "Visual tool to build LLM orchestration flow and AI agents.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Haystack",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "Framework"
+      ],
+      "description": "End-to-End LLM orchestration framework.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Kubeflow",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "ML workflow deployments on Kubernetes.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Langchain",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "Framework"
+      ],
+      "description": "Framework for developing applications powered by language models.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "LangChain Expression Language (LCEL)",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Declarative way to compose chains.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "LangChain Templates",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Collection of deployable reference architectures.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "LangGraph",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Library for building stateful, multi-actor applications with LLMs.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Langserve",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Library for deploying LangChain chains as a REST API.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Langsmith",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "Framework"
+      ],
+      "description": "Developer platform for debugging, testing, and monitoring chains.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "LitGPT",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "A command-line tool for finetuning, pretraining, evaluating, and deploying LLMs.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "LLM OS",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "An LLM with specified specs (GPT-4 Turbo, 128Ktok RAM, Ada002 filesystem).",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "llmware",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "Framework"
+      ],
+      "description": "LLM-based development framework with fine-tuned models.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "LM Studio",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Tool to discover, download, and run local LLMs.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "makeMoE",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Implementation of a sparse mixture of experts language model.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "mergekit",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Toolkit for merging pre-trained language models.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "mergoo",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Library for merging multiple LLM experts and training the merged LLM.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "MLFlow",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "Framework"
+      ],
+      "description": "Open-source platform for tracking ML experiments.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "moondream",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Tiny vision language model.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Ollama App",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Client App to use Ollama Models on Phone.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Open Interpreter",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "Coding"
+      ],
+      "description": "Lets LLMs run code locally (Python, Javascript, Shell).",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "openagi",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "AI Agents"
+      ],
+      "description": "Aims to make human-like agents accessible.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "phidata",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Used for building AI Assistants using function calling.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "pyrit",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Python Risk Identification Tool for generative AI systems.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "PyTriton",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Interface to simplify Triton's deployment in Python environments.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Replicate",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "Framework"
+      ],
+      "description": "Platform to run and fine-tune open-source models; deploy custom models.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Semantic Router",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "AI Agents"
+      ],
+      "description": "Decision-making layer for LLMs and agents using semantic vector space.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "setfit",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Few-shot learning with Sentence Transformers.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "TaskingAI",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "Framework"
+      ],
+      "description": "Framework for LLM applications deployment.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "TaskWeaver",
+      "url": "",
+      "categories": [
+        "Generative AI",
+        "Coding",
+        "AI Agents",
+        "Framework"
+      ],
+      "description": "Code-first agent framework for data analytics tasks.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "Triton Inference Server",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Inference serving software that streamlines AI inferencing.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    },
+    {
+      "name": "txtai",
+      "url": "",
+      "categories": [
+        "Generative AI"
+      ],
+      "description": "Open-source embeddings database for semantic search and LLM workflows.",
+      "additional_links": [],
+      "source_repository": "ParthaPRay/Curated-List-of-Generative-AI-Tools"
+    }
+  ]
+}

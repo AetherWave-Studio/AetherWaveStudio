@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AetherWave — Playlist Editor (Local)</title>
+  <style>
+    :root{
+      --bg:#0a0a0f; --panel:#12121b; --ink:#eaeaf2; --muted:#9aa0a6; --accent:#ff2ea6;
+      --ok:#35d07f; --warn:#ffb703; --bad:#ff4d4d;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,Segoe UI,Roboto,Inter,Arial,sans-serif; background:linear-gradient(180deg,#0a0a0f,#0f0f18); color:var(--ink)}
+    header{position:sticky; top:0; z-index:10; background:rgba(10,10,15,.8); backdrop-filter: blur(8px); border-bottom:1px solid #1e1e2a}
+    .wrap{max-width:1100px; margin:0 auto; padding:18px}
+    h1{margin:0; font-size:20px; letter-spacing:.5px}
+    .sub{color:var(--muted); font-size:12px}
+    main{max-width:1100px; margin:24px auto; padding:0 18px; display:grid; grid-template-columns: 1.1fr .9fr; gap:20px}
+    @media (max-width:980px){ main{grid-template-columns:1fr} }
+
+    .card{background:var(--panel); border:1px solid #1e1e2a; border-radius:16px; padding:16px; box-shadow:0 0 0 1px #0c0c14 inset}
+    .row{display:flex; gap:12px; align-items:center; margin-bottom:10px}
+    label{font-size:12px; color:var(--muted); width:90px}
+    input, textarea{width:100%; background:#0b0b12; color:var(--ink); border:1px solid #24243a; border-radius:10px; padding:10px 12px; font-size:14px}
+    textarea{min-height:120px}
+    button{appearance:none; border:1px solid #2a2a44; background:#141426; color:var(--ink); border-radius:12px; padding:10px 14px; cursor:pointer}
+    button.primary{background:var(--accent); border-color:#ff50b6; color:#0b0010}
+    button.ghost{background:transparent}
+    button.small{padding:6px 10px; font-size:12px; border-radius:10px}
+    .pill{display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; font-size:12px}
+    .pill.ok{background:rgba(53,208,127,.15); color:#b6ffd8; border:1px solid rgba(53,208,127,.35)}
+    .pill.bad{background:rgba(255,77,77,.15); color:#ffd6d6; border:1px solid rgba(255,77,77,.35)}
+    .list{display:flex; flex-direction:column; gap:10px}
+    .track{display:grid; grid-template-columns: 56px 1fr auto; gap:12px; align-items:center; background:#0c0c18; border:1px solid #24243a; border-radius:14px; padding:10px}
+    .track img{width:56px; height:56px; object-fit:cover; border-radius:10px; border:1px solid #23233a}
+    .meta{display:flex; flex-direction:column}
+    .meta .t{font-weight:600}
+    .meta .a{font-size:12px; color:var(--muted)}
+    .meta .u{font-size:11px; color:#7f8596; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:520px}
+    .actions{display:flex; gap:8px}
+    .danger{color:#ffb3c4}
+    .hint{font-size:12px; color:var(--muted)}
+    code{background:#0c0c14; padding:2px 6px; border-radius:6px; border:1px solid #1f1f2f}
+    .footer{display:flex; gap:12px; flex-wrap:wrap}
+    a.inline{color:#b6c3ff}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>🎛️ AetherWave Playlist Editor <span class="sub">— Local, no servers, export JSON</span></h1>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left: Track form + list -->
+    <section class="card">
+      <h2 style="margin-top:0">Add / Edit Track</h2>
+      <div class="row"><label>Title</label><input id="title" placeholder="Song title" /></div>
+      <div class="row"><label>Artist</label><input id="artist" placeholder="Artist name" /></div>
+      <div class="row"><label>Audio URL</label><input id="url" placeholder="Dropbox raw link (…&raw=1)" /></div>
+      <div class="row"><label>Cover URL</label><input id="cover" placeholder="Recommended ≥ 500×500" /></div>
+      <div class="row"><label>ID</label><input id="id" placeholder="auto-from-title (optional)" /></div>
+      <div class="row">
+        <button class="primary" id="addBtn">Add / Update</button>
+        <button class="ghost" id="clearBtn">Clear</button>
+        <span id="checks" class="pill" title="validation"></span>
+      </div>
+
+      <hr style="border-color:#1f1f2f; opacity:.6; margin:14px 0" />
+
+      <div class="row" style="justify-content:space-between; align-items:baseline">
+        <h3 style="margin:.3rem 0">Current Tracks</h3>
+        <div class="footer">
+          <button class="small" id="importBtn">Import playlist.json</button>
+          <input type="file" id="fileInput" accept="application/json" hidden>
+          <button class="small" id="loadRemoteBtn">Load from /playlist.json</button>
+        </div>
+      </div>
+      <div class="list" id="list"></div>
+    </section>
+
+    <!-- Right: Export + raw JSON -->
+    <section class="card">
+      <h2 style="margin-top:0">Export / Validate</h2>
+      <div class="row footer">
+        <button class="primary" id="downloadBtn">Download playlist.json</button>
+        <button class="ghost" id="copyBtn">Copy JSON</button>
+      </div>
+      <p class="hint">This tool runs 100% in your browser. Edit tracks on the left, then <b>Download</b> the <code>playlist.json</code> and commit it to your GitHub repo. Keep audio links as Dropbox <code>&raw=1</code> and covers ≥ <b>500×500</b>.</p>
+      <textarea id="raw" spellcheck="false" placeholder="{\n  \"title\": \"AetherWave Global Playlist\",\n  \"tracks\": [ /* will render here */ ]\n}"></textarea>
+      <p class="hint">Tip: Drag tracks to reorder. Click a track to load it into the form. Delete with the trash button.</p>
+    </section>
+  </main>
+
+  <script>
+    const $ = sel => document.querySelector(sel);
+    const listEl = $('#list');
+    const rawEl = $('#raw');
+    const checksEl = $('#checks');
+
+    let model = { title: 'AetherWave Global Playlist', tracks: [] };
+    let editIndex = -1; // -1 = adding new
+
+    function slugify(s){
+      return s.toLowerCase().trim()
+        .replace(/[^a-z0-9\s-]/g,'')
+        .replace(/\s+/g,'-')
+        .replace(/-+/g,'-')
+        .slice(0,80);
+    }
+
+    function validateTrack(t){
+      const problems = [];
+      if(!t.title) problems.push('missing title');
+      if(!t.artist) problems.push('missing artist');
+      if(!/^https?:\/\//.test(t.url)) problems.push('audio url');
+      if(!/raw=1($|&)/.test(t.url)) problems.push('dropbox ?raw=1');
+      if(!/^https?:\/\//.test(t.cover)) problems.push('cover url');
+      return problems;
+    }
+
+    async function coverDims(url){
+      return new Promise(res=>{
+        const img = new Image();
+        img.onload = () => res({w: img.naturalWidth, h: img.naturalHeight});
+        img.onerror = () => res(null);
+        img.src = url;
+      });
+    }
+
+    function render(){
+      // render list
+      listEl.innerHTML = '';
+      model.tracks.forEach((t, i)=>{
+        const el = document.createElement('div');
+        el.className = 'track';
+        el.draggable = true;
+        el.innerHTML = `
+          <img src="${t.cover || ''}" alt="cover" />
+          <div class="meta">
+            <div class="t">${t.title}</div>
+            <div class="a">${t.artist}</div>
+            <div class="u" title="${t.url}">${t.url}</div>
+          </div>
+          <div class="actions">
+            <button class="small" data-act="edit">Edit</button>
+            <button class="small danger" data-act="del">Delete</button>
+          </div>`;
+
+        el.addEventListener('click', (ev)=>{
+          if(ev.target.dataset.act === 'del'){
+            model.tracks.splice(i,1); render(); return;
+          }
+          if(ev.target.dataset.act === 'edit'){
+            loadIntoForm(i); return;
+          }
+        });
+
+        // drag sort
+        el.addEventListener('dragstart', e=>{
+          e.dataTransfer.setData('text/plain', i);
+        });
+        el.addEventListener('dragover', e=> e.preventDefault());
+        el.addEventListener('drop', e=>{
+          e.preventDefault();
+          const from = +e.dataTransfer.getData('text/plain');
+          const to = i;
+          if(from===to) return;
+          const [moved] = model.tracks.splice(from,1);
+          model.tracks.splice(to,0,moved);
+          render();
+        });
+
+        listEl.appendChild(el);
+      });
+
+      // render JSON
+      rawEl.value = JSON.stringify(model, null, 2);
+    }
+
+    function loadIntoForm(i){
+      const t = model.tracks[i];
+      editIndex = i;
+      $('#title').value = t.title || '';
+      $('#artist').value = t.artist || '';
+      $('#url').value = t.url || '';
+      $('#cover').value = t.cover || '';
+      $('#id').value = t.id || '';
+      checksEl.textContent = `Editing #${i+1}`;
+      checksEl.className = 'pill';
+    }
+
+    async function addOrUpdate(){
+      const t = {
+        title: $('#title').value.trim(),
+        artist: $('#artist').value.trim(),
+        url: $('#url').value.trim(),
+        cover: $('#cover').value.trim(),
+        id: $('#id').value.trim() || slugify($('#title').value + '-' + $('#artist').value)
+      };
+      const problems = validateTrack(t);
+      let dimNote = '';
+      const dims = await coverDims(t.cover);
+      if(dims && (dims.w < 500 || dims.h < 500)) dimNote = ' (cover < 500px)';
+
+      if(problems.length){
+        checksEl.textContent = 'Issues: ' + problems.join(', ') + dimNote;
+        checksEl.className = 'pill bad';
+        return;
+      }
+
+      if(editIndex >= 0){
+        model.tracks[editIndex] = t; editIndex = -1;
+      } else {
+        model.tracks.push(t);
+      }
+      $('#title').value = $('#artist').value = $('#url').value = $('#cover').value = $('#id').value = '';
+      checksEl.textContent = 'Saved' + (dimNote? dimNote:'');
+      checksEl.className = 'pill ok';
+      render();
+    }
+
+    function download(){
+      const blob = new Blob([rawEl.value], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'playlist.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function copyJSON(){
+      rawEl.select(); document.execCommand('copy');
+      checksEl.textContent = 'JSON copied';
+      checksEl.className = 'pill ok';
+    }
+
+    async function loadRemote(){
+      try{
+        const res = await fetch('playlist.json', {cache:'no-store'});
+        if(!res.ok) throw new Error(res.statusText);
+        const data = await res.json();
+        model = data; render();
+        checksEl.textContent = 'Loaded /playlist.json';
+        checksEl.className = 'pill ok';
+      }catch(err){
+        checksEl.textContent = 'Could not load /playlist.json';
+        checksEl.className = 'pill bad';
+      }
+    }
+
+    function importLocalFile(file){
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const data = JSON.parse(reader.result);
+          model = data; render();
+          checksEl.textContent = 'Imported file';
+          checksEl.className = 'pill ok';
+        }catch(e){
+          checksEl.textContent = 'Invalid JSON';
+          checksEl.className = 'pill bad';
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // hooks
+    $('#addBtn').addEventListener('click', addOrUpdate);
+    $('#clearBtn').addEventListener('click', ()=>{ editIndex=-1; ['#title','#artist','#url','#cover','#id'].forEach(s=>$(s).value=''); checksEl.textContent=''; checksEl.className='pill'; });
+    $('#downloadBtn').addEventListener('click', download);
+    $('#copyBtn').addEventListener('click', copyJSON);
+    $('#loadRemoteBtn').addEventListener('click', loadRemote);
+    $('#importBtn').addEventListener('click', ()=> $('#fileInput').click());
+    $('#fileInput').addEventListener('change', e=>{ if(e.target.files[0]) importLocalFile(e.target.files[0]); });
+
+    // seed with two empty tracks if needed
+    render();
+  </script>
+</body>
+</html>

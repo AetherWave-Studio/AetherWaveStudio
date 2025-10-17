@@ -1,0 +1,122 @@
+[
+  {
+    "id": 6,
+    "name": "AutoGen",
+    "description": "AutoGen is a framework that enables the development of LLM applications using multiple agents that can converse with each other to solve tasks.",
+    "link": "https://github.com/microsoft/autogen",
+    "category": "Artificial Intelligence",
+    "logo_url": "https://logo.clearbit.com/github.com",
+    "screenshot_url": "https://image.thum.io/get/fullpage/https://github.com/microsoft/autogen",
+    "featured": true,
+    "popularity_score": 6.5,
+    "source": "data/additional_github_tools.json"
+  },
+  {
+    "id": 7,
+    "name": "Stable Diffusion",
+    "description": "Stable Diffusion by Stability AI is a state of the art text-to-image model that generates images from text. opensource",
+    "link": "https://huggingface.co/CompVis/stable-diffusion-v1-4",
+    "category": "Artificial Intelligence",
+    "logo_url": "https://logo.clearbit.com/huggingface.co",
+    "screenshot_url": "https://image.thum.io/get/fullpage/https://huggingface.co/CompVis/stable-diffusion-v1-4",
+    "featured": true,
+    "popularity_score": 6.5,
+    "source": "data/additional_github_tools.json"
+  },
+  {
+    "id": 8,
+    "name": "gptcomet",
+    "description": "CLI tool to help you generate commit message and review changes. Support mutiple providers and languages.",
+    "link": "https://github.com/belingud/gptcomet",
+    "category": "Artificial Intelligence",
+    "logo_url": "https://logo.clearbit.com/github.com",
+    "screenshot_url": "https://image.thum.io/get/fullpage/https://github.com/belingud/gptcomet",
+    "featured": true,
+    "popularity_score": 6.5,
+    "source": "data/additional_github_tools.json"
+  },
+  {
+    "id": 9,
+    "name": "poorcoder",
+    "description": "A collection of Bash scripts to extract code context, apply changes from markdown, and generate AI commit messages while using web-based LLMs.",
+    "link": "https://github.com/vgrichina/poorcoder",
+    "category": "Artificial Intelligence",
+    "logo_url": "https://logo.clearbit.com/github.com",
+    "screenshot_url": "https://image.thum.io/get/fullpage/https://github.com/vgrichina/poorcoder",
+    "featured": true,
+    "popularity_score": 6.5,
+    "source": "data/additional_github_tools.json"
+  },
+  {
+    "id": 10,
+    "name": "Vibe Compiler (vibec)",
+    "description": "A self-compiling tool that transforms markdown-based prompt stacks into code and tests using LLM generation. Works with any LLM via OpenRouter, including Claude, ChatGPT, and Grok.",
+    "link": "https://github.com/Strawberry-Computer/vibe-compiler",
+    "category": "Artificial Intelligence",
+    "logo_url": "https://logo.clearbit.com/github.com",
+    "screenshot_url": "https://image.thum.io/get/fullpage/https://github.com/Strawberry-Computer/vibe-compiler",
+    "featured": true,
+    "popularity_score": 6.5,
+    "source": "data/additional_github_tools.json"
+  },
+  {
+    "id": 11,
+    "name": "AutoComplete.sh",
+    "description": "CLI tool that adds AI-powered command-line suggestions directly to your terminal with just type to return the top suggestions for you.",
+    "link": "https://github.com/closedLoop-technologies/autocomplete-sh",
+    "category": "Artificial Intelligence",
+    "logo_url": "https://logo.clearbit.com/github.com",
+    "screenshot_url": "https://image.thum.io/get/fullpage/https://github.com/closedLoop-technologies/autocomplete-sh",
+    "featured": true,
+    "popularity_score": 6.5,
+    "source": "data/additional_github_tools.json"
+  },
+  {
+    "id": 12,
+    "name": "code-collator",
+    "description": "CLI tool that creates a single markdown file that describes your entire codebase to language models. Useful for AI-coding assistance from the ClaudeChatGPT web interface rather than via the API.",
+    "link": "https://github.com/tawandakembo/code-collator",
+    "category": "Artificial Intelligence",
+    "logo_url": "https://logo.clearbit.com/github.com",
+    "screenshot_url": "https://image.thum.io/get/fullpage/https://github.com/tawandakembo/code-collator",
+    "featured": true,
+    "popularity_score": 6.5,
+    "source": "data/additional_github_tools.json"
+  },
+  {
+    "id": 13,
+    "name": "GPT Migrate",
+    "description": "CLI agent that converts a full-stack application from one language or framework to another. Uses GPT-4 32k context.",
+    "link": "https://github.com/0xpayne/gpt-migrate",
+    "category": "Artificial Intelligence",
+    "logo_url": "https://logo.clearbit.com/github.com",
+    "screenshot_url": "https://image.thum.io/get/fullpage/https://github.com/0xpayne/gpt-migrate",
+    "featured": true,
+    "popularity_score": 6.5,
+    "source": "data/additional_github_tools.json"
+  },
+  {
+    "id": 14,
+    "name": "Bolt.diy",
+    "description": "Open source version of Bolt.new that supports multiple LLM providers including Groq, Anthropic, Ollama, OpenRouter, Gemini, LMStudio, Mistral, xAI, HuggingFace, DeepSeek",
+    "link": "https://github.com/stackblitz-labs/bolt.diy",
+    "category": "Artificial Intelligence",
+    "logo_url": "https://logo.clearbit.com/github.com",
+    "screenshot_url": "https://image.thum.io/get/fullpage/https://github.com/stackblitz-labs/bolt.diy",
+    "featured": true,
+    "popularity_score": 6.5,
+    "source": "data/additional_github_tools.json"
+  },
+  {
+    "id": 15,
+    "name": "MutahunterAI",
+    "description": "Accelerate developer productivity and code security by finding vulnerabilities in code and generating tests for them. Open Source and available as a CLI or CICD pipeline.",
+    "link": "https://github.com/codeintegrity-ai/mutahunter",
+    "category": "Artificial Intelligence",
+    "logo_url": "https://logo.clearbit.com/github.com",
+    "screenshot_url": "https://image.thum.io/get/fullpage/https://github.com/codeintegrity-ai/mutahunter",
+    "featured": true,
+    "popularity_score": 6.5,
+    "source": "data/additional_github_tools.json"
+  }
+]
