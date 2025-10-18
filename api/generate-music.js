@@ -58,7 +58,8 @@ export default async function handler(req, res) {
     let requestPayload = {
       model: model,
       instrumental: instrumental,
-      customMode: customMode
+      customMode: customMode,
+      callBackUrl: 'https://aetherwavestudio.com/api/suno-callback'  // Required by KIE.AI API
     };
 
     if (customMode) {
