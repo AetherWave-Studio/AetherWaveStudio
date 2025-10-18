@@ -32,14 +32,12 @@ export default async function handler(req, res) {
   // Validate request body
   const {
     prompt,
-    duration = '10',
-    aspectRatio = '16:9',
-    audioId // Optional: existing audio ID from music generation
+    audioId // Required: audio ID from music generation
   } = req.body;
 
-  if (!prompt) {
+  if (!audioId) {
     return res.status(400).json({
-      error: 'Invalid request. Prompt is required.'
+      error: 'Invalid request. audioId is required for music video generation.'
     });
   }
 
@@ -48,21 +46,23 @@ export default async function handler(req, res) {
   const agent = new HttpsProxyAgent(proxyUrl);
 
   try {
+    // Generate a unique taskId for this request
+    const taskId = `taskId_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    // KIE.AI mp4/generate expects: taskId, audioId, callBackUrl, author, domainName
     const requestPayload = {
-      prompt: prompt,
-      callBackUrl: 'https://aetherwavestudio.com/api/video-callback'
+      taskId: taskId,
+      audioId: audioId,
+      callBackUrl: 'https://aetherwavestudio.com/api/video-callback',
+      author: 'AetherWave Studio',
+      domainName: 'aetherwavestudio.com'
     };
 
-    // If audioId is provided, use it (for generating video from existing audio)
-    if (audioId) {
-      requestPayload.audioId = audioId;
-    }
-
     console.log('Generating music video with SUNO API:', {
+      taskId,
+      audioId,
       prompt,
-      duration,
-      aspectRatio,
-      hasAudioId: !!audioId
+      payload: requestPayload
     });
 
     // Use the mp4 generate endpoint for video generation
@@ -111,13 +111,11 @@ export default async function handler(req, res) {
     }
     console.log('SUNO Video API Response:', JSON.stringify(generateData, null, 2));
 
-    const taskId = generateData.data?.taskId;
-
-    if (!taskId) {
-      console.error('No taskId found. Full response:', generateData);
+    // Check if the API accepted the request
+    if (generateData.code !== 200) {
       return res.status(500).json({
-        error: 'No taskId returned from SUNO API',
-        details: 'Response: ' + JSON.stringify(generateData)
+        error: 'Video generation request failed',
+        details: generateData.msg || 'Unknown error'
       });
     }
 

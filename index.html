@@ -938,7 +938,12 @@
             <div class="result-title">${track.title || `Track ${index + 1}`}</div>
             <audio controls src="${track.streamAudioUrl || track.audioUrl}"></audio>
             ${track.imageUrl ? `<img src="${track.imageUrl}" alt="Album art" style="width: 100%; border-radius: 8px; margin: 0.5rem 0;" />` : ''}
-            <a href="${track.streamAudioUrl || track.audioUrl}" download="${track.title || 'music'}.mp3" class="download-btn">Download MP3</a>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
+              <a href="${track.streamAudioUrl || track.audioUrl}" download="${track.title || 'music'}.mp3" class="download-btn">Download MP3</a>
+              <button class="download-btn" onclick="generateVisualForTrack('${track.id}', '${track.title}', 'image')" style="cursor: pointer;">Generate Album Art</button>
+              <button class="download-btn" onclick="generateVisualForTrack('${track.id}', '${track.title}', 'video')" style="cursor: pointer;">Generate Music Video</button>
+            </div>
+            <div id="visual-result-${track.id}" style="margin-top: 0.5rem;"></div>
           </div>
         `).join('');
 
@@ -1092,6 +1097,66 @@
         generateVideoBtn.textContent = 'Generate Video';
       }
     }
+
+    // Generate visual (image/video) for a specific track
+    window.generateVisualForTrack = async function(audioId, trackTitle, type) {
+      const prompt = window.prompt(
+        `Describe the ${type === 'image' ? 'album art' : 'music video'} for "${trackTitle}"`,
+        `${type === 'image' ? 'Album art' : 'Music video'} for ${trackTitle}`
+      );
+
+      if (!prompt) return;
+
+      const resultDiv = document.getElementById(`visual-result-${audioId}`);
+      resultDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">Generating ${type}...</p>`;
+
+      try {
+        if (type === 'video') {
+          // Generate music video using the audio ID
+          const response = await fetch('/api/generate-video', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              audioId: audioId,
+              prompt: prompt
+            })
+          });
+
+          if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || 'Failed to generate video');
+          }
+
+          const data = await response.json();
+          resultDiv.innerHTML = `
+            <video controls style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
+              <source src="${data.videoUrl}" type="video/mp4">
+            </video>
+            <a href="${data.videoUrl}" download="${trackTitle}-video.mp4" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Video</a>
+          `;
+        } else {
+          // Generate album art (existing functionality)
+          const response = await fetch('/api/generate-art', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: prompt, style: 'photorealistic' })
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to generate album art');
+          }
+
+          const data = await response.json();
+          resultDiv.innerHTML = `
+            <img src="${data.imageUrl}" alt="Album art" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
+            <a href="${data.imageUrl}" download="${trackTitle}-art.jpg" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Image</a>
+          `;
+        }
+      } catch (error) {
+        console.error(`${type} generation error:`, error);
+        resultDiv.innerHTML = `<p style="color: #ff6b6b; font-size: 0.9rem;">Error: ${error.message}</p>`;
+      }
+    };
 
     // Event listeners - Chat
     sendBtn.addEventListener('click', () => {
