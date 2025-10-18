@@ -172,7 +172,10 @@ export default async function handler(req, res) {
       console.log(`Attempt ${attempts}: Status =`, statusData.data?.status);
 
       // Check if generation is complete
-      if (statusData.data?.status === 'complete') {
+      // KIE.AI returns TEXT_SUCCESS or MUSIC_SUCCESS when complete
+      if (statusData.data?.status === 'complete' ||
+          statusData.data?.status === 'TEXT_SUCCESS' ||
+          statusData.data?.status === 'MUSIC_SUCCESS') {
         musicData = statusData.data;
         break;
       }
