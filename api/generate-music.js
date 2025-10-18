@@ -97,15 +97,38 @@ export default async function handler(req, res) {
     });
 
     if (!generateResponse.ok) {
-      const error = await generateResponse.json();
-      console.error('SUNO Generate Error:', error);
+      const errorText = await generateResponse.text();
+      console.error('SUNO Generate Error (raw):', errorText);
+      console.error('Response status:', generateResponse.status);
+      console.error('Response headers:', Object.fromEntries(generateResponse.headers.entries()));
+
+      let errorDetails;
+      try {
+        const errorJson = JSON.parse(errorText);
+        errorDetails = errorJson.msg || errorJson.message || 'Unknown error';
+      } catch (e) {
+        errorDetails = errorText.substring(0, 200); // First 200 chars if not JSON
+      }
+
       return res.status(generateResponse.status).json({
         error: 'Music generation request failed',
-        details: error.msg || 'Unknown error'
+        details: errorDetails
       });
     }
 
-    const generateData = await generateResponse.json();
+    const responseText = await generateResponse.text();
+    console.log('SUNO API Response (raw):', responseText);
+
+    let generateData;
+    try {
+      generateData = JSON.parse(responseText);
+    } catch (e) {
+      console.error('Failed to parse response as JSON:', e.message);
+      return res.status(500).json({
+        error: 'Invalid API response',
+        details: responseText.substring(0, 200)
+      });
+    }
     console.log('SUNO API Response:', JSON.stringify(generateData, null, 2));
 
     const taskId = generateData.data?.taskId;
