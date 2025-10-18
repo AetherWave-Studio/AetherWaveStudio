@@ -169,19 +169,19 @@ export default async function handler(req, res) {
       }
 
       const statusData = await statusResponse.json();
-      console.log(`Attempt ${attempts}: Full response =`, JSON.stringify(statusData, null, 2));
-
       const status = statusData.data?.status;
-      const msg = statusData.msg;
+      const response = statusData.data?.response;
 
-      console.log(`Attempt ${attempts}: Status = ${status}, msg = ${msg}`);
+      console.log(`Attempt ${attempts}: Status = ${status}, has response = ${!!response}`);
 
       // Check if generation is complete
-      // KIE.AI returns msg: "success" when complete, not status field
-      if (msg === 'success' && statusData.data) {
-        musicData = statusData.data;
-        console.log('Music generation complete! Data:', JSON.stringify(musicData, null, 2));
-        break;
+      // Wait for status to be SUCCESS/COMPLETE and response to be populated
+      if (status && status !== 'PENDING' && status !== 'PROCESSING') {
+        if (status === 'SUCCESS' || status === 'COMPLETE' || response) {
+          musicData = statusData.data;
+          console.log('Music generation complete! Data:', JSON.stringify(musicData, null, 2));
+          break;
+        }
       }
 
       // Check for errors
