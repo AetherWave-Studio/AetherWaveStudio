@@ -866,11 +866,25 @@
           throw new Error(`${errorMsg}${errorDetails ? ': ' + errorDetails : ''}`);
         }
 
+        // Handle multiple tracks returned from API
+        const tracks = data.tracks || [];
+        if (tracks.length === 0) {
+          throw new Error('No music tracks returned from API');
+        }
+
+        // Display all tracks (usually 2 variations)
+        const tracksHTML = tracks.map((track, index) => `
+          <div class="result-box" style="margin-bottom: 1rem;">
+            <div class="result-title">${track.title || `Track ${index + 1}`}</div>
+            <audio controls src="${track.streamAudioUrl || track.audioUrl}"></audio>
+            ${track.imageUrl ? `<img src="${track.imageUrl}" alt="Album art" style="width: 100%; border-radius: 8px; margin: 0.5rem 0;" />` : ''}
+            <a href="${track.streamAudioUrl || track.audioUrl}" download="${track.title || 'music'}.mp3" class="download-btn">Download MP3</a>
+          </div>
+        `).join('');
+
         musicResult.innerHTML = `
-          <div class="result-box">
-            <div class="result-title">Generated Music</div>
-            <audio controls src="${data.audioUrl}"></audio>
-            <a href="${data.audioUrl}" download class="download-btn">Download MP3</a>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            ${tracksHTML}
           </div>
         `;
         musicResult.style.display = 'block';
