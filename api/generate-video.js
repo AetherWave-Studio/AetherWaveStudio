@@ -65,8 +65,8 @@ export default async function handler(req, res) {
       hasAudioId: !!audioId
     });
 
-    // Use the same generate endpoint as music, with video-specific parameters
-    const generateResponse = await fetch('https://api.kie.ai/api/v1/generate/video', {
+    // Use the mp4 generate endpoint for video generation
+    const generateResponse = await fetch('https://api.kie.ai/api/v1/mp4/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ export default async function handler(req, res) {
       attempts++;
 
       const statusResponse = await fetch(
-        `https://api.kie.ai/api/v1/generate/record-info?taskId=${taskId}`,
+        `https://api.kie.ai/api/v1/mp4/record-info?taskId=${taskId}`,
         {
           headers: {
             'Authorization': `Bearer ${sunoApiKey}`
