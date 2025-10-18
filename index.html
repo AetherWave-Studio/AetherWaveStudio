@@ -692,24 +692,35 @@
           <div id="video-mode-fields" style="display: none;">
             <div class="form-group">
               <label class="form-label">Describe your video</label>
-              <textarea id="video-prompt" placeholder="e.g., A camera flying through a neon-lit cyberpunk city at night, with holographic billboards and flying cars"></textarea>
+              <textarea id="video-prompt" placeholder="e.g., A camera flying through a neon-lit cyberpunk city at night, with holographic billboards and flying cars. Use [Cut to] for scene transitions."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Image URL (Optional - for Image-to-Video)</label>
+              <input type="text" id="video-image-url" placeholder="https://example.com/image.jpg" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Leave empty for text-to-video generation</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Resolution</label>
+              <select id="video-resolution">
+                <option value="720p" selected>720p (Faster)</option>
+                <option value="1080p">1080p (Higher Quality)</option>
+              </select>
             </div>
             <div class="form-group">
               <label class="form-label">Duration</label>
               <select id="video-duration">
-                <option value="5">5 seconds</option>
-                <option value="10" selected>10 seconds</option>
+                <option value="5" selected>5 seconds</option>
+                <option value="10">10 seconds</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Aspect Ratio</label>
-              <select id="video-aspect-ratio">
-                <option value="16:9" selected>16:9 (Widescreen)</option>
-                <option value="9:16">9:16 (Vertical)</option>
-                <option value="1:1">1:1 (Square)</option>
-              </select>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" id="video-camera-fixed" style="width: auto; cursor: pointer;">
+                <span class="form-label" style="margin: 0;">Fixed Camera (No Movement)</span>
+              </label>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.5rem;">Enable for static camera shots</div>
             </div>
-            <button class="btn-primary" id="generate-video-btn">Generate Video</button>
+            <button class="btn-primary" id="generate-video-btn">Generate Video with Seedance 1.0</button>
           </div>
 
           <div id="art-result" style="display: none;"></div>
@@ -778,8 +789,10 @@
     const artStyle = document.getElementById('art-style');
     const generateArtBtn = document.getElementById('generate-art-btn');
     const videoPrompt = document.getElementById('video-prompt');
+    const videoImageUrl = document.getElementById('video-image-url');
+    const videoResolution = document.getElementById('video-resolution');
     const videoDuration = document.getElementById('video-duration');
-    const videoAspectRatio = document.getElementById('video-aspect-ratio');
+    const videoCameraFixed = document.getElementById('video-camera-fixed');
     const generateVideoBtn = document.getElementById('generate-video-btn');
     const artResult = document.getElementById('art-result');
 
@@ -1038,11 +1051,13 @@
       }
     }
 
-    // Generate video
+    // Generate video with Seedance
     async function generateVideo() {
       const prompt = videoPrompt.value.trim();
+      const imageUrl = videoImageUrl.value.trim();
+      const resolution = videoResolution.value;
       const duration = videoDuration.value;
-      const aspectRatio = videoAspectRatio.value;
+      const cameraFixed = videoCameraFixed.checked;
 
       if (!prompt) {
         alert('Please describe your video');
@@ -1050,40 +1065,59 @@
       }
 
       generateVideoBtn.disabled = true;
-      generateVideoBtn.textContent = 'Generating...';
+      generateVideoBtn.textContent = 'Generating with Seedance...';
       artResult.style.display = 'none';
 
       try {
+        const requestBody = {
+          prompt: prompt,
+          resolution: resolution,
+          duration: duration,
+          cameraFixed: cameraFixed
+        };
+
+        // Add imageUrl if provided (for image-to-video)
+        if (imageUrl) {
+          requestBody.imageUrl = imageUrl;
+        }
+
         const response = await fetch('/api/generate-video', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            prompt: prompt,
-            duration: duration,
-            aspectRatio: aspectRatio
-          })
+          body: JSON.stringify(requestBody)
         });
-
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.error || 'Failed to generate video');
-        }
 
         const data = await response.json();
 
-        artResult.innerHTML = `
-          <div class="result-box">
-            <div class="result-title">Generated Video</div>
-            <video controls style="width: 100%; border-radius: 8px; margin-bottom: 0.5rem;">
-              <source src="${data.videoUrl}" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-            <a href="${data.videoUrl}" download="generated-video.mp4" class="download-btn">Download Video</a>
-          </div>
-        `;
-        artResult.style.display = 'block';
+        // Check if response is 202 (processing)
+        if (response.status === 202) {
+          // Video generation started - poll for completion
+          artResult.innerHTML = `
+            <div class="result-box">
+              <div class="result-title">🎬 Generating Video with Seedance 1.0</div>
+              <p style="color: var(--accent-color); font-size: 0.9rem;">Video generation started! This may take 5-10 minutes.</p>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Model: ${data.model || 'Seedance 1.0 Lite'}</p>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Resolution: ${data.resolution || '720p'}</p>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Duration: ${data.duration || '5'}s</p>
+            </div>
+          `;
+          artResult.style.display = 'block';
+
+          // Poll for completion
+          pollVideoStatus(data.taskId);
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to generate video');
+        }
+
+        // If video is already ready (unlikely with Seedance)
+        if (data.videoUrl) {
+          displayVideoResult(data);
+        }
 
       } catch (error) {
         console.error('Video generation error:', error);
@@ -1096,8 +1130,80 @@
         artResult.style.display = 'block';
       } finally {
         generateVideoBtn.disabled = false;
-        generateVideoBtn.textContent = 'Generate Video';
+        generateVideoBtn.textContent = 'Generate Video with Seedance 1.0';
       }
+    }
+
+    // Poll video status
+    async function pollVideoStatus(taskId) {
+      const maxAttempts = 60; // 10 minutes (60 * 10 seconds)
+      let attempts = 0;
+
+      const checkInterval = setInterval(async () => {
+        attempts++;
+
+        try {
+          const statusResponse = await fetch(`/api/video-status?taskId=${taskId}`);
+          const statusData = await statusResponse.json();
+
+          if (statusData.status === 'complete') {
+            clearInterval(checkInterval);
+            displayVideoResult(statusData);
+          } else if (statusData.status === 'failed') {
+            clearInterval(checkInterval);
+            artResult.innerHTML = `
+              <div class="result-box">
+                <div class="result-title">Error</div>
+                <p style="color: #ff6b6b; font-size: 0.9rem;">❌ Video generation failed: ${statusData.error || statusData.details || 'Unknown error'}</p>
+              </div>
+            `;
+          } else if (attempts >= maxAttempts) {
+            clearInterval(checkInterval);
+            artResult.innerHTML = `
+              <div class="result-box">
+                <div class="result-title">Timeout</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Video generation is taking longer than expected. Please check back later.</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Task ID: ${taskId}</p>
+              </div>
+            `;
+          } else {
+            // Still processing - update message
+            artResult.innerHTML = `
+              <div class="result-box">
+                <div class="result-title">🎬 Generating Video with Seedance 1.0</div>
+                <p style="color: var(--accent-color); font-size: 0.9rem;">Video is still being generated... (${attempts * 10}s elapsed)</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Status: ${statusData.jobStatus || 'processing'}</p>
+                ${statusData.progress ? `<p style="color: var(--text-muted); font-size: 0.85rem;">Progress: ${statusData.progress}%</p>` : ''}
+              </div>
+            `;
+          }
+        } catch (error) {
+          console.error('Status check error:', error);
+        }
+      }, 10000); // Check every 10 seconds
+    }
+
+    // Display video result
+    function displayVideoResult(data) {
+      artResult.innerHTML = `
+        <div class="result-box">
+          <div class="result-title">✅ Generated Video (Seedance 1.0)</div>
+          <video controls style="width: 100%; border-radius: 8px; margin-bottom: 0.5rem;">
+            <source src="${data.videoUrl}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          ${data.coverUrl ? `<img src="${data.coverUrl}" alt="Video thumbnail" style="display: none;">` : ''}
+          <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+            <a href="${data.videoUrl}" download="seedance-video.mp4" class="download-btn">Download Video</a>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem;">
+            ${data.resolution ? `Resolution: ${data.resolution} · ` : ''}
+            ${data.duration ? `Duration: ${data.duration}s · ` : ''}
+            ${data.model ? `Model: ${data.model}` : ''}
+          </p>
+        </div>
+      `;
+      artResult.style.display = 'block';
     }
 
     // Generate visual (image/video) for a specific track
@@ -1118,39 +1224,42 @@
 
       try {
         if (type === 'video') {
-          // Generate music video using the music generation taskId
+          // Generate music video using Seedance 1.0
           const response = await fetch('/api/generate-video', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              prompt: prompt,
+              resolution: '720p',
+              duration: '5',
               musicTaskId: musicTaskId,
-              audioId: trackId,
-              prompt: prompt
+              audioId: trackId
             })
           });
 
-          if (!response.ok) {
-            const data = await response.json();
+          const data = await response.json();
+
+          if (!response.ok && response.status !== 202) {
             console.error('Video generation error response:', data);
             throw new Error(data.details || data.error || 'Failed to generate video');
           }
 
-          const data = await response.json();
-
           // Video generation is async - poll for completion
-          if (data.status === 'processing') {
-            resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎬 Video generation started! This may take 10-15 minutes. Checking status...</p>`;
+          if (response.status === 202 || data.status === 'processing') {
+            resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎬 Video generation started with Seedance 1.0! This may take 5-10 minutes.</p>`;
+
+            const videoTaskId = data.taskId;
 
             // Poll for completion
             const checkInterval = setInterval(async () => {
               try {
-                const statusResponse = await fetch(`/api/video-status?taskId=${musicTaskId}`);
+                const statusResponse = await fetch(`/api/video-status?taskId=${videoTaskId}`);
                 const statusData = await statusResponse.json();
 
                 if (statusData.status === 'complete') {
                   clearInterval(checkInterval);
                   resultDiv.innerHTML = `
-                    <p style="color: #4ade80; font-size: 0.9rem;">✅ Video generation complete!</p>
+                    <p style="color: #4ade80; font-size: 0.9rem;">✅ Music video complete! (Seedance 1.0)</p>
                     <video controls style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
                       <source src="${statusData.videoUrl}" type="video/mp4">
                     </video>
@@ -1158,18 +1267,17 @@
                   `;
                 } else if (statusData.status === 'failed') {
                   clearInterval(checkInterval);
-                  resultDiv.innerHTML = `<p style="color: #ff6b6b; font-size: 0.9rem;">❌ Video generation failed: ${statusData.error || 'Unknown error'}</p>`;
+                  resultDiv.innerHTML = `<p style="color: #ff6b6b; font-size: 0.9rem;">❌ Video generation failed: ${statusData.error || statusData.details || 'Unknown error'}</p>`;
                 } else {
-                  // Still processing - update message
-                  const elapsed = Math.floor((Date.now() - Date.now()) / 1000);
-                  resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎬 Video is still being generated... Please wait (this can take 10-15 minutes)</p>`;
+                  // Still processing - update message with progress
+                  resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎬 Generating music video with Seedance 1.0... (${statusData.jobStatus || 'processing'})</p>`;
                 }
               } catch (error) {
                 console.error('Status check error:', error);
               }
             }, 10000); // Check every 10 seconds
           } else if (data.videoUrl) {
-            // Video already complete (shouldn't happen with new async approach)
+            // Video already complete (unlikely)
             resultDiv.innerHTML = `
               <video controls style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
                 <source src="${data.videoUrl}" type="video/mp4">

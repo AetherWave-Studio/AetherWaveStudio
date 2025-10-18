@@ -1,5 +1,5 @@
-// Vercel Serverless Function - Check Video Generation Status
-// Polls KIE.AI API to check if video generation is complete
+// Vercel Serverless Function - Check Seedance Video Generation Status
+// Polls KIE.AI API to check if Seedance video generation is complete
 
 import fetch from 'node-fetch';
 import { HttpsProxyAgent } from 'https-proxy-agent';
@@ -22,10 +22,10 @@ export default async function handler(req, res) {
   }
 
   // Get API key from environment variables
-  const sunoApiKey = process.env.SUNO_API_KEY;
+  const seedanceApiKey = process.env.SEEDANCE1_API_KEY;
 
-  if (!sunoApiKey) {
-    return res.status(500).json({ error: 'SUNO API key not configured' });
+  if (!seedanceApiKey) {
+    return res.status(500).json({ error: 'Seedance API key not configured' });
   }
 
   // Get taskId from query parameters
@@ -40,12 +40,12 @@ export default async function handler(req, res) {
   const agent = new HttpsProxyAgent(proxyUrl);
 
   try {
-    // Check video generation status
+    // Check Seedance video generation status using jobs endpoint
     const statusResponse = await fetch(
-      `https://api.kie.ai/api/v1/mp4/record-info?taskId=${taskId}`,
+      `https://api.kie.ai/api/v1/jobs/${taskId}`,
       {
         headers: {
-          'Authorization': `Bearer ${sunoApiKey}`
+          'Authorization': `Bearer ${seedanceApiKey}`
         },
         agent  // Route through proxy
       }
@@ -59,46 +59,65 @@ export default async function handler(req, res) {
     }
 
     const statusData = await statusResponse.json();
-    console.log('Video status full response:', JSON.stringify(statusData, null, 2));
+    console.log('Seedance video status full response:', JSON.stringify(statusData, null, 2));
 
-    // The mp4/record-info endpoint structure is different from music generation
-    // It returns: { code: 0, msg: "", data: { taskId: "" } }
-    // When video is ready, it might return additional fields in data
+    // KIE.AI Seedance jobs endpoint returns:
+    // { code: 200, msg: "success", data: { taskId: "...", status: "...", output: { ... } } }
 
-    // Check for success (code could be 0 or 200)
-    if (statusData.code === 0 || statusData.code === 200) {
-      // Check if we have video data in the response (try both snake_case and camelCase)
-      const videoUrl = statusData.data?.video_url || statusData.data?.videoUrl ||
-                       statusData.data?.url || statusData.data?.mp4Url;
+    // Check for success
+    if (statusData.code === 200) {
+      const jobData = statusData.data;
+      const jobStatus = jobData?.status;
 
-      if (videoUrl) {
-        // Video is ready
-        const coverUrl = statusData.data?.cover_url || statusData.data?.coverUrl ||
-                         statusData.data?.imageUrl || statusData.data?.image_url;
+      // Check job status
+      if (jobStatus === 'completed' || jobStatus === 'succeeded' || jobStatus === 'success') {
+        // Video is ready - get the output
+        const output = jobData?.output;
+        const videoUrl = output?.video_url || output?.videoUrl || output?.url;
 
-        return res.status(200).json({
-          status: 'complete',
-          videoUrl: videoUrl,
-          coverUrl: coverUrl,
+        if (videoUrl) {
+          const coverUrl = output?.cover_url || output?.coverUrl ||
+                           output?.thumbnail_url || output?.thumbnailUrl;
+
+          return res.status(200).json({
+            status: 'complete',
+            videoUrl: videoUrl,
+            coverUrl: coverUrl,
+            taskId: taskId,
+            duration: output?.duration,
+            resolution: output?.resolution,
+            model: jobData?.model
+          });
+        }
+      }
+
+      // Check if job failed
+      if (jobStatus === 'failed' || jobStatus === 'error') {
+        return res.status(500).json({
+          status: 'failed',
+          error: 'Video generation failed',
+          details: jobData?.error || jobData?.errorMessage || 'Unknown error',
           taskId: taskId
         });
       }
 
-      // If we only have taskId, video is still processing
+      // Job is still processing (pending, running, etc.)
       return res.status(200).json({
         status: 'processing',
-        message: 'Video is still being generated',
+        message: 'Video is still being generated with Seedance 1.0',
         taskId: taskId,
-        debug: statusData
+        jobStatus: jobStatus,
+        progress: jobData?.progress
       });
     }
 
-    // Check for errors
-    if (statusData.code !== 0 && statusData.msg) {
+    // Check for API errors
+    if (statusData.code !== 200) {
       return res.status(500).json({
         status: 'failed',
-        error: 'Video generation failed',
-        details: statusData.msg
+        error: 'Failed to check video status',
+        details: statusData.msg || 'Unknown error',
+        code: statusData.code
       });
     }
 

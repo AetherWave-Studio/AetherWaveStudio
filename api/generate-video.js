@@ -1,5 +1,5 @@
-// Vercel Serverless Function - Music Video Generation API
-// Uses KIE.AI SUNO API to generate music videos from audio
+// Vercel Serverless Function - Video Generation API
+// Uses KIE.AI Seedance 1.0 API to generate videos from text/image
 
 // Import node-fetch explicitly to use with proxy agent
 import fetch from 'node-fetch';
@@ -23,22 +23,28 @@ export default async function handler(req, res) {
   }
 
   // Get API key from environment variables
-  const sunoApiKey = process.env.SUNO_API_KEY;
+  const seedanceApiKey = process.env.SEEDANCE1_API_KEY;
 
-  if (!sunoApiKey) {
-    return res.status(500).json({ error: 'SUNO API key not configured' });
+  if (!seedanceApiKey) {
+    return res.status(500).json({ error: 'Seedance API key not configured' });
   }
 
   // Validate request body
   const {
     prompt,
-    musicTaskId, // Required: taskId from music generation
-    audioId // Individual track ID (for reference)
+    imageUrl, // Optional: for image-to-video
+    resolution = '720p', // 720p or 1080p
+    duration = '5', // 5 or 10 seconds
+    cameraFixed = false,
+    seed = -1,
+    enableSafetyChecker = true,
+    musicTaskId, // Optional: for music video generation
+    audioId // Optional: Individual track ID (for reference)
   } = req.body;
 
-  if (!musicTaskId) {
+  if (!prompt) {
     return res.status(400).json({
-      error: 'Invalid request. musicTaskId is required for music video generation.'
+      error: 'Invalid request. Prompt is required for video generation.'
     });
   }
 
@@ -47,31 +53,46 @@ export default async function handler(req, res) {
   const agent = new HttpsProxyAgent(proxyUrl);
 
   try {
-    // KIE.AI mp4/generate expects:
-    // - taskId: music generation taskId (identifies the original music task)
-    // - audioId: individual track ID (which variation to visualize)
-    // - callBackUrl, author, domainName: optional metadata
+    // Determine which model to use based on whether an image is provided
+    const model = imageUrl
+      ? 'bytedance/v1-lite-image-to-video'
+      : 'bytedance/v1-lite-text-to-video';
+
+    // Build request payload for Seedance API
     const requestPayload = {
-      taskId: musicTaskId,  // Music generation taskId
-      audioId: audioId,      // Specific track ID to visualize
+      model: model,
       callBackUrl: 'https://aetherwavestudio.com/api/video-callback',
-      author: 'AetherWave Studio',
-      domainName: 'aetherwavestudio.com'
+      input: {
+        prompt: prompt,
+        resolution: resolution,
+        duration: duration,
+        camera_fixed: cameraFixed,
+        seed: seed,
+        enable_safety_checker: enableSafetyChecker
+      }
     };
 
-    console.log('Generating music video with SUNO API:', {
-      musicTaskId,
-      trackId: audioId,
+    // Add image_url only for image-to-video
+    if (imageUrl) {
+      requestPayload.input.image_url = imageUrl;
+    }
+
+    console.log('Generating video with Seedance 1.0 API:', {
+      model,
       prompt,
-      payload: requestPayload
+      imageUrl,
+      resolution,
+      duration,
+      musicTaskId,
+      audioId
     });
 
-    // Use the mp4 generate endpoint for video generation
-    const generateResponse = await fetch('https://api.kie.ai/api/v1/mp4/generate', {
+    // Use KIE.AI jobs/createTask endpoint for Seedance
+    const generateResponse = await fetch('https://api.kie.ai/api/v1/jobs/createTask', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${sunoApiKey}`
+        'Authorization': `Bearer ${seedanceApiKey}`
       },
       body: JSON.stringify(requestPayload),
       agent  // Route through proxy
@@ -79,7 +100,7 @@ export default async function handler(req, res) {
 
     if (!generateResponse.ok) {
       const errorText = await generateResponse.text();
-      console.error('SUNO Video Generate Error (raw):', errorText);
+      console.error('Seedance Video Generate Error (raw):', errorText);
       console.error('Response status:', generateResponse.status);
       console.error('Response headers:', Object.fromEntries(generateResponse.headers.entries()));
 
@@ -98,7 +119,7 @@ export default async function handler(req, res) {
     }
 
     const responseText = await generateResponse.text();
-    console.log('SUNO Video API Response (raw):', responseText);
+    console.log('Seedance API Response (raw):', responseText);
 
     let generateData;
     try {
@@ -110,38 +131,43 @@ export default async function handler(req, res) {
         details: responseText.substring(0, 200)
       });
     }
-    console.log('SUNO Video API Response:', JSON.stringify(generateData, null, 2));
+    console.log('Seedance API Response:', JSON.stringify(generateData, null, 2));
 
     // Check if the API accepted the request
-    if (generateData.code === 422 && generateData.msg === 'Mp4 record already exists') {
-      // Video already exists or is being generated - just return processing status
-      // Client will poll status endpoint to get the result
-      console.log('Video already exists or is processing for musicTaskId:', musicTaskId);
-      return res.status(202).json({
-        status: 'processing',
-        message: 'Video is already being generated or exists. Checking status...',
-        taskId: musicTaskId,
-        audioId: audioId,
-        prompt: prompt
-      });
-    } else if (generateData.code !== 200) {
+    // KIE.AI Seedance API returns: { code: 200, msg: "success", data: { taskId: "..." } }
+    if (generateData.code !== 200) {
       return res.status(500).json({
         error: 'Video generation request failed',
-        details: generateData.msg || 'Unknown error'
+        details: generateData.msg || 'Unknown error',
+        code: generateData.code
       });
     }
 
-    console.log('Video generation started for musicTaskId:', musicTaskId);
+    const taskId = generateData.data?.taskId || generateData.data?.task_id;
+
+    if (!taskId) {
+      console.error('No taskId found. Full response:', generateData);
+      return res.status(500).json({
+        error: 'No taskId returned from Seedance API',
+        details: 'Response: ' + JSON.stringify(generateData)
+      });
+    }
+
+    console.log('Video generation started with Seedance, taskId:', taskId);
 
     // Return immediately - video generation is async
     // KIE.AI will call our webhook when complete
     // Client should poll the status endpoint to check progress
     return res.status(202).json({
       status: 'processing',
-      message: 'Video generation started. This may take 10-15 minutes.',
-      taskId: musicTaskId,
-      audioId: audioId,
-      prompt: prompt
+      message: 'Video generation started with Seedance 1.0. This may take 5-10 minutes.',
+      taskId: taskId,
+      model: model,
+      resolution: resolution,
+      duration: duration,
+      prompt: prompt,
+      musicTaskId: musicTaskId, // Include for reference if this is a music video
+      audioId: audioId
     });
 
   } catch (error) {
