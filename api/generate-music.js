@@ -1,7 +1,8 @@
 // Vercel Serverless Function - Music Generation API
 // Uses KIE.AI SUNO API to generate music from text prompts
 
-// At the top, instead of const { HttpsProxyAgent } = require('https-proxy-agent');
+// Import node-fetch explicitly to use with proxy agent
+import fetch from 'node-fetch';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 export default async function handler(req, res) {
@@ -50,7 +51,7 @@ export default async function handler(req, res) {
   }
 
   // Proxy setup - use your Webshare details here
-  const proxyUrl = 'https://mfvrmgdc:3281gl8vgvlp@142.111.48.253:7030';  // From Webshare
+  const proxyUrl = 'http://mfvrmgdc:3281gl8vgvlp@142.111.48.253:7030';  // From Webshare
   const agent = new HttpsProxyAgent(proxyUrl);
 
   try {
