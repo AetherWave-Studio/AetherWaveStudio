@@ -122,73 +122,12 @@ export default async function handler(req, res) {
 
     console.log('Video generation started for musicTaskId:', musicTaskId);
 
-    // Step 2: Poll for completion (with timeout)
-    const maxAttempts = 60; // 60 attempts (videos take longer)
-    const pollInterval = 3000; // 3 seconds
-    let attempts = 0;
-    let videoData = null;
-
-    while (attempts < maxAttempts) {
-      await new Promise(resolve => setTimeout(resolve, pollInterval));
-      attempts++;
-
-      const statusResponse = await fetch(
-        `https://api.kie.ai/api/v1/mp4/record-info?taskId=${musicTaskId}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${sunoApiKey}`
-          },
-          agent  // Route through proxy
-        }
-      );
-
-      if (!statusResponse.ok) {
-        console.error('Status check failed');
-        continue;
-      }
-
-      const statusData = await statusResponse.json();
-      const status = statusData.data?.status;
-      const response = statusData.data?.response;
-
-      console.log(`Attempt ${attempts}: Status = ${status}, has response = ${!!response}`);
-
-      // Check if generation is complete
-      // Wait for status to be SUCCESS/COMPLETE and response to be populated
-      if (status && status !== 'PENDING' && status !== 'PROCESSING') {
-        if (status === 'SUCCESS' || status === 'COMPLETE' || response) {
-          videoData = statusData.data;
-          console.log('Video generation complete! Data:', JSON.stringify(videoData, null, 2));
-          break;
-        }
-      }
-
-      // Check for errors
-      if (statusData.data?.status === 'error' || statusData.data?.status === 'failed') {
-        return res.status(500).json({
-          error: 'Video generation failed',
-          details: statusData.data?.errorMessage || 'Generation failed'
-        });
-      }
-    }
-
-    // Check if we got the video data
-    if (!videoData || !videoData.response) {
-      return res.status(408).json({
-        error: 'Video generation timeout',
-        message: 'Generation is taking longer than expected. Please try again.',
-        taskId: musicTaskId
-      });
-    }
-
-    // Extract video URL from response
-    const videoUrl = videoData.response.videoUrl || videoData.response.url;
-    const coverUrl = videoData.response.coverUrl || videoData.response.imageUrl;
-
-    // Return successful response
-    return res.status(200).json({
-      videoUrl: videoUrl,
-      coverUrl: coverUrl,
+    // Return immediately - video generation is async
+    // KIE.AI will call our webhook when complete
+    // Client should poll the status endpoint to check progress
+    return res.status(202).json({
+      status: 'processing',
+      message: 'Video generation started. This may take 10-15 minutes.',
       taskId: musicTaskId,
       audioId: audioId,
       prompt: prompt

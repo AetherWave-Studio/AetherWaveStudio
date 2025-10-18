@@ -1131,12 +1131,47 @@
           }
 
           const data = await response.json();
-          resultDiv.innerHTML = `
-            <video controls style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
-              <source src="${data.videoUrl}" type="video/mp4">
-            </video>
-            <a href="${data.videoUrl}" download="${trackTitle}-video.mp4" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Video</a>
-          `;
+
+          // Video generation is async - poll for completion
+          if (data.status === 'processing') {
+            resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎬 Video generation started! This may take 10-15 minutes. Checking status...</p>`;
+
+            // Poll for completion
+            const checkInterval = setInterval(async () => {
+              try {
+                const statusResponse = await fetch(`/api/video-status?taskId=${musicTaskId}`);
+                const statusData = await statusResponse.json();
+
+                if (statusData.status === 'complete') {
+                  clearInterval(checkInterval);
+                  resultDiv.innerHTML = `
+                    <p style="color: #4ade80; font-size: 0.9rem;">✅ Video generation complete!</p>
+                    <video controls style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
+                      <source src="${statusData.videoUrl}" type="video/mp4">
+                    </video>
+                    <a href="${statusData.videoUrl}" download="${trackTitle}-video.mp4" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Video</a>
+                  `;
+                } else if (statusData.status === 'failed') {
+                  clearInterval(checkInterval);
+                  resultDiv.innerHTML = `<p style="color: #ff6b6b; font-size: 0.9rem;">❌ Video generation failed: ${statusData.error || 'Unknown error'}</p>`;
+                } else {
+                  // Still processing - update message
+                  const elapsed = Math.floor((Date.now() - Date.now()) / 1000);
+                  resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎬 Video is still being generated... Please wait (this can take 10-15 minutes)</p>`;
+                }
+              } catch (error) {
+                console.error('Status check error:', error);
+              }
+            }, 10000); // Check every 10 seconds
+          } else if (data.videoUrl) {
+            // Video already complete (shouldn't happen with new async approach)
+            resultDiv.innerHTML = `
+              <video controls style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
+                <source src="${data.videoUrl}" type="video/mp4">
+              </video>
+              <a href="${data.videoUrl}" download="${trackTitle}-video.mp4" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Video</a>
+            `;
+          }
         } else {
           // Generate album art (existing functionality)
           const response = await fetch('/api/generate-art', {
