@@ -10,7 +10,7 @@
       "maxDuration": 60
     },
     "api/generate-video.js": {
-      "maxDuration": 180
+      "maxDuration": 300
     }
   },
   "headers": [
