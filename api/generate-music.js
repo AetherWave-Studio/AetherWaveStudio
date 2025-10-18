@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   }
 
   // Get API key from environment variables
-  const sunoApiKey = process.env.b1bde5cbe1b55cf0c492afe2b97fb133;
+  const sunoApiKey = process.env.SUNO_API_KEY;
 
   if (!sunoApiKey) {
     return res.status(500).json({ error: 'SUNO API key not configured' });
@@ -88,7 +88,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${b1bde5cbe1b55cf0c492afe2b97fb133}`
+        'Authorization': `Bearer ${sunoApiKey}`
       },
       body: JSON.stringify(requestPayload),
       agent  // Route through proxy
@@ -132,7 +132,7 @@ export default async function handler(req, res) {
         `https://api.kie.ai/api/v1/generate/record-info?taskId=${taskId}`,
         {
           headers: {
-            'Authorization': `Bearer ${b1bde5cbe1b55cf0c492afe2b97fb133}`
+            'Authorization': `Bearer ${sunoApiKey}`
           },
           agent  // Route through proxy
         }
