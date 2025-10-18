@@ -65,7 +65,7 @@ export default async function handler(req, res) {
       hasAudioId: !!audioId
     });
 
-    const generateResponse = await fetch('https://api.kie.ai/api/v1/video/generate', {
+    const generateResponse = await fetch('https://api.kie.ai/api/v1/suno/video', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ export default async function handler(req, res) {
       attempts++;
 
       const statusResponse = await fetch(
-        `https://api.kie.ai/api/v1/video/record-info?taskId=${taskId}`,
+        `https://api.kie.ai/api/v1/suno/video/record-info?taskId=${taskId}`,
         {
           headers: {
             'Authorization': `Bearer ${sunoApiKey}`
