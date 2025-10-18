@@ -17,6 +17,15 @@
     },
     "api/video-callback.js": {
       "maxDuration": 10
+    },
+    "api/generate-cover.js": {
+      "maxDuration": 10
+    },
+    "api/cover-status.js": {
+      "maxDuration": 10
+    },
+    "api/cover-callback.js": {
+      "maxDuration": 10
     }
   },
   "headers": [
