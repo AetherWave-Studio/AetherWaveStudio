@@ -32,12 +32,13 @@ export default async function handler(req, res) {
   // Validate request body
   const {
     prompt,
-    audioId // Required: audio ID from music generation
+    musicTaskId, // Required: taskId from music generation
+    audioId // Individual track ID (for reference)
   } = req.body;
 
-  if (!audioId) {
+  if (!musicTaskId) {
     return res.status(400).json({
-      error: 'Invalid request. audioId is required for music video generation.'
+      error: 'Invalid request. musicTaskId is required for music video generation.'
     });
   }
 
@@ -46,21 +47,21 @@ export default async function handler(req, res) {
   const agent = new HttpsProxyAgent(proxyUrl);
 
   try {
-    // Generate a unique taskId for this request
-    const taskId = `taskId_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-    // KIE.AI mp4/generate expects: taskId, audioId, callBackUrl, author, domainName
+    // KIE.AI mp4/generate expects:
+    // - taskId: music generation taskId (identifies the original music task)
+    // - audioId: individual track ID (which variation to visualize)
+    // - callBackUrl, author, domainName: optional metadata
     const requestPayload = {
-      taskId: taskId,
-      audioId: audioId,
+      taskId: musicTaskId,  // Music generation taskId
+      audioId: audioId,      // Specific track ID to visualize
       callBackUrl: 'https://aetherwavestudio.com/api/video-callback',
       author: 'AetherWave Studio',
       domainName: 'aetherwavestudio.com'
     };
 
     console.log('Generating music video with SUNO API:', {
-      taskId,
-      audioId,
+      musicTaskId,
+      trackId: audioId,
       prompt,
       payload: requestPayload
     });
@@ -119,7 +120,7 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('Video generation started, taskId:', taskId);
+    console.log('Video generation started for musicTaskId:', musicTaskId);
 
     // Step 2: Poll for completion (with timeout)
     const maxAttempts = 60; // 60 attempts (videos take longer)
@@ -132,7 +133,7 @@ export default async function handler(req, res) {
       attempts++;
 
       const statusResponse = await fetch(
-        `https://api.kie.ai/api/v1/mp4/record-info?taskId=${taskId}`,
+        `https://api.kie.ai/api/v1/mp4/record-info?taskId=${musicTaskId}`,
         {
           headers: {
             'Authorization': `Bearer ${sunoApiKey}`
@@ -176,7 +177,7 @@ export default async function handler(req, res) {
       return res.status(408).json({
         error: 'Video generation timeout',
         message: 'Generation is taking longer than expected. Please try again.',
-        taskId: taskId
+        taskId: musicTaskId
       });
     }
 
@@ -188,10 +189,9 @@ export default async function handler(req, res) {
     return res.status(200).json({
       videoUrl: videoUrl,
       coverUrl: coverUrl,
-      taskId: taskId,
-      prompt: prompt,
-      duration: duration,
-      aspectRatio: aspectRatio
+      taskId: musicTaskId,
+      audioId: audioId,
+      prompt: prompt
     });
 
   } catch (error) {

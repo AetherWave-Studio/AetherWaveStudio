@@ -928,6 +928,8 @@
 
         // Handle multiple tracks returned from API
         const tracks = data.tracks || [];
+        const musicTaskId = data.taskId; // Store the music generation taskId
+
         if (tracks.length === 0) {
           throw new Error('No music tracks returned from API');
         }
@@ -940,8 +942,8 @@
             ${track.imageUrl ? `<img src="${track.imageUrl}" alt="Album art" style="width: 100%; border-radius: 8px; margin: 0.5rem 0;" />` : ''}
             <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
               <a href="${track.streamAudioUrl || track.audioUrl}" download="${track.title || 'music'}.mp3" class="download-btn">Download MP3</a>
-              <button class="download-btn" onclick="generateVisualForTrack('${track.id}', '${track.title}', 'image')" style="cursor: pointer;">Generate Album Art</button>
-              <button class="download-btn" onclick="generateVisualForTrack('${track.id}', '${track.title}', 'video')" style="cursor: pointer;">Generate Music Video</button>
+              <button class="download-btn" onclick="generateVisualForTrack('${musicTaskId}', '${track.id}', '${track.title}', 'image')" style="cursor: pointer;">Generate Album Art</button>
+              <button class="download-btn" onclick="generateVisualForTrack('${musicTaskId}', '${track.id}', '${track.title}', 'video')" style="cursor: pointer;">Generate Music Video</button>
             </div>
             <div id="visual-result-${track.id}" style="margin-top: 0.5rem;"></div>
           </div>
@@ -1099,7 +1101,7 @@
     }
 
     // Generate visual (image/video) for a specific track
-    window.generateVisualForTrack = async function(audioId, trackTitle, type) {
+    window.generateVisualForTrack = async function(musicTaskId, trackId, trackTitle, type) {
       const prompt = window.prompt(
         `Describe the ${type === 'image' ? 'album art' : 'music video'} for "${trackTitle}"`,
         `${type === 'image' ? 'Album art' : 'Music video'} for ${trackTitle}`
@@ -1107,17 +1109,18 @@
 
       if (!prompt) return;
 
-      const resultDiv = document.getElementById(`visual-result-${audioId}`);
+      const resultDiv = document.getElementById(`visual-result-${trackId}`);
       resultDiv.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">Generating ${type}...</p>`;
 
       try {
         if (type === 'video') {
-          // Generate music video using the audio ID
+          // Generate music video using the music generation taskId
           const response = await fetch('/api/generate-video', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              audioId: audioId,
+              musicTaskId: musicTaskId,
+              audioId: trackId,
               prompt: prompt
             })
           });
