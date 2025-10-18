@@ -1131,7 +1131,8 @@
 
           if (!response.ok) {
             const data = await response.json();
-            throw new Error(data.error || 'Failed to generate video');
+            console.error('Video generation error response:', data);
+            throw new Error(data.details || data.error || 'Failed to generate video');
           }
 
           const data = await response.json();

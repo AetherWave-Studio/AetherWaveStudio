@@ -59,6 +59,8 @@ export default async function handler(req, res) {
     }
 
     const statusData = await statusResponse.json();
+    console.log('Video status full response:', JSON.stringify(statusData, null, 2));
+
     const status = statusData.data?.status;
     const response = statusData.data?.response;
 

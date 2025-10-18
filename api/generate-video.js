@@ -113,7 +113,18 @@ export default async function handler(req, res) {
     console.log('SUNO Video API Response:', JSON.stringify(generateData, null, 2));
 
     // Check if the API accepted the request
-    if (generateData.code !== 200) {
+    if (generateData.code === 422 && generateData.msg === 'Mp4 record already exists') {
+      // Video already exists or is being generated - just return processing status
+      // Client will poll status endpoint to get the result
+      console.log('Video already exists or is processing for musicTaskId:', musicTaskId);
+      return res.status(202).json({
+        status: 'processing',
+        message: 'Video is already being generated or exists. Checking status...',
+        taskId: musicTaskId,
+        audioId: audioId,
+        prompt: prompt
+      });
+    } else if (generateData.code !== 200) {
       return res.status(500).json({
         error: 'Video generation request failed',
         details: generateData.msg || 'Unknown error'
