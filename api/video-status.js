@@ -65,12 +65,16 @@ export default async function handler(req, res) {
     // It returns: { code: 0, msg: "", data: { taskId: "" } }
     // When video is ready, it might return additional fields in data
 
-    if (statusData.code === 0) {
-      // Check if we have video data in the response
-      if (statusData.data?.videoUrl || statusData.data?.url || statusData.data?.mp4Url) {
+    // Check for success (code could be 0 or 200)
+    if (statusData.code === 0 || statusData.code === 200) {
+      // Check if we have video data in the response (try both snake_case and camelCase)
+      const videoUrl = statusData.data?.video_url || statusData.data?.videoUrl ||
+                       statusData.data?.url || statusData.data?.mp4Url;
+
+      if (videoUrl) {
         // Video is ready
-        const videoUrl = statusData.data.videoUrl || statusData.data.url || statusData.data.mp4Url;
-        const coverUrl = statusData.data.coverUrl || statusData.data.imageUrl;
+        const coverUrl = statusData.data?.cover_url || statusData.data?.coverUrl ||
+                         statusData.data?.imageUrl || statusData.data?.image_url;
 
         return res.status(200).json({
           status: 'complete',

@@ -22,12 +22,20 @@ export default async function handler(req, res) {
     // Log the callback data from KIE.AI
     console.log('Video callback received:', JSON.stringify(req.body, null, 2));
 
-    // KIE.AI sends the completed video data in the callback
+    // KIE.AI sends the completed video data in the callback:
+    // { code: 200, msg: "success", data: { task_id: "...", video_url: "..." } }
     const callbackData = req.body;
 
-    // Store this data temporarily (in a real app, you'd use a database)
-    // For now, we'll just log it and return success
-    // The frontend will need to poll the status endpoint instead
+    // Extract video data (uses snake_case)
+    if (callbackData.code === 200 && callbackData.data?.video_url) {
+      console.log('Video generation complete!', {
+        taskId: callbackData.data.task_id,
+        videoUrl: callbackData.data.video_url
+      });
+
+      // In a real app, you'd store this in a database
+      // For now, we just log it - the frontend polls the status endpoint
+    }
 
     return res.status(200).json({
       success: true,
