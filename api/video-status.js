@@ -61,17 +61,16 @@ export default async function handler(req, res) {
     const statusData = await statusResponse.json();
     console.log('Video status full response:', JSON.stringify(statusData, null, 2));
 
-    const status = statusData.data?.status;
-    const response = statusData.data?.response;
+    // The mp4/record-info endpoint structure is different from music generation
+    // It returns: { code: 0, msg: "", data: { taskId: "" } }
+    // When video is ready, it might return additional fields in data
 
-    console.log('Video status check:', { taskId, status, hasResponse: !!response });
-
-    // Check if generation is complete
-    if (status && status !== 'PENDING' && status !== 'PROCESSING') {
-      if (status === 'SUCCESS' || status === 'COMPLETE' || response) {
+    if (statusData.code === 0) {
+      // Check if we have video data in the response
+      if (statusData.data?.videoUrl || statusData.data?.url || statusData.data?.mp4Url) {
         // Video is ready
-        const videoUrl = response?.videoUrl || response?.url;
-        const coverUrl = response?.coverUrl || response?.imageUrl;
+        const videoUrl = statusData.data.videoUrl || statusData.data.url || statusData.data.mp4Url;
+        const coverUrl = statusData.data.coverUrl || statusData.data.imageUrl;
 
         return res.status(200).json({
           status: 'complete',
@@ -80,22 +79,31 @@ export default async function handler(req, res) {
           taskId: taskId
         });
       }
-    }
 
-    // Check for errors
-    if (status === 'error' || status === 'failed') {
-      return res.status(500).json({
-        status: 'failed',
-        error: 'Video generation failed',
-        details: statusData.data?.errorMessage || 'Generation failed'
+      // If we only have taskId, video is still processing
+      return res.status(200).json({
+        status: 'processing',
+        message: 'Video is still being generated',
+        taskId: taskId,
+        debug: statusData
       });
     }
 
-    // Still processing
+    // Check for errors
+    if (statusData.code !== 0 && statusData.msg) {
+      return res.status(500).json({
+        status: 'failed',
+        error: 'Video generation failed',
+        details: statusData.msg
+      });
+    }
+
+    // Unknown response
     return res.status(200).json({
-      status: 'processing',
-      message: 'Video is still being generated',
-      taskId: taskId
+      status: 'unknown',
+      message: 'Unable to determine video status',
+      taskId: taskId,
+      debug: statusData
     });
 
   } catch (error) {
