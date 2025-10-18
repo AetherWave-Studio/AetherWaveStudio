@@ -8,6 +8,9 @@
     },
     "api/generate-art.js": {
       "maxDuration": 60
+    },
+    "api/generate-video.js": {
+      "maxDuration": 180
     }
   },
   "headers": [
