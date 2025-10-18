@@ -194,7 +194,7 @@ export default async function handler(req, res) {
     }
 
     // Check if we got the music data
-    if (!musicData || !musicData.audioUrl) {
+    if (!musicData || !musicData.response || !musicData.response.sunoData) {
       return res.status(408).json({
         error: 'Music generation timeout',
         message: 'Generation is taking longer than expected. Please try again.',
@@ -202,15 +202,25 @@ export default async function handler(req, res) {
       });
     }
 
-    // Return successful response
+    // Extract music tracks (KIE.AI returns multiple variations)
+    const tracks = musicData.response.sunoData;
+
+    // Return successful response with all tracks
     return res.status(200).json({
-      audioUrl: musicData.audioUrl,
-      imageUrl: musicData.imageUrl,
-      title: musicData.title || title || 'Generated Track',
-      duration: musicData.duration,
-      prompt: prompt,
-      style: style,
-      taskId: taskId
+      tracks: tracks.map(track => ({
+        id: track.id,
+        audioUrl: track.audioUrl || track.streamAudioUrl,
+        streamAudioUrl: track.streamAudioUrl,
+        imageUrl: track.imageUrl,
+        title: track.title,
+        prompt: track.prompt,
+        tags: track.tags,
+        duration: track.duration,
+        modelName: track.modelName
+      })),
+      taskId: taskId,
+      originalPrompt: prompt,
+      style: style
     });
 
   } catch (error) {
