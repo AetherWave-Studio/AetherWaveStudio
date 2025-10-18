@@ -653,29 +653,65 @@
         </div>
       </div>
 
-      <!-- Album Art Panel -->
+      <!-- Visual Generation Panel -->
       <div class="panel">
         <div class="panel-header">
-          <div class="panel-title">🎨 Album Art Generator</div>
-          <div class="panel-description">Create stunning visuals for your music</div>
+          <div class="panel-title" id="visual-panel-title">🎨 Album Art Generator</div>
+          <div class="panel-description" id="visual-panel-description">Create stunning visuals for your music</div>
         </div>
         <div class="panel-content">
+          <!-- Image/Video Toggle -->
           <div class="form-group">
-            <label class="form-label">Describe your album art</label>
-            <textarea id="art-prompt" placeholder="e.g., A neon-lit cityscape at night with purple and pink gradient sky, cyberpunk aesthetic"></textarea>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="video-mode-toggle" style="width: auto; cursor: pointer;">
+              <span class="form-label" style="margin: 0;">Generate Video</span>
+            </label>
           </div>
-          <div class="form-group">
-            <label class="form-label">Style</label>
-            <select id="art-style">
-              <option value="cyberpunk">Cyberpunk</option>
-              <option value="abstract">Abstract</option>
-              <option value="retro">Retro/Vaporwave</option>
-              <option value="minimal">Minimalist</option>
-              <option value="surreal">Surreal</option>
-              <option value="photorealistic">Photorealistic</option>
-            </select>
+
+          <!-- Image Mode Fields -->
+          <div id="image-mode-fields">
+            <div class="form-group">
+              <label class="form-label">Describe your album art</label>
+              <textarea id="art-prompt" placeholder="e.g., A neon-lit cityscape at night with purple and pink gradient sky, cyberpunk aesthetic"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Style</label>
+              <select id="art-style">
+                <option value="cyberpunk">Cyberpunk</option>
+                <option value="abstract">Abstract</option>
+                <option value="retro">Retro/Vaporwave</option>
+                <option value="minimal">Minimalist</option>
+                <option value="surreal">Surreal</option>
+                <option value="photorealistic">Photorealistic</option>
+              </select>
+            </div>
+            <button class="btn-primary" id="generate-art-btn">Generate Art</button>
           </div>
-          <button class="btn-primary" id="generate-art-btn">Generate Art</button>
+
+          <!-- Video Mode Fields -->
+          <div id="video-mode-fields" style="display: none;">
+            <div class="form-group">
+              <label class="form-label">Describe your video</label>
+              <textarea id="video-prompt" placeholder="e.g., A camera flying through a neon-lit cyberpunk city at night, with holographic billboards and flying cars"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Duration</label>
+              <select id="video-duration">
+                <option value="5">5 seconds</option>
+                <option value="10" selected>10 seconds</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Aspect Ratio</label>
+              <select id="video-aspect-ratio">
+                <option value="16:9" selected>16:9 (Widescreen)</option>
+                <option value="9:16">9:16 (Vertical)</option>
+                <option value="1:1">1:1 (Square)</option>
+              </select>
+            </div>
+            <button class="btn-primary" id="generate-video-btn">Generate Video</button>
+          </div>
+
           <div id="art-result" style="display: none;"></div>
         </div>
       </div>
@@ -732,11 +768,35 @@
       customCharCount.textContent = `(${charCount}/3000)`;
     });
 
-    // Album art generation
+    // Visual generation (Image/Video)
+    const videoModeToggle = document.getElementById('video-mode-toggle');
+    const imageModeFields = document.getElementById('image-mode-fields');
+    const videoModeFields = document.getElementById('video-mode-fields');
+    const visualPanelTitle = document.getElementById('visual-panel-title');
+    const visualPanelDescription = document.getElementById('visual-panel-description');
     const artPrompt = document.getElementById('art-prompt');
     const artStyle = document.getElementById('art-style');
     const generateArtBtn = document.getElementById('generate-art-btn');
+    const videoPrompt = document.getElementById('video-prompt');
+    const videoDuration = document.getElementById('video-duration');
+    const videoAspectRatio = document.getElementById('video-aspect-ratio');
+    const generateVideoBtn = document.getElementById('generate-video-btn');
     const artResult = document.getElementById('art-result');
+
+    // Video Mode Toggle
+    videoModeToggle.addEventListener('change', () => {
+      if (videoModeToggle.checked) {
+        imageModeFields.style.display = 'none';
+        videoModeFields.style.display = 'block';
+        visualPanelTitle.textContent = '🎬 Video Generator';
+        visualPanelDescription.textContent = 'Create AI-generated videos for your music';
+      } else {
+        imageModeFields.style.display = 'block';
+        videoModeFields.style.display = 'none';
+        visualPanelTitle.textContent = '🎨 Album Art Generator';
+        visualPanelDescription.textContent = 'Create stunning visuals for your music';
+      }
+    });
 
     // Add message to chat
     function addMessage(content, type = 'user') {
@@ -971,6 +1031,68 @@
       }
     }
 
+    // Generate video
+    async function generateVideo() {
+      const prompt = videoPrompt.value.trim();
+      const duration = videoDuration.value;
+      const aspectRatio = videoAspectRatio.value;
+
+      if (!prompt) {
+        alert('Please describe your video');
+        return;
+      }
+
+      generateVideoBtn.disabled = true;
+      generateVideoBtn.textContent = 'Generating...';
+      artResult.style.display = 'none';
+
+      try {
+        const response = await fetch('/api/generate-video', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            prompt: prompt,
+            duration: duration,
+            aspectRatio: aspectRatio
+          })
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || 'Failed to generate video');
+        }
+
+        const data = await response.json();
+
+        artResult.innerHTML = `
+          <div class="result-box">
+            <div class="result-title">Generated Video</div>
+            <video controls style="width: 100%; border-radius: 8px; margin-bottom: 0.5rem;">
+              <source src="${data.videoUrl}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <a href="${data.videoUrl}" download="generated-video.mp4" class="download-btn">Download Video</a>
+          </div>
+        `;
+        artResult.style.display = 'block';
+
+      } catch (error) {
+        console.error('Video generation error:', error);
+        artResult.innerHTML = `
+          <div class="result-box">
+            <div class="result-title">Error</div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Unable to generate video. ${error.message}</p>
+          </div>
+        `;
+        artResult.style.display = 'block';
+      } finally {
+        generateVideoBtn.disabled = false;
+        generateVideoBtn.textContent = 'Generate Video';
+      }
+    }
+
     // Event listeners - Chat
     sendBtn.addEventListener('click', () => {
       sendMessage(chatInput.value);
@@ -992,8 +1114,9 @@
     // Event listeners - Music
     generateMusicBtn.addEventListener('click', generateMusic);
 
-    // Event listeners - Art
+    // Event listeners - Visual (Art/Video)
     generateArtBtn.addEventListener('click', generateArt);
+    generateVideoBtn.addEventListener('click', generateVideo);
   </script>
 </body>
 </html>
