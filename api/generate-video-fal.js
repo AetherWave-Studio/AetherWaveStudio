@@ -1,7 +1,7 @@
 // Vercel Serverless Function - Video Generation with Fal.ai
 // Uses Fal.ai Seedance 1.0 API for more reliable video generation
 
-import * as fal from "@fal-ai/client";
+import { fal } from "@fal-ai/client";
 
 export default async function handler(req, res) {
   // Set CORS headers
@@ -27,10 +27,8 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Fal.ai API key not configured' });
   }
 
-  // Configure Fal.ai
-  fal.config({
-    credentials: falApiKey
-  });
+  // Set API key (no config method needed, set directly on fal)
+  process.env.FAL_KEY = falApiKey;
 
   // Validate request body
   const {
