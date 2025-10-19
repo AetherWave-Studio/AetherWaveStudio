@@ -908,12 +908,26 @@
             </div>
 
             <!-- Image Upload (Optional) -->
-            <div class="form-group">
+            <div class="form-group" id="image-upload-group">
               <label class="form-label">
-                <span>Upload Reference Image (Optional)</span>
-                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal; margin-left: 0.5rem;">- Animate existing image or use as style reference</span>
+                <span>Upload Image (Optional)</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal; margin-left: 0.5rem;">- For video: animate image or use as reference</span>
               </label>
               <input type="file" id="media-image-upload" accept="image/*" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer;">
+
+              <!-- Image Mode Selection (shown only for video when image uploaded) -->
+              <div id="image-mode-selection" style="display: none; margin-top: 0.75rem;">
+                <label class="form-label">How should the image be used?</label>
+                <select id="image-mode" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;">
+                  <option value="first-frame">First Frame - Start video with this image</option>
+                  <option value="reference">Style Reference - Use as visual inspiration (1-4 images)</option>
+                </select>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+                  <strong>First Frame:</strong> Image becomes the opening frame, AI animates from there<br>
+                  <strong>Reference:</strong> AI uses image(s) as style guide but creates new content
+                </div>
+              </div>
+
               <div id="media-image-preview" style="display: none; margin-top: 0.5rem;">
                 <img id="media-preview-img" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid var(--border-color);" />
                 <button type="button" id="media-clear-image" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Clear Image</button>
@@ -936,8 +950,9 @@
                 <div class="form-group" id="video-resolution-group" style="display: none;">
                   <label class="form-label">Resolution</label>
                   <select id="media-resolution">
-                    <option value="720p" selected>720p (Faster)</option>
-                    <option value="1080p">1080p (Higher Quality)</option>
+                    <option value="512p">512p (Fastest, Lower Quality)</option>
+                    <option value="720p" selected>720p (Balanced)</option>
+                    <option value="1080p">1080p (Highest Quality, Slower)</option>
                   </select>
                 </div>
 
@@ -1037,6 +1052,8 @@
     const mediaImagePreview = document.getElementById('media-image-preview');
     const mediaPreviewImg = document.getElementById('media-preview-img');
     const mediaClearImage = document.getElementById('media-clear-image');
+    const imageModeSelection = document.getElementById('image-mode-selection');
+    const imageMode = document.getElementById('image-mode');
     const mediaQuality = document.getElementById('media-quality');
     const mediaResolution = document.getElementById('media-resolution');
     const mediaDuration = document.getElementById('media-duration');
@@ -1206,6 +1223,11 @@
           uploadedImageData = event.target.result;
           mediaPreviewImg.src = uploadedImageData;
           mediaImagePreview.style.display = 'block';
+
+          // Show image mode selection only for video
+          if (selectedMediaType === 'video') {
+            imageModeSelection.style.display = 'block';
+          }
         };
         img.src = event.target.result;
       };
@@ -1221,6 +1243,7 @@
       mediaImageUpload.value = '';
       mediaImagePreview.style.display = 'none';
       mediaPreviewImg.src = '';
+      imageModeSelection.style.display = 'none';
     });
 
     // Add message to chat
@@ -1497,6 +1520,7 @@
           // Add uploaded image data if provided
           if (uploadedImageData) {
             requestBody.imageData = uploadedImageData;
+            requestBody.imageMode = imageMode.value; // 'first-frame' or 'reference'
           }
 
           // Try Fal.ai first (more reliable)
