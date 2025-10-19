@@ -1,6 +1,8 @@
 // Vercel Serverless Function - Video Generation Callback
 // Receives webhook from KIE.AI when video generation completes
 
+import { setVideoStatus } from './video-store.js';
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -45,26 +47,54 @@ export default async function handler(req, res) {
       }
     }
 
+    const taskId = callbackData.data?.taskId || callbackData.data?.task_id;
+
     // Check for success
     if (callbackData.code === 200 && videoUrl) {
       console.log('✅ Video generation complete!', {
-        taskId: callbackData.data?.taskId || callbackData.data?.task_id,
+        taskId: taskId,
         videoUrl: videoUrl,
         model: callbackData.data?.model,
         costTime: callbackData.data?.costTime,
         state: callbackData.data?.state
       });
-    } else if (callbackData.code !== 200 || callbackData.data?.state === 'failed') {
-      // Log failures with full details
+
+      // Store success status for polling endpoint
+      setVideoStatus(taskId, {
+        status: 'complete',
+        videoUrl: videoUrl,
+        model: callbackData.data?.model,
+        costTime: callbackData.data?.costTime,
+        resolution: callbackData.data?.resolution
+      });
+
+    } else if (callbackData.code !== 200 || callbackData.data?.state === 'fail' || callbackData.data?.state === 'failed') {
+      // Extract failure details
+      const failMsg = callbackData.data?.failMsg ||
+                      callbackData.data?.fail_msg ||
+                      callbackData.data?.errorMessage ||
+                      callbackData.data?.error_message ||
+                      callbackData.msg ||
+                      'Video generation failed';
+
       console.error('❌ Video generation FAILED:', {
         code: callbackData.code,
         message: callbackData.msg || callbackData.message,
-        taskId: callbackData.data?.task_id || callbackData.data?.taskId,
+        taskId: taskId,
         state: callbackData.data?.state,
-        error: callbackData.data?.error,
-        errorMessage: callbackData.data?.error_message || callbackData.data?.errorMessage,
+        failCode: callbackData.data?.failCode,
+        failMsg: failMsg,
         fullData: callbackData.data
       });
+
+      // Store failure status for polling endpoint
+      setVideoStatus(taskId, {
+        status: 'failed',
+        error: failMsg,
+        failCode: callbackData.data?.failCode,
+        code: callbackData.code
+      });
+
     } else {
       console.warn('⚠️ Callback received but no video URL:', callbackData);
     }

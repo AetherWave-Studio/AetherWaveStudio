@@ -3,6 +3,7 @@
 
 import fetch from 'node-fetch';
 import { HttpsProxyAgent } from 'https-proxy-agent';
+import { getVideoStatus } from './video-store.js';
 
 export default async function handler(req, res) {
   // Set CORS headers
@@ -40,6 +41,33 @@ export default async function handler(req, res) {
   const agent = new HttpsProxyAgent(proxyUrl);
 
   try {
+    // First, check in-memory store (updated by callback)
+    const cachedStatus = getVideoStatus(taskId);
+    if (cachedStatus) {
+      console.log('Returning cached status from callback:', cachedStatus);
+
+      if (cachedStatus.status === 'failed') {
+        return res.status(200).json({
+          status: 'failed',
+          error: cachedStatus.error,
+          failCode: cachedStatus.failCode,
+          taskId: taskId
+        });
+      }
+
+      if (cachedStatus.status === 'complete') {
+        return res.status(200).json({
+          status: 'complete',
+          videoUrl: cachedStatus.videoUrl,
+          model: cachedStatus.model,
+          costTime: cachedStatus.costTime,
+          resolution: cachedStatus.resolution,
+          taskId: taskId
+        });
+      }
+    }
+
+    // If not in cache, poll KIE.AI API
     // Check Seedance video generation status using jobs query endpoint
     // Use query parameter instead of path parameter
     const statusResponse = await fetch(
