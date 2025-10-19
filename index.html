@@ -1188,7 +1188,7 @@
 
     // Poll video status
     async function pollVideoStatus(taskId) {
-      const maxAttempts = 60; // 10 minutes (60 * 10 seconds)
+      const maxAttempts = 36; // 6 minutes (36 * 10 seconds)
       let attempts = 0;
 
       const checkInterval = setInterval(async () => {
@@ -1207,15 +1207,18 @@
               <div class="result-box">
                 <div class="result-title">Error</div>
                 <p style="color: #ff6b6b; font-size: 0.9rem;">❌ Video generation failed: ${statusData.error || statusData.details || 'Unknown error'}</p>
+                <button class="btn-primary" onclick="location.reload()" style="margin-top: 1rem;">Try Again</button>
               </div>
             `;
           } else if (attempts >= maxAttempts) {
             clearInterval(checkInterval);
             artResult.innerHTML = `
               <div class="result-box">
-                <div class="result-title">Timeout</div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Video generation is taking longer than expected. Please check back later.</p>
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Task ID: ${taskId}</p>
+                <div class="result-title">⏳ Video Generation In Progress</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Your video is being generated! This typically takes 2-5 minutes.</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Due to current limitations, the video won't appear automatically. Please check your server logs for the video URL, or we're working on adding persistent storage to fix this.</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Task ID: <code style="background: var(--dark-bg); padding: 0.25rem 0.5rem; border-radius: 4px;">${taskId}</code></p>
+                <button class="btn-primary" onclick="location.reload()" style="margin-top: 1rem;">Refresh Page</button>
               </div>
             `;
           } else {
@@ -1223,9 +1226,11 @@
             artResult.innerHTML = `
               <div class="result-box">
                 <div class="result-title">🎬 Generating Video with Seedance 1.0</div>
-                <p style="color: var(--accent-color); font-size: 0.9rem;">Video is still being generated... (${attempts * 10}s elapsed)</p>
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Status: ${statusData.jobStatus || 'processing'}</p>
-                ${statusData.progress ? `<p style="color: var(--text-muted); font-size: 0.85rem;">Progress: ${statusData.progress}%</p>` : ''}
+                <p style="color: var(--accent-color); font-size: 0.9rem;">Video is still being generated... (${attempts * 10}s / ~${maxAttempts * 10}s)</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">This usually takes 2-5 minutes. Please wait...</p>
+                <div style="width: 100%; background: var(--dark-bg); border-radius: 8px; height: 8px; margin-top: 1rem; overflow: hidden;">
+                  <div style="width: ${(attempts / maxAttempts) * 100}%; background: linear-gradient(90deg, var(--aetherwave-pink), var(--aetherwave-purple)); height: 100%; transition: width 0.3s;"></div>
+                </div>
               </div>
             `;
           }
