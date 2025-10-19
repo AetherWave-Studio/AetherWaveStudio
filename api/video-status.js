@@ -71,23 +71,40 @@ export default async function handler(req, res) {
       const jobStatus = jobData?.status;
 
       // Check job status
-      if (jobStatus === 'completed' || jobStatus === 'succeeded' || jobStatus === 'success') {
-        // Video is ready - get the output
+      if (jobStatus === 'completed' || jobStatus === 'succeeded' || jobStatus === 'success' || jobData?.state === 'success') {
+        // Video is ready - parse the output/resultJson
+        let videoUrl = null;
+        let coverUrl = null;
+
+        // Try output field first
         const output = jobData?.output;
-        const videoUrl = output?.video_url || output?.videoUrl || output?.url;
+        if (output?.video_url || output?.videoUrl || output?.url) {
+          videoUrl = output.video_url || output.videoUrl || output.url;
+          coverUrl = output?.cover_url || output?.coverUrl ||
+                     output?.thumbnail_url || output?.thumbnailUrl;
+        }
+        // Try parsing resultJson field (Seedance format)
+        else if (jobData?.resultJson) {
+          try {
+            const result = JSON.parse(jobData.resultJson);
+            if (result.resultUrls && result.resultUrls.length > 0) {
+              videoUrl = result.resultUrls[0];
+            }
+          } catch (e) {
+            console.error('Failed to parse resultJson:', e);
+          }
+        }
 
         if (videoUrl) {
-          const coverUrl = output?.cover_url || output?.coverUrl ||
-                           output?.thumbnail_url || output?.thumbnailUrl;
-
           return res.status(200).json({
             status: 'complete',
             videoUrl: videoUrl,
             coverUrl: coverUrl,
             taskId: taskId,
-            duration: output?.duration,
-            resolution: output?.resolution,
-            model: jobData?.model
+            duration: jobData?.duration,
+            resolution: jobData?.resolution,
+            model: jobData?.model,
+            costTime: jobData?.costTime
           });
         }
       }

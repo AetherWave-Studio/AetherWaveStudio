@@ -26,21 +26,43 @@ export default async function handler(req, res) {
     // { code: 200, msg: "success", data: { task_id: "...", video_url: "..." } }
     const callbackData = req.body;
 
+    // Parse video URL from different response formats
+    let videoUrl = null;
+
+    // Try direct video_url field
+    if (callbackData.data?.video_url || callbackData.data?.videoUrl) {
+      videoUrl = callbackData.data.video_url || callbackData.data.videoUrl;
+    }
+    // Try parsing resultJson field (Seedance format)
+    else if (callbackData.data?.resultJson) {
+      try {
+        const result = JSON.parse(callbackData.data.resultJson);
+        if (result.resultUrls && result.resultUrls.length > 0) {
+          videoUrl = result.resultUrls[0];
+        }
+      } catch (e) {
+        console.error('Failed to parse resultJson:', e);
+      }
+    }
+
     // Check for success
-    if (callbackData.code === 200 && callbackData.data?.video_url) {
+    if (callbackData.code === 200 && videoUrl) {
       console.log('✅ Video generation complete!', {
-        taskId: callbackData.data.task_id || callbackData.data.taskId,
-        videoUrl: callbackData.data.video_url || callbackData.data.videoUrl
+        taskId: callbackData.data?.taskId || callbackData.data?.task_id,
+        videoUrl: videoUrl,
+        model: callbackData.data?.model,
+        costTime: callbackData.data?.costTime,
+        state: callbackData.data?.state
       });
-    } else if (callbackData.code !== 200) {
+    } else if (callbackData.code !== 200 || callbackData.data?.state === 'failed') {
       // Log failures with full details
       console.error('❌ Video generation FAILED:', {
         code: callbackData.code,
         message: callbackData.msg || callbackData.message,
         taskId: callbackData.data?.task_id || callbackData.data?.taskId,
+        state: callbackData.data?.state,
         error: callbackData.data?.error,
         errorMessage: callbackData.data?.error_message || callbackData.data?.errorMessage,
-        status: callbackData.data?.status,
         fullData: callbackData.data
       });
     } else {
