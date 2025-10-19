@@ -489,6 +489,123 @@
       color: var(--text-primary);
     }
 
+    /* Use Case Cards */
+    .use-case-card {
+      position: relative;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: visible;
+    }
+
+    .use-case-card:hover {
+      border-color: var(--aetherwave-purple);
+      background: rgba(139, 92, 246, 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+    }
+
+    .use-case-card.selected {
+      border-color: var(--aetherwave-pink);
+      background: rgba(255, 46, 166, 0.1);
+      box-shadow: 0 4px 16px rgba(255, 46, 166, 0.3);
+    }
+
+    .use-case-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      filter: grayscale(0.3);
+      transition: filter 0.3s ease;
+    }
+
+    .use-case-card:hover .use-case-icon {
+      filter: grayscale(0);
+      transform: scale(1.1);
+    }
+
+    .use-case-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    /* Tooltip Lightbox */
+    .use-case-tooltip {
+      position: absolute;
+      bottom: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: rgba(26, 22, 37, 0.98);
+      border: 1px solid var(--aetherwave-purple);
+      border-radius: 12px;
+      padding: 1rem;
+      width: 280px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+
+    .use-case-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 8px solid transparent;
+      border-top-color: var(--aetherwave-purple);
+    }
+
+    .use-case-card:hover .use-case-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+      pointer-events: auto;
+    }
+
+    .use-case-tooltip strong {
+      display: block;
+      color: var(--aetherwave-pink);
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .use-case-tooltip p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+
+    .use-case-tooltip em {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--aetherwave-purple);
+      font-style: italic;
+      line-height: 1.4;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* Media Type Toggle Buttons */
+    .media-type-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .media-type-btn.active {
+      background: var(--aetherwave-pink) !important;
+      border-color: var(--aetherwave-pink) !important;
+      color: white !important;
+      box-shadow: 0 4px 16px rgba(255, 46, 166, 0.4);
+    }
+
     @media (max-width: 1200px) {
       .panels-container {
         grid-template-columns: 1fr;
@@ -656,92 +773,205 @@
       <!-- Visual Generation Panel -->
       <div class="panel">
         <div class="panel-header">
-          <div class="panel-title" id="visual-panel-title">🎨 Album Art Generator</div>
-          <div class="panel-description" id="visual-panel-description">Create stunning visuals for your music</div>
+          <div class="panel-title">🎬 AI Media Generator</div>
+          <div class="panel-description">Create images and videos for your music career</div>
         </div>
         <div class="panel-content">
-          <!-- Image/Video Toggle -->
-          <div class="form-group">
-            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-              <input type="checkbox" id="video-mode-toggle" style="width: auto; cursor: pointer;">
-              <span class="form-label" style="margin: 0;">Generate Video</span>
-            </label>
-          </div>
 
-          <!-- Image Mode Fields -->
-          <div id="image-mode-fields">
+          <!-- Step 1: Media Type Selection -->
+          <div id="media-type-selection">
             <div class="form-group">
-              <label class="form-label">Describe your album art</label>
-              <textarea id="art-prompt" placeholder="e.g., A neon-lit cityscape at night with purple and pink gradient sky, cyberpunk aesthetic"></textarea>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Style</label>
-              <select id="art-style">
-                <option value="cyberpunk">Cyberpunk</option>
-                <option value="abstract">Abstract</option>
-                <option value="retro">Retro/Vaporwave</option>
-                <option value="minimal">Minimalist</option>
-                <option value="surreal">Surreal</option>
-                <option value="photorealistic">Photorealistic</option>
-              </select>
-            </div>
-            <button class="btn-primary" id="generate-art-btn">Generate Art</button>
-          </div>
-
-          <!-- Video Mode Fields -->
-          <div id="video-mode-fields" style="display: none;">
-            <div class="form-group">
-              <label class="form-label">Describe your video</label>
-              <textarea id="video-prompt" placeholder="e.g., A camera flying through a neon-lit cyberpunk city at night, with holographic billboards and flying cars. Use [Cut to] for scene transitions."></textarea>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Upload Image (Optional - for Image-to-Video)</label>
-              <input type="file" id="video-image-upload" accept="image/*" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer;">
-              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Upload an image to animate, or leave empty for text-to-video</div>
-              <div id="video-image-preview" style="display: none; margin-top: 0.5rem;">
-                <img id="video-preview-img" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid var(--border-color);" />
-                <button type="button" id="video-clear-image" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Clear Image</button>
+              <label class="form-label">What do you want to create?</label>
+              <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                <button class="media-type-btn active" data-type="image" style="flex: 1; padding: 1rem; background: var(--accent-color); border: 2px solid var(--accent-color); border-radius: 12px; color: white; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s;">
+                  📸 Image
+                </button>
+                <button class="media-type-btn" data-type="video" style="flex: 1; padding: 1rem; background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 12px; color: var(--text-primary); font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s;">
+                  🎥 Video
+                </button>
               </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Model Version</label>
-              <select id="video-model">
-                <option value="lite" selected>Lite (Faster, Cheaper)</option>
-                <option value="pro">Pro (Higher Quality, More Reliable)</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Resolution</label>
-              <select id="video-resolution">
-                <option value="720p" selected>720p (Faster)</option>
-                <option value="1080p">1080p (Higher Quality)</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Duration</label>
-              <select id="video-duration">
-                <option value="5" selected>5 seconds</option>
-                <option value="10">10 seconds</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                <input type="checkbox" id="video-camera-fixed" style="width: auto; cursor: pointer;">
-                <span class="form-label" style="margin: 0;">Fixed Camera (No Movement)</span>
-              </label>
-              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.5rem;">Enable for static camera shots</div>
-            </div>
-            <div class="form-group">
-              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                <input type="checkbox" id="video-safety-checker" checked style="width: auto; cursor: pointer;">
-                <span class="form-label" style="margin: 0;">Enable Safety Checker</span>
-              </label>
-              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.5rem;">Filters inappropriate content (uncheck if getting false rejections)</div>
-            </div>
-            <button class="btn-primary" id="generate-video-btn">Generate Video with Seedance 1.0</button>
           </div>
 
-          <div id="art-result" style="display: none;"></div>
+          <!-- Step 2: Use Case Selection -->
+          <div id="use-case-selection" style="margin-top: 1.5rem;">
+            <div class="form-group">
+              <label class="form-label">Choose your use case</label>
+              <div class="use-case-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-top: 0.5rem;">
+
+                <!-- Band Profile Card -->
+                <div class="use-case-card" data-use-case="band-profile">
+                  <div class="use-case-icon">👤</div>
+                  <div class="use-case-name">Band Profile</div>
+                  <div class="use-case-tooltip">
+                    <strong>Band Profile</strong>
+                    <p>Professional artist photos for press kits, social media profiles, and promotional materials</p>
+                    <em>Example: "Indie rock band posing in urban alley with vintage instruments"</em>
+                  </div>
+                </div>
+
+                <!-- Live Photos Card -->
+                <div class="use-case-card" data-use-case="live-photos">
+                  <div class="use-case-icon">🎸</div>
+                  <div class="use-case-name">Live Photos</div>
+                  <div class="use-case-tooltip">
+                    <strong>Live Photos</strong>
+                    <p>Dynamic concert and performance shots with energy and atmosphere</p>
+                    <em>Example: "Singer performing on stage with dramatic lighting and crowd"</em>
+                  </div>
+                </div>
+
+                <!-- Live Video Card -->
+                <div class="use-case-card" data-use-case="live-video">
+                  <div class="use-case-icon">🎤</div>
+                  <div class="use-case-name">Live Video</div>
+                  <div class="use-case-tooltip">
+                    <strong>Live Video</strong>
+                    <p>Concert footage and performance clips for social media and promotion</p>
+                    <em>Example: "Guitarist shredding solo with flashing stage lights"</em>
+                  </div>
+                </div>
+
+                <!-- Production Video Card -->
+                <div class="use-case-card" data-use-case="production-video">
+                  <div class="use-case-icon">🎬</div>
+                  <div class="use-case-name">Production Video</div>
+                  <div class="use-case-tooltip">
+                    <strong>Production Video</strong>
+                    <p>Professional music videos with cinematic quality and storytelling</p>
+                    <em>Example: "Cinematic shots of artist walking through neon-lit city"</em>
+                  </div>
+                </div>
+
+                <!-- Backstage Pass Card -->
+                <div class="use-case-card" data-use-case="backstage">
+                  <div class="use-case-icon">🎭</div>
+                  <div class="use-case-name">Backstage Pass</div>
+                  <div class="use-case-tooltip">
+                    <strong>Backstage Pass</strong>
+                    <p>Behind-the-scenes content showing the artist life and creative process</p>
+                    <em>Example: "Band members relaxing in green room with instruments"</em>
+                  </div>
+                </div>
+
+                <!-- On The Road Card -->
+                <div class="use-case-card" data-use-case="on-the-road">
+                  <div class="use-case-icon">🚐</div>
+                  <div class="use-case-name">On The Road</div>
+                  <div class="use-case-tooltip">
+                    <strong>On The Road</strong>
+                    <p>Tour life, travel scenes, and adventure content for storytelling</p>
+                    <em>Example: "Tour bus driving through desert landscape at sunset"</em>
+                  </div>
+                </div>
+
+                <!-- Album Art Card -->
+                <div class="use-case-card" data-use-case="album-art">
+                  <div class="use-case-icon">💿</div>
+                  <div class="use-case-name">Album Art</div>
+                  <div class="use-case-tooltip">
+                    <strong>Album Art</strong>
+                    <p>Square format cover art for singles, EPs, and full albums</p>
+                    <em>Example: "Abstract geometric shapes in vibrant neon colors"</em>
+                  </div>
+                </div>
+
+                <!-- News Reports Card -->
+                <div class="use-case-card" data-use-case="news-reports">
+                  <div class="use-case-icon">📰</div>
+                  <div class="use-case-name">News Reports</div>
+                  <div class="use-case-tooltip">
+                    <strong>News Reports</strong>
+                    <p>Press-style imagery and announcement visuals for releases and events</p>
+                    <em>Example: "Breaking news style graphic with artist announcement"</em>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Generation Settings (shown after use case selected) -->
+          <div id="generation-settings" style="display: none; margin-top: 1.5rem;">
+
+            <!-- Enhanced Prompt Preview -->
+            <div class="form-group">
+              <label class="form-label">AI Prompt (edit to customize)</label>
+              <textarea id="enhanced-prompt" rows="4" placeholder="Your enhanced prompt will appear here..." style="font-family: monospace; font-size: 0.9rem;"></textarea>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">This is the full prompt sent to the AI. Feel free to edit it!</div>
+            </div>
+
+            <!-- User's Creative Input -->
+            <div class="form-group">
+              <label class="form-label">Your Vision (optional - add custom details)</label>
+              <textarea id="user-vision" rows="2" placeholder="e.g., wearing leather jacket, vintage 80s aesthetic, purple color scheme..."></textarea>
+            </div>
+
+            <!-- Image Upload (Optional) -->
+            <div class="form-group">
+              <label class="form-label">
+                <span>Upload Reference Image (Optional)</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal; margin-left: 0.5rem;">- Animate existing image or use as style reference</span>
+              </label>
+              <input type="file" id="media-image-upload" accept="image/*" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer;">
+              <div id="media-image-preview" style="display: none; margin-top: 0.5rem;">
+                <img id="media-preview-img" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid var(--border-color);" />
+                <button type="button" id="media-clear-image" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Clear Image</button>
+              </div>
+            </div>
+
+            <!-- Advanced Settings (collapsible) -->
+            <div class="form-group">
+              <details>
+                <summary style="cursor: pointer; font-weight: 600; color: var(--accent-color); margin-bottom: 1rem;">⚙️ Advanced Settings</summary>
+
+                <div class="form-group" id="video-settings-group" style="display: none;">
+                  <label class="form-label">Quality</label>
+                  <select id="media-quality">
+                    <option value="lite" selected>Fast (Lite Model)</option>
+                    <option value="pro">High Quality (Pro Model)</option>
+                  </select>
+                </div>
+
+                <div class="form-group" id="video-resolution-group" style="display: none;">
+                  <label class="form-label">Resolution</label>
+                  <select id="media-resolution">
+                    <option value="720p" selected>720p (Faster)</option>
+                    <option value="1080p">1080p (Higher Quality)</option>
+                  </select>
+                </div>
+
+                <div class="form-group" id="video-duration-group" style="display: none;">
+                  <label class="form-label">Duration</label>
+                  <select id="media-duration">
+                    <option value="5" selected>5 seconds</option>
+                    <option value="10">10 seconds</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="media-safety-checker" checked style="width: auto; cursor: pointer;">
+                    <span class="form-label" style="margin: 0;">Enable Safety Checker</span>
+                  </label>
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.5rem;">Uncheck if getting false rejections</div>
+                </div>
+              </details>
+            </div>
+
+            <!-- Generate Button -->
+            <button class="btn-primary" id="generate-media-btn" style="width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: 600;">
+              🎨 Generate <span id="media-type-label">Image</span>
+            </button>
+
+            <!-- Back Button -->
+            <button class="download-btn" id="back-to-use-cases" style="width: 100%; margin-top: 0.5rem;">
+              ← Back to Use Cases
+            </button>
+          </div>
+
+          <!-- Results Display -->
+          <div id="media-result" style="display: none; margin-top: 1.5rem;"></div>
         </div>
       </div>
     </div>
@@ -797,48 +1027,141 @@
       customCharCount.textContent = `(${charCount}/3000)`;
     });
 
-    // Visual generation (Image/Video)
-    const videoModeToggle = document.getElementById('video-mode-toggle');
-    const imageModeFields = document.getElementById('image-mode-fields');
-    const videoModeFields = document.getElementById('video-mode-fields');
-    const visualPanelTitle = document.getElementById('visual-panel-title');
-    const visualPanelDescription = document.getElementById('visual-panel-description');
-    const artPrompt = document.getElementById('art-prompt');
-    const artStyle = document.getElementById('art-style');
-    const generateArtBtn = document.getElementById('generate-art-btn');
-    const videoPrompt = document.getElementById('video-prompt');
-    const videoImageUpload = document.getElementById('video-image-upload');
-    const videoImagePreview = document.getElementById('video-image-preview');
-    const videoPreviewImg = document.getElementById('video-preview-img');
-    const videoClearImage = document.getElementById('video-clear-image');
-    const videoModel = document.getElementById('video-model');
-    const videoResolution = document.getElementById('video-resolution');
-    const videoDuration = document.getElementById('video-duration');
-    const videoCameraFixed = document.getElementById('video-camera-fixed');
-    const videoSafetyChecker = document.getElementById('video-safety-checker');
-    const generateVideoBtn = document.getElementById('generate-video-btn');
-    const artResult = document.getElementById('art-result');
+    // NEW Visual Generation System - Use Case Based
+    const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
+    const useCaseCards = document.querySelectorAll('.use-case-card');
+    const generationSettings = document.getElementById('generation-settings');
+    const enhancedPrompt = document.getElementById('enhanced-prompt');
+    const userVision = document.getElementById('user-vision');
+    const mediaImageUpload = document.getElementById('media-image-upload');
+    const mediaImagePreview = document.getElementById('media-image-preview');
+    const mediaPreviewImg = document.getElementById('media-preview-img');
+    const mediaClearImage = document.getElementById('media-clear-image');
+    const mediaQuality = document.getElementById('media-quality');
+    const mediaResolution = document.getElementById('media-resolution');
+    const mediaDuration = document.getElementById('media-duration');
+    const mediaSafetyChecker = document.getElementById('media-safety-checker');
+    const generateMediaBtn = document.getElementById('generate-media-btn');
+    const mediaTypeLabel = document.getElementById('media-type-label');
+    const backToUseCases = document.getElementById('back-to-use-cases');
+    const mediaResult = document.getElementById('media-result');
+    const videoSettingsGroup = document.getElementById('video-settings-group');
+    const videoResolutionGroup = document.getElementById('video-resolution-group');
+    const videoDurationGroup = document.getElementById('video-duration-group');
 
-    // Store uploaded image as base64
+    // State management
+    let selectedMediaType = 'image'; // 'image' or 'video'
+    let selectedUseCase = null;
     let uploadedImageData = null;
 
-    // Video Mode Toggle
-    videoModeToggle.addEventListener('change', () => {
-      if (videoModeToggle.checked) {
-        imageModeFields.style.display = 'none';
-        videoModeFields.style.display = 'block';
-        visualPanelTitle.textContent = '🎬 Video Generator';
-        visualPanelDescription.textContent = 'Create AI-generated videos for your music';
-      } else {
-        imageModeFields.style.display = 'block';
-        videoModeFields.style.display = 'none';
-        visualPanelTitle.textContent = '🎨 Album Art Generator';
-        visualPanelDescription.textContent = 'Create stunning visuals for your music';
+    // Prompt templates for each use case
+    const promptTemplates = {
+      'band-profile': {
+        image: 'Professional artist portrait photography: {vision}. Studio lighting, high quality, detailed, press kit worthy, promotional photo style.',
+        video: 'Cinematic portrait footage: {vision}. Professional lighting, slow camera movement, artist posing confidently, high production value.'
+      },
+      'live-photos': {
+        image: 'Live concert photography: {vision}. Dynamic stage lighting, energetic performance, crowd atmosphere, professional music photography.',
+        video: 'Live performance footage: {vision}. Concert stage with dramatic lighting, energetic movement, crowd energy, professional concert videography.'
+      },
+      'live-video': {
+        image: 'Concert performance shot: {vision}. Stage lights, live music energy, performance intensity, concert photography.',
+        video: 'Live concert performance: {vision}. Dynamic camera angles, stage lighting effects, musician performing live, concert film quality.'
+      },
+      'production-video': {
+        image: 'Cinematic music video still: {vision}. Professional cinematography, artistic composition, music video aesthetic, high production value.',
+        video: 'Professional music video production: {vision}. Cinematic camera work, artistic storytelling, high-quality cinematography, music video style.'
+      },
+      'backstage': {
+        image: 'Behind-the-scenes music photography: {vision}. Candid backstage moments, authentic artist life, documentary photography style.',
+        video: 'Backstage documentary footage: {vision}. Behind-the-scenes access, authentic moments, candid artist interactions, documentary style.'
+      },
+      'on-the-road': {
+        image: 'Tour life photography: {vision}. Travel documentary style, authentic road moments, touring musician lifestyle, candid shots.',
+        video: 'Tour documentary footage: {vision}. Travel scenes, road life, touring musician journey, documentary cinematography.'
+      },
+      'album-art': {
+        image: 'Album cover art design: {vision}. Square format, artistic composition, professional album artwork, high-quality graphic design.',
+        video: 'Animated album artwork: {vision}. Square format, artistic motion graphics, professional album art animation, looping visual.'
+      },
+      'news-reports': {
+        image: 'Music news press image: {vision}. Professional news photography, press release quality, announcement graphic style.',
+        video: 'Music news announcement video: {vision}. News report style, professional presentation, press announcement format.'
       }
+    };
+
+    // Media type toggle
+    mediaTypeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        mediaTypeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedMediaType = btn.dataset.type;
+        mediaTypeLabel.textContent = selectedMediaType === 'image' ? 'Image' : 'Video';
+
+        // Show/hide video-specific settings
+        if (selectedMediaType === 'video') {
+          videoSettingsGroup.style.display = 'block';
+          videoResolutionGroup.style.display = 'block';
+          videoDurationGroup.style.display = 'block';
+        } else {
+          videoSettingsGroup.style.display = 'none';
+          videoResolutionGroup.style.display = 'none';
+          videoDurationGroup.style.display = 'none';
+        }
+
+        // Update enhanced prompt if use case already selected
+        if (selectedUseCase) {
+          updateEnhancedPrompt();
+        }
+      });
     });
 
-    // Handle image upload
-    videoImageUpload.addEventListener('change', (e) => {
+    // Use case selection
+    useCaseCards.forEach(card => {
+      card.addEventListener('click', () => {
+        useCaseCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedUseCase = card.dataset.useCase;
+
+        // Show generation settings
+        generationSettings.style.display = 'block';
+
+        // Update enhanced prompt
+        updateEnhancedPrompt();
+
+        // Scroll to settings
+        setTimeout(() => {
+          generationSettings.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      });
+    });
+
+    // Update enhanced prompt based on use case and user vision
+    function updateEnhancedPrompt() {
+      if (!selectedUseCase) return;
+
+      const template = promptTemplates[selectedUseCase][selectedMediaType];
+      const vision = userVision.value.trim() || 'artist/band';
+      const finalPrompt = template.replace('{vision}', vision);
+
+      enhancedPrompt.value = finalPrompt;
+    }
+
+    // User vision input updates prompt
+    userVision.addEventListener('input', updateEnhancedPrompt);
+
+    // Back button
+    backToUseCases.addEventListener('click', () => {
+      generationSettings.style.display = 'none';
+      useCaseCards.forEach(c => c.classList.remove('selected'));
+      selectedUseCase = null;
+      enhancedPrompt.value = '';
+      userVision.value = '';
+      mediaResult.style.display = 'none';
+    });
+
+    // Handle image upload for media generator
+    mediaImageUpload.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
@@ -846,14 +1169,14 @@
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
       if (!validTypes.includes(file.type)) {
         alert('Invalid image format. Please use JPG, PNG, WEBP, or GIF.');
-        videoImageUpload.value = '';
+        mediaImageUpload.value = '';
         return;
       }
 
       // Check file size (max 5MB for better compatibility)
       if (file.size > 5 * 1024 * 1024) {
         alert('Image file is too large. Please use an image under 5MB.');
-        videoImageUpload.value = '';
+        mediaImageUpload.value = '';
         return;
       }
 
@@ -866,7 +1189,7 @@
           const maxDimension = 1920;
           if (img.width > maxDimension || img.height > maxDimension) {
             if (!confirm(`Image is ${img.width}x${img.height}. Large images may fail. Continue anyway?`)) {
-              videoImageUpload.value = '';
+              mediaImageUpload.value = '';
               return;
             }
           }
@@ -875,14 +1198,14 @@
           const aspectRatio = img.width / img.height;
           if (aspectRatio < 0.5 || aspectRatio > 2) {
             if (!confirm(`Unusual aspect ratio (${img.width}x${img.height}). May not work well. Continue?`)) {
-              videoImageUpload.value = '';
+              mediaImageUpload.value = '';
               return;
             }
           }
 
           uploadedImageData = event.target.result;
-          videoPreviewImg.src = uploadedImageData;
-          videoImagePreview.style.display = 'block';
+          mediaPreviewImg.src = uploadedImageData;
+          mediaImagePreview.style.display = 'block';
         };
         img.src = event.target.result;
       };
@@ -893,11 +1216,11 @@
     });
 
     // Clear uploaded image
-    videoClearImage.addEventListener('click', () => {
+    mediaClearImage.addEventListener('click', () => {
       uploadedImageData = null;
-      videoImageUpload.value = '';
-      videoImagePreview.style.display = 'none';
-      videoPreviewImg.src = '';
+      mediaImageUpload.value = '';
+      mediaImagePreview.style.display = 'none';
+      mediaPreviewImg.src = '';
     });
 
     // Add message to chat
@@ -1141,6 +1464,139 @@
     }
 
     // Generate video with Seedance
+    // Generate Media (Image or Video) with new use case system
+    async function generateMedia() {
+      if (!selectedUseCase) {
+        alert('Please select a use case first');
+        return;
+      }
+
+      const prompt = enhancedPrompt.value.trim();
+      if (!prompt) {
+        alert('Please provide a prompt');
+        return;
+      }
+
+      generateMediaBtn.disabled = true;
+      const originalBtnText = generateMediaBtn.innerHTML;
+      generateMediaBtn.innerHTML = `⏳ Generating ${selectedMediaType}...`;
+      mediaResult.style.display = 'none';
+
+      try {
+        if (selectedMediaType === 'video') {
+          // Video generation
+          const requestBody = {
+            prompt: prompt,
+            modelVersion: mediaQuality.value,
+            resolution: mediaResolution.value,
+            duration: mediaDuration.value,
+            cameraFixed: false,
+            enableSafetyChecker: mediaSafetyChecker.checked
+          };
+
+          // Add uploaded image data if provided
+          if (uploadedImageData) {
+            requestBody.imageData = uploadedImageData;
+          }
+
+          // Try Fal.ai first (more reliable)
+          let response = await fetch('/api/generate-video-fal', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+          });
+
+          let data = await response.json();
+          let usingFallback = false;
+
+          // If Fal.ai fails, fallback to KIE.AI
+          if (!response.ok && data.error?.includes('Fal.ai API key not configured')) {
+            console.log('Fal.ai not configured, falling back to KIE.AI...');
+            usingFallback = true;
+
+            response = await fetch('/api/generate-video', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(requestBody)
+            });
+
+            data = await response.json();
+          }
+
+          // Handle Fal.ai response (synchronous - video ready immediately)
+          if (!usingFallback && response.ok && data.status === 'complete') {
+            displayMediaResult(data, 'video');
+            return;
+          }
+
+          // Handle KIE.AI response (async - need to poll)
+          if (usingFallback && response.status === 202) {
+            mediaResult.innerHTML = `
+              <div class="result-box">
+                <div class="result-title">🎬 Generating Video with Seedance 1.0</div>
+                <p style="color: var(--accent-color); font-size: 0.9rem;">Video generation started! This may take 5-10 minutes.</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Use Case: ${selectedUseCase}</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Resolution: ${data.resolution || '720p'}</p>
+              </div>
+            `;
+            mediaResult.style.display = 'block';
+            pollVideoStatus(data.taskId);
+            return;
+          }
+
+          if (!response.ok) {
+            throw new Error(data.error || data.details || 'Failed to generate video');
+          }
+
+        } else {
+          // Image generation (placeholder - you'll need to implement image API)
+          alert('Image generation coming soon! For now, use video mode.');
+        }
+
+      } catch (error) {
+        console.error('Media generation error:', error);
+        mediaResult.innerHTML = `
+          <div class="result-box">
+            <div class="result-title">Error</div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Unable to generate ${selectedMediaType}. ${error.message}</p>
+          </div>
+        `;
+        mediaResult.style.display = 'block';
+      } finally {
+        generateMediaBtn.disabled = false;
+        generateMediaBtn.innerHTML = originalBtnText;
+      }
+    }
+
+    // Display media result
+    function displayMediaResult(data, type) {
+      const provider = data.model?.includes('fal') ? 'Fal.ai' : 'KIE.AI';
+
+      if (type === 'video') {
+        mediaResult.innerHTML = `
+          <div class="result-box">
+            <div class="result-title">✅ Generated Video (${provider})</div>
+            <video controls src="${data.videoUrl}" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;"></video>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
+              <a href="${data.videoUrl}" download="aetherwave-${selectedUseCase}.mp4" class="download-btn">Download Video</a>
+              ${data.seed ? `<button class="download-btn" disabled>Seed: ${data.seed}</button>` : ''}
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Use Case: ${selectedUseCase}</p>
+          </div>
+        `;
+      }
+
+      mediaResult.style.display = 'block';
+    }
+
+    // Event listener for generate button
+    generateMediaBtn.addEventListener('click', generateMedia);
+
+    // OLD VIDEO GENERATION (keep for compatibility with music track buttons)
     async function generateVideo() {
       const prompt = videoPrompt.value.trim();
       const modelVersion = videoModel.value;
