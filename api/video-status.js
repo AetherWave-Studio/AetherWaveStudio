@@ -98,7 +98,30 @@ export default async function handler(req, res) {
       const jobData = statusData.data;
       const jobStatus = jobData?.status;
 
-      // Check job status
+      // Check if job failed (check this FIRST before success)
+      if (jobStatus === 'failed' || jobStatus === 'error' || jobData?.state === 'fail' || jobData?.state === 'failed') {
+        const failMsg = jobData?.failMsg ||
+                        jobData?.fail_msg ||
+                        jobData?.errorMessage ||
+                        jobData?.error_message ||
+                        jobData?.error ||
+                        'Video generation failed';
+
+        console.error('Video generation failed for taskId:', taskId, {
+          state: jobData?.state,
+          failCode: jobData?.failCode,
+          failMsg: failMsg
+        });
+
+        return res.status(200).json({
+          status: 'failed',
+          error: failMsg,
+          failCode: jobData?.failCode,
+          taskId: taskId
+        });
+      }
+
+      // Check job status for success
       if (jobStatus === 'completed' || jobStatus === 'succeeded' || jobStatus === 'success' || jobData?.state === 'success') {
         // Video is ready - parse the output/resultJson
         let videoUrl = null;
@@ -135,16 +158,6 @@ export default async function handler(req, res) {
             costTime: jobData?.costTime
           });
         }
-      }
-
-      // Check if job failed
-      if (jobStatus === 'failed' || jobStatus === 'error') {
-        return res.status(500).json({
-          status: 'failed',
-          error: 'Video generation failed',
-          details: jobData?.error || jobData?.errorMessage || 'Unknown error',
-          taskId: taskId
-        });
       }
 
       // Job is still processing (pending, running, etc.)
