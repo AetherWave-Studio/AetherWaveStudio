@@ -26,15 +26,25 @@ export default async function handler(req, res) {
     // { code: 200, msg: "success", data: { task_id: "...", video_url: "..." } }
     const callbackData = req.body;
 
-    // Extract video data (uses snake_case)
+    // Check for success
     if (callbackData.code === 200 && callbackData.data?.video_url) {
-      console.log('Video generation complete!', {
-        taskId: callbackData.data.task_id,
-        videoUrl: callbackData.data.video_url
+      console.log('✅ Video generation complete!', {
+        taskId: callbackData.data.task_id || callbackData.data.taskId,
+        videoUrl: callbackData.data.video_url || callbackData.data.videoUrl
       });
-
-      // In a real app, you'd store this in a database
-      // For now, we just log it - the frontend polls the status endpoint
+    } else if (callbackData.code !== 200) {
+      // Log failures with full details
+      console.error('❌ Video generation FAILED:', {
+        code: callbackData.code,
+        message: callbackData.msg || callbackData.message,
+        taskId: callbackData.data?.task_id || callbackData.data?.taskId,
+        error: callbackData.data?.error,
+        errorMessage: callbackData.data?.error_message || callbackData.data?.errorMessage,
+        status: callbackData.data?.status,
+        fullData: callbackData.data
+      });
+    } else {
+      console.warn('⚠️ Callback received but no video URL:', callbackData);
     }
 
     return res.status(200).json({
