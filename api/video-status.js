@@ -40,9 +40,10 @@ export default async function handler(req, res) {
   const agent = new HttpsProxyAgent(proxyUrl);
 
   try {
-    // Check Seedance video generation status using jobs endpoint
+    // Check Seedance video generation status using jobs query endpoint
+    // Use query parameter instead of path parameter
     const statusResponse = await fetch(
-      `https://api.kie.ai/api/v1/jobs/${taskId}`,
+      `https://api.kie.ai/api/v1/jobs/query?taskId=${taskId}`,
       {
         headers: {
           'Authorization': `Bearer ${seedanceApiKey}`
