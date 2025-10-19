@@ -52,31 +52,48 @@ export default async function handler(req, res) {
   // Determine final image URL
   let finalImageUrl = imageUrl;
 
-  // If base64 image data is provided, upload to imgbb or similar
+  // If base64 image data is provided, upload to imgbb
   if (imageData && !imageUrl) {
     try {
       // Upload base64 image to imgbb
-      const imgbbApiKey = process.env.IMGBB_API_KEY || '8d32c3e4a92939ef7c0d2c8c5e6f1d9a'; // Free tier key for testing
+      const imgbbApiKey = process.env.IMGBB_API_KEY || '8d32c3e4a92939ef7c0d2c8c5e6f1d9a';
 
       // Remove data URL prefix
       const base64Image = imageData.replace(/^data:image\/\w+;base64,/, '');
+
+      console.log('Uploading image to imgbb... (size:', base64Image.length, 'chars)');
+
+      const formBody = `key=${imgbbApiKey}&image=${encodeURIComponent(base64Image)}`;
 
       const uploadResponse = await fetch('https://api.imgbb.com/1/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `key=${imgbbApiKey}&image=${encodeURIComponent(base64Image)}`
+        body: formBody
       });
 
-      if (uploadResponse.ok) {
-        const uploadData = await uploadResponse.json();
+      const uploadData = await uploadResponse.json();
+
+      console.log('ImgBB response:', {
+        status: uploadResponse.status,
+        ok: uploadResponse.ok,
+        success: uploadData.success,
+        dataKeys: uploadData.data ? Object.keys(uploadData.data) : null
+      });
+
+      if (uploadResponse.ok && uploadData.success) {
         finalImageUrl = uploadData.data.url;
-        console.log('Uploaded image to imgbb:', finalImageUrl);
+        console.log('✅ Uploaded image to imgbb:', finalImageUrl);
       } else {
-        console.error('Failed to upload image to imgbb');
+        console.error('❌ ImgBB upload failed:', {
+          status: uploadResponse.status,
+          error: uploadData.error,
+          statusText: uploadResponse.statusText
+        });
         return res.status(500).json({
-          error: 'Failed to upload image. Please try again or use a direct image URL.'
+          error: 'Failed to upload image to hosting service.',
+          details: uploadData.error?.message || 'Image hosting service rejected the upload.'
         });
       }
     } catch (uploadError) {
