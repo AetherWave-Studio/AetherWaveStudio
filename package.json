@@ -5,6 +5,7 @@
   "description": "AetherWave Studio - All Intelligence is Welcome Here",
   "private": true,
   "dependencies": {
+    "@fal-ai/client": "^1.7.0",
     "https-proxy-agent": "^7.0.6",
     "node-fetch": "^3.3.2"
   }
