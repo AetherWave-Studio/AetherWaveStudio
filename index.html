@@ -724,6 +724,13 @@
               </label>
               <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.5rem;">Enable for static camera shots</div>
             </div>
+            <div class="form-group">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" id="video-safety-checker" checked style="width: auto; cursor: pointer;">
+                <span class="form-label" style="margin: 0;">Enable Safety Checker</span>
+              </label>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.5rem;">Filters inappropriate content (uncheck if getting false rejections)</div>
+            </div>
             <button class="btn-primary" id="generate-video-btn">Generate Video with Seedance 1.0</button>
           </div>
 
@@ -800,6 +807,7 @@
     const videoResolution = document.getElementById('video-resolution');
     const videoDuration = document.getElementById('video-duration');
     const videoCameraFixed = document.getElementById('video-camera-fixed');
+    const videoSafetyChecker = document.getElementById('video-safety-checker');
     const generateVideoBtn = document.getElementById('generate-video-btn');
     const artResult = document.getElementById('art-result');
 
@@ -1100,6 +1108,7 @@
       const resolution = videoResolution.value;
       const duration = videoDuration.value;
       const cameraFixed = videoCameraFixed.checked;
+      const safetyChecker = videoSafetyChecker.checked;
 
       if (!prompt) {
         alert('Please describe your video');
@@ -1115,7 +1124,8 @@
           prompt: prompt,
           resolution: resolution,
           duration: duration,
-          cameraFixed: cameraFixed
+          cameraFixed: cameraFixed,
+          enableSafetyChecker: safetyChecker
         };
 
         // Add uploaded image data if provided (for image-to-video)
