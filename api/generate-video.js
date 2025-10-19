@@ -34,6 +34,7 @@ export default async function handler(req, res) {
     prompt,
     imageUrl, // Optional: for image-to-video (URL)
     imageData, // Optional: for image-to-video (base64 data)
+    modelVersion = 'lite', // 'lite' or 'pro'
     resolution = '720p', // 720p or 1080p
     duration = '5', // 5 or 10 seconds
     cameraFixed = false,
@@ -137,10 +138,11 @@ export default async function handler(req, res) {
   const agent = new HttpsProxyAgent(proxyUrl);
 
   try {
-    // Determine which model to use based on whether an image is provided
+    // Determine which model to use based on version and whether an image is provided
+    const modelPrefix = modelVersion === 'pro' ? 'bytedance/v1-pro' : 'bytedance/v1-lite';
     const model = finalImageUrl
-      ? 'bytedance/v1-lite-image-to-video'
-      : 'bytedance/v1-lite-text-to-video';
+      ? `${modelPrefix}-image-to-video`
+      : `${modelPrefix}-text-to-video`;
 
     // Build request payload for Seedance API
     const requestPayload = {
