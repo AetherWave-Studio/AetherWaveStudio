@@ -32,7 +32,8 @@ export default async function handler(req, res) {
   // Validate request body
   const {
     prompt,
-    imageUrl, // Optional: for image-to-video
+    imageUrl, // Optional: for image-to-video (URL)
+    imageData, // Optional: for image-to-video (base64 data)
     resolution = '720p', // 720p or 1080p
     duration = '5', // 5 or 10 seconds
     cameraFixed = false,
@@ -48,13 +49,52 @@ export default async function handler(req, res) {
     });
   }
 
+  // Determine final image URL
+  let finalImageUrl = imageUrl;
+
+  // If base64 image data is provided, upload to imgbb or similar
+  if (imageData && !imageUrl) {
+    try {
+      // Upload base64 image to imgbb
+      const imgbbApiKey = process.env.IMGBB_API_KEY || '8d32c3e4a92939ef7c0d2c8c5e6f1d9a'; // Free tier key for testing
+
+      // Remove data URL prefix
+      const base64Image = imageData.replace(/^data:image\/\w+;base64,/, '');
+
+      const uploadResponse = await fetch('https://api.imgbb.com/1/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `key=${imgbbApiKey}&image=${encodeURIComponent(base64Image)}`
+      });
+
+      if (uploadResponse.ok) {
+        const uploadData = await uploadResponse.json();
+        finalImageUrl = uploadData.data.url;
+        console.log('Uploaded image to imgbb:', finalImageUrl);
+      } else {
+        console.error('Failed to upload image to imgbb');
+        return res.status(500).json({
+          error: 'Failed to upload image. Please try again or use a direct image URL.'
+        });
+      }
+    } catch (uploadError) {
+      console.error('Image upload error:', uploadError);
+      return res.status(500).json({
+        error: 'Failed to process uploaded image.',
+        details: uploadError.message
+      });
+    }
+  }
+
   // Proxy setup - use your Webshare details here
   const proxyUrl = 'http://mfvrmgdc:3281gl8vgvlp@142.111.48.253:7030';
   const agent = new HttpsProxyAgent(proxyUrl);
 
   try {
     // Determine which model to use based on whether an image is provided
-    const model = imageUrl
+    const model = finalImageUrl
       ? 'bytedance/v1-lite-image-to-video'
       : 'bytedance/v1-lite-text-to-video';
 
@@ -73,14 +113,14 @@ export default async function handler(req, res) {
     };
 
     // Add image_url only for image-to-video
-    if (imageUrl) {
-      requestPayload.input.image_url = imageUrl;
+    if (finalImageUrl) {
+      requestPayload.input.image_url = finalImageUrl;
     }
 
     console.log('Generating video with Seedance 1.0 API:', {
       model,
       prompt,
-      imageUrl,
+      imageUrl: finalImageUrl,
       resolution,
       duration,
       musicTaskId,

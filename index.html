@@ -695,9 +695,13 @@
               <textarea id="video-prompt" placeholder="e.g., A camera flying through a neon-lit cyberpunk city at night, with holographic billboards and flying cars. Use [Cut to] for scene transitions."></textarea>
             </div>
             <div class="form-group">
-              <label class="form-label">Image URL (Optional - for Image-to-Video)</label>
-              <input type="text" id="video-image-url" placeholder="https://example.com/image.jpg" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;">
-              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Leave empty for text-to-video generation</div>
+              <label class="form-label">Upload Image (Optional - for Image-to-Video)</label>
+              <input type="file" id="video-image-upload" accept="image/*" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer;">
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Upload an image to animate, or leave empty for text-to-video</div>
+              <div id="video-image-preview" style="display: none; margin-top: 0.5rem;">
+                <img id="video-preview-img" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid var(--border-color);" />
+                <button type="button" id="video-clear-image" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Clear Image</button>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">Resolution</label>
@@ -789,12 +793,18 @@
     const artStyle = document.getElementById('art-style');
     const generateArtBtn = document.getElementById('generate-art-btn');
     const videoPrompt = document.getElementById('video-prompt');
-    const videoImageUrl = document.getElementById('video-image-url');
+    const videoImageUpload = document.getElementById('video-image-upload');
+    const videoImagePreview = document.getElementById('video-image-preview');
+    const videoPreviewImg = document.getElementById('video-preview-img');
+    const videoClearImage = document.getElementById('video-clear-image');
     const videoResolution = document.getElementById('video-resolution');
     const videoDuration = document.getElementById('video-duration');
     const videoCameraFixed = document.getElementById('video-camera-fixed');
     const generateVideoBtn = document.getElementById('generate-video-btn');
     const artResult = document.getElementById('art-result');
+
+    // Store uploaded image as base64
+    let uploadedImageData = null;
 
     // Video Mode Toggle
     videoModeToggle.addEventListener('change', () => {
@@ -809,6 +819,39 @@
         visualPanelTitle.textContent = '🎨 Album Art Generator';
         visualPanelDescription.textContent = 'Create stunning visuals for your music';
       }
+    });
+
+    // Handle image upload
+    videoImageUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Check file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Image file is too large. Please use an image under 10MB.');
+        videoImageUpload.value = '';
+        return;
+      }
+
+      // Read file as base64
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        uploadedImageData = event.target.result;
+        videoPreviewImg.src = uploadedImageData;
+        videoImagePreview.style.display = 'block';
+      };
+      reader.onerror = () => {
+        alert('Failed to read image file. Please try again.');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Clear uploaded image
+    videoClearImage.addEventListener('click', () => {
+      uploadedImageData = null;
+      videoImageUpload.value = '';
+      videoImagePreview.style.display = 'none';
+      videoPreviewImg.src = '';
     });
 
     // Add message to chat
@@ -1054,7 +1097,6 @@
     // Generate video with Seedance
     async function generateVideo() {
       const prompt = videoPrompt.value.trim();
-      const imageUrl = videoImageUrl.value.trim();
       const resolution = videoResolution.value;
       const duration = videoDuration.value;
       const cameraFixed = videoCameraFixed.checked;
@@ -1076,9 +1118,9 @@
           cameraFixed: cameraFixed
         };
 
-        // Add imageUrl if provided (for image-to-video)
-        if (imageUrl) {
-          requestBody.imageUrl = imageUrl;
+        // Add uploaded image data if provided (for image-to-video)
+        if (uploadedImageData) {
+          requestBody.imageData = uploadedImageData;
         }
 
         const response = await fetch('/api/generate-video', {
