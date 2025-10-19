@@ -92,24 +92,39 @@ export default async function handler(req, res) {
       }
     });
 
-    console.log('Fal.ai video generation complete:', {
-      hasVideo: !!result.video,
-      videoUrl: result.video?.url
-    });
+    console.log('Fal.ai video generation complete (full result):', JSON.stringify(result, null, 2));
+
+    // Extract video URL from different possible response formats
+    let videoUrl = null;
+
+    // Try different response structures
+    if (result.video?.url) {
+      videoUrl = result.video.url;
+    } else if (result.data?.video?.url) {
+      videoUrl = result.data.video.url;
+    } else if (result.video_url) {
+      videoUrl = result.video_url;
+    } else if (result.data?.video_url) {
+      videoUrl = result.data.video_url;
+    } else if (result.url) {
+      videoUrl = result.url;
+    }
 
     // Return the video URL
-    if (result.video && result.video.url) {
+    if (videoUrl) {
       return res.status(200).json({
         status: 'complete',
-        videoUrl: result.video.url,
+        videoUrl: videoUrl,
         model: modelId,
-        seed: result.seed,
-        timings: result.timings
+        seed: result.seed || result.data?.seed,
+        timings: result.timings || result.data?.timings
       });
     } else {
       return res.status(500).json({
-        error: 'Video generation completed but no video URL returned',
-        result: result
+        error: 'Video generation completed but no video URL found in response',
+        result: result,
+        keys: Object.keys(result),
+        dataKeys: result.data ? Object.keys(result.data) : null
       });
     }
 
