@@ -1548,8 +1548,48 @@
           }
 
         } else {
-          // Image generation (placeholder - you'll need to implement image API)
-          alert('Image generation coming soon! For now, use video mode.');
+          // Image generation with OpenAI DALL-E 3
+          const requestBody = {
+            prompt: prompt,
+            style: 'abstract' // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
+          };
+
+          console.log('Generating image with DALL-E 3...');
+
+          const response = await fetch('/api/generate-art', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || data.details || 'Failed to generate image');
+          }
+
+          // Display image result
+          if (data.imageUrl) {
+            mediaResult.innerHTML = `
+              <div class="result-box">
+                <div class="result-title">✅ Image Generated with DALL-E 3</div>
+                <img src="${data.imageUrl}" alt="Generated image" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                  <a href="${data.imageUrl}" download="aetherwave-${selectedUseCase}.png" class="download-btn">Download Image</a>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
+                  Use Case: ${selectedUseCase} · Style: ${data.style}
+                </p>
+                ${data.revisedPrompt ? `<p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem; font-style: italic;">Revised: ${data.revisedPrompt}</p>` : ''}
+              </div>
+            `;
+            mediaResult.style.display = 'block';
+            return;
+          } else {
+            throw new Error('Image generated but no URL returned');
+          }
         }
 
       } catch (error) {
@@ -1583,6 +1623,20 @@
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
               Use Case: ${selectedUseCase} · Model: ${data.model || 'Seedance 1.0'}
             </p>
+          </div>
+        `;
+      } else if (type === 'image') {
+        mediaResult.innerHTML = `
+          <div class="result-box">
+            <div class="result-title">✅ Image Generated with DALL-E 3</div>
+            <img src="${data.imageUrl}" alt="Generated image" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
+              <a href="${data.imageUrl}" download="aetherwave-${selectedUseCase}.png" class="download-btn">Download Image</a>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
+              Use Case: ${selectedUseCase} · Style: ${data.style}
+            </p>
+            ${data.revisedPrompt ? `<p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem; font-style: italic;">DALL-E Revision: ${data.revisedPrompt}</p>` : ''}
           </div>
         `;
       }
