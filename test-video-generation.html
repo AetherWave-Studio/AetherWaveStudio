@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AetherWave Video Generation Test Suite</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0d0b15;
+      color: #e9e8ff;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ff2ea6, #8b5cf6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .test-case {
+      background: #1a1625;
+      border: 1px solid #2d2640;
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .test-case:hover {
+      border-color: #ff2ea6;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(255, 46, 166, 0.2);
+    }
+
+    .test-case h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #ff2ea6;
+    }
+
+    .test-case p {
+      font-size: 0.9rem;
+      color: #b7b3d9;
+      margin-bottom: 1rem;
+    }
+
+    .test-btn {
+      width: 100%;
+      padding: 0.75rem;
+      background: linear-gradient(135deg, #ff2ea6, #8b5cf6);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .test-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 46, 166, 0.4);
+    }
+
+    .test-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .status {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    .status.pending {
+      background: rgba(139, 92, 246, 0.1);
+      color: #8b5cf6;
+    }
+
+    .status.testing {
+      background: rgba(255, 46, 166, 0.1);
+      color: #ff2ea6;
+      animation: pulse 2s infinite;
+    }
+
+    .status.success {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    .status.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .video-result {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .video-result video {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    .summary {
+      background: #1a1625;
+      border: 2px solid #8b5cf6;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .summary h2 {
+      color: #8b5cf6;
+      margin-bottom: 1rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(139, 92, 246, 0.1);
+      border-radius: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ff2ea6;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #b7b3d9;
+      margin-top: 0.25rem;
+    }
+
+    .test-all-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #8b5cf6, #ff2ea6);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .test-all-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(139, 92, 246, 0.4);
+    }
+
+    .test-all-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .prompt-display {
+      background: #0d0b15;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      margin: 0.5rem 0;
+      color: #b7b3d9;
+      border: 1px solid #2d2640;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎬 AetherWave Video Generation Test Suite</h1>
+    <p style="color: #b7b3d9; margin-bottom: 1rem;">Testing all 8 use cases with Fal.ai Seedance 1.0</p>
+
+    <button id="test-all-btn" class="test-all-btn">🚀 Test All 8 Use Cases</button>
+
+    <div class="summary">
+      <h2>Test Results Summary</h2>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value" id="total-tests">0/8</div>
+          <div class="stat-label">Tests Completed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="success-count">0</div>
+          <div class="stat-label">Successful</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="error-count">0</div>
+          <div class="stat-label">Failed</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-grid">
+      <!-- Band Profile -->
+      <div class="test-case">
+        <h3>👤 Band Profile</h3>
+        <p>Professional artist portrait photography for press kits</p>
+        <div class="prompt-display" id="prompt-band-profile"></div>
+        <button class="test-btn" data-use-case="band-profile">Test</button>
+        <div class="status pending" id="status-band-profile">Ready to test</div>
+        <div class="video-result" id="result-band-profile"></div>
+      </div>
+
+      <!-- Live Photos -->
+      <div class="test-case">
+        <h3>🎸 Live Photos</h3>
+        <p>Dynamic concert and performance photography</p>
+        <div class="prompt-display" id="prompt-live-photos"></div>
+        <button class="test-btn" data-use-case="live-photos">Test</button>
+        <div class="status pending" id="status-live-photos">Ready to test</div>
+        <div class="video-result" id="result-live-photos"></div>
+      </div>
+
+      <!-- Live Video -->
+      <div class="test-case">
+        <h3>🎤 Live Video</h3>
+        <p>Concert footage and performance clips</p>
+        <div class="prompt-display" id="prompt-live-video"></div>
+        <button class="test-btn" data-use-case="live-video">Test</button>
+        <div class="status pending" id="status-live-video">Ready to test</div>
+        <div class="video-result" id="result-live-video"></div>
+      </div>
+
+      <!-- Production Video -->
+      <div class="test-case">
+        <h3>🎬 Production Video</h3>
+        <p>Professional music videos with cinematic quality</p>
+        <div class="prompt-display" id="prompt-production-video"></div>
+        <button class="test-btn" data-use-case="production-video">Test</button>
+        <div class="status pending" id="status-production-video">Ready to test</div>
+        <div class="video-result" id="result-production-video"></div>
+      </div>
+
+      <!-- Backstage Pass -->
+      <div class="test-case">
+        <h3>🎭 Backstage Pass</h3>
+        <p>Behind-the-scenes content and artist life</p>
+        <div class="prompt-display" id="prompt-backstage"></div>
+        <button class="test-btn" data-use-case="backstage">Test</button>
+        <div class="status pending" id="status-backstage">Ready to test</div>
+        <div class="video-result" id="result-backstage"></div>
+      </div>
+
+      <!-- On The Road -->
+      <div class="test-case">
+        <h3>🚐 On The Road</h3>
+        <p>Tour life, travel scenes, and adventure content</p>
+        <div class="prompt-display" id="prompt-on-the-road"></div>
+        <button class="test-btn" data-use-case="on-the-road">Test</button>
+        <div class="status pending" id="status-on-the-road">Ready to test</div>
+        <div class="video-result" id="result-on-the-road"></div>
+      </div>
+
+      <!-- Album Art -->
+      <div class="test-case">
+        <h3>💿 Album Art</h3>
+        <p>Square format cover art for albums and singles</p>
+        <div class="prompt-display" id="prompt-album-art"></div>
+        <button class="test-btn" data-use-case="album-art">Test</button>
+        <div class="status pending" id="status-album-art">Ready to test</div>
+        <div class="video-result" id="result-album-art"></div>
+      </div>
+
+      <!-- News Reports -->
+      <div class="test-case">
+        <h3>📰 News Reports</h3>
+        <p>Press-style imagery and announcement visuals</p>
+        <div class="prompt-display" id="prompt-news-reports"></div>
+        <button class="test-btn" data-use-case="news-reports">Test</button>
+        <div class="status pending" id="status-news-reports">Ready to test</div>
+        <div class="video-result" id="result-news-reports"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Prompt templates (same as main app)
+    const promptTemplates = {
+      'band-profile': 'Professional artist portrait photography: indie rock band in urban setting. Studio lighting, high quality, detailed, press kit worthy, promotional photo style.',
+      'live-photos': 'Live concert photography: rock band performing on stage with dramatic lighting. Dynamic stage lighting, energetic performance, crowd atmosphere, professional music photography.',
+      'live-video': 'Live concert performance: energetic band performing with dynamic camera angles. Stage lights, live music energy, performance intensity, concert film quality.',
+      'production-video': 'Professional music video production: cinematic shots of band in moody urban environment. Cinematic camera work, artistic storytelling, high-quality cinematography, music video style.',
+      'backstage': 'Behind-the-scenes music photography: band relaxing in green room with instruments. Candid backstage moments, authentic artist life, documentary photography style.',
+      'on-the-road': 'Tour life photography: band on tour bus traveling through scenic landscape. Travel documentary style, authentic road moments, touring musician lifestyle.',
+      'album-art': 'Album cover art design: abstract geometric shapes in vibrant neon colors. Square format, artistic composition, professional album artwork, high-quality graphic design.',
+      'news-reports': 'Music news press image: band announcement with professional presentation. Professional news photography, press release quality, announcement graphic style.'
+    };
+
+    // Display prompts
+    Object.keys(promptTemplates).forEach(useCase => {
+      const promptDisplay = document.getElementById(`prompt-${useCase}`);
+      if (promptDisplay) {
+        promptDisplay.textContent = promptTemplates[useCase];
+      }
+    });
+
+    // Test statistics
+    let testsCompleted = 0;
+    let successCount = 0;
+    let errorCount = 0;
+
+    function updateStats() {
+      document.getElementById('total-tests').textContent = `${testsCompleted}/8`;
+      document.getElementById('success-count').textContent = successCount;
+      document.getElementById('error-count').textContent = errorCount;
+    }
+
+    // Test single use case
+    async function testUseCase(useCase) {
+      const statusEl = document.getElementById(`status-${useCase}`);
+      const resultEl = document.getElementById(`result-${useCase}`);
+      const btn = document.querySelector(`[data-use-case="${useCase}"]`);
+
+      btn.disabled = true;
+      statusEl.className = 'status testing';
+      statusEl.textContent = 'Generating video...';
+      resultEl.style.display = 'none';
+
+      try {
+        const prompt = promptTemplates[useCase];
+
+        console.log(`Testing ${useCase}:`, prompt);
+
+        const response = await fetch('/api/generate-video-fal', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            prompt: prompt,
+            modelVersion: 'lite',
+            resolution: '720p',
+            duration: '5',
+            enableSafetyChecker: true
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || data.details || 'Failed to generate video');
+        }
+
+        if (data.status === 'complete' && data.videoUrl) {
+          statusEl.className = 'status success';
+          statusEl.textContent = '✅ Success!';
+
+          const generationTime = data.timings ? ` (${Math.round(data.timings.inference / 1000)}s)` : '';
+
+          resultEl.innerHTML = `
+            <p style="font-size: 0.85rem; color: #22c55e; margin-bottom: 0.5rem;">
+              Generated in${generationTime}
+            </p>
+            <video controls autoplay loop src="${data.videoUrl}"></video>
+            <p style="font-size: 0.75rem; color: #b7b3d9; margin-top: 0.5rem;">
+              Seed: ${data.seed || 'N/A'} · Model: ${data.model || 'Seedance 1.0'}
+            </p>
+          `;
+          resultEl.style.display = 'block';
+
+          successCount++;
+        } else {
+          throw new Error('Video generated but no URL returned');
+        }
+
+      } catch (error) {
+        console.error(`Error testing ${useCase}:`, error);
+        statusEl.className = 'status error';
+        statusEl.textContent = `❌ Error: ${error.message}`;
+        errorCount++;
+      } finally {
+        btn.disabled = false;
+        testsCompleted++;
+        updateStats();
+      }
+    }
+
+    // Individual test buttons
+    document.querySelectorAll('.test-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const useCase = e.target.dataset.useCase;
+        testUseCase(useCase);
+      });
+    });
+
+    // Test all button
+    document.getElementById('test-all-btn').addEventListener('click', async () => {
+      const testAllBtn = document.getElementById('test-all-btn');
+      testAllBtn.disabled = true;
+      testAllBtn.textContent = '🚀 Running All Tests...';
+
+      // Reset stats
+      testsCompleted = 0;
+      successCount = 0;
+      errorCount = 0;
+      updateStats();
+
+      const useCases = Object.keys(promptTemplates);
+
+      // Test each use case sequentially (to avoid rate limiting)
+      for (const useCase of useCases) {
+        await testUseCase(useCase);
+        // Wait 2 seconds between tests to avoid rate limiting
+        if (useCase !== useCases[useCases.length - 1]) {
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
+
+      testAllBtn.disabled = false;
+      testAllBtn.textContent = '✅ All Tests Complete!';
+
+      setTimeout(() => {
+        testAllBtn.textContent = '🚀 Test All 8 Use Cases';
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
