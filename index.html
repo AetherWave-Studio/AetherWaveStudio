@@ -1948,56 +1948,42 @@
             `;
           }
         } else {
-          // Generate album art using SUNO API (audio-based, no prompt needed)
-          const response = await fetch('/api/generate-cover', {
+          // Generate album art using OpenAI DALL-E 3 (synchronous!)
+          resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎨 Generating album art with DALL-E 3...</p>`;
+
+          // Create a prompt based on the track title
+          const artPrompt = `Album cover art for the song "${trackTitle}". Music-themed, artistic, vibrant, professional album artwork design`;
+
+          console.log('Generating album art with prompt:', artPrompt);
+
+          const response = await fetch('/api/generate-art', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              musicTaskId: musicTaskId
+              prompt: artPrompt,
+              style: 'abstract' // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
             })
           });
 
           if (!response.ok) {
             const data = await response.json();
-            throw new Error(data.error || 'Failed to generate album art');
+            console.error('Album art generation error:', data);
+            throw new Error(data.error || data.details || 'Failed to generate album art');
           }
 
           const data = await response.json();
+          console.log('Album art generated successfully:', data);
 
-          // Cover generation is async - poll for completion
-          if (data.status === 'processing') {
-            resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎨 Album art generation started! Checking status...</p>`;
-
-            // Poll for completion
-            const checkInterval = setInterval(async () => {
-              try {
-                const statusResponse = await fetch(`/api/cover-status?taskId=${musicTaskId}`);
-                const statusData = await statusResponse.json();
-
-                if (statusData.status === 'complete') {
-                  clearInterval(checkInterval);
-                  resultDiv.innerHTML = `
-                    <p style="color: #4ade80; font-size: 0.9rem;">✅ Album art complete!</p>
-                    <img src="${statusData.imageUrl}" alt="Album art" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
-                    <a href="${statusData.imageUrl}" download="${trackTitle}-art.jpg" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Image</a>
-                  `;
-                } else if (statusData.status === 'failed') {
-                  clearInterval(checkInterval);
-                  resultDiv.innerHTML = `<p style="color: #ff6b6b; font-size: 0.9rem;">❌ Album art generation failed: ${statusData.error || 'Unknown error'}</p>`;
-                } else {
-                  // Still processing
-                  resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎨 Album art is being generated...</p>`;
-                }
-              } catch (error) {
-                console.error('Cover status check error:', error);
-              }
-            }, 5000); // Check every 5 seconds (faster than video)
-          } else if (data.imageUrl) {
-            // Cover already complete
+          // DALL-E returns image synchronously - display immediately
+          if (data.imageUrl) {
             resultDiv.innerHTML = `
+              <p style="color: #4ade80; font-size: 0.9rem;">✅ Album art complete! (DALL-E 3)</p>
               <img src="${data.imageUrl}" alt="Album art" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
               <a href="${data.imageUrl}" download="${trackTitle}-art.jpg" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Image</a>
+              ${data.revisedPrompt ? `<p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem; font-style: italic;">DALL-E enhanced: ${data.revisedPrompt}</p>` : ''}
             `;
+          } else {
+            throw new Error('Album art generated but no image URL returned');
           }
         }
       } catch (error) {
