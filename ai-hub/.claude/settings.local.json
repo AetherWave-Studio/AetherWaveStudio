@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//e/Gits/AetherWaveStudio/**)",
+      "Bash(cat E:/Gits/AetherWaveStudio/vercel.json)",
+      "Bash(git add index.html vercel.json)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nFix music video generation - switch to Fal.ai for synchronous delivery\n\n- Changed music video generation from KIE.AI to Fal.ai Seedance API\n- Fal.ai returns videos synchronously (no polling needed)\n- Added comprehensive logging and error handling\n- Added timeout mechanism (10 minutes max)\n- Videos now display immediately when ready\n- Added generate-video-fal.js to vercel.json with 60s timeout\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push)",
+      "Bash(git add index.html)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nSwitch album art generation from SUNO polling to OpenAI DALL-E 3\n\n- Replaced async SUNO API (/api/generate-cover) with synchronous DALL-E 3 (/api/generate-art)\n- Album art now generates instantly without polling\n- Generates art based on track title with music-themed prompts\n- Added comprehensive logging for debugging\n- Shows DALL-E''s enhanced prompt in the UI\n- No more stuck \"processing\" states for album art\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit -m \"$(cat <<''EOF''\nFix download buttons to actually download instead of preview\n\n- Added downloadFile() helper function using fetch and blob API\n- Replaced all <a> download links with <button> onclick handlers\n- Downloads now work properly for videos and images\n- Bypasses CORS issues and forces actual file download\n- Applies to music videos, album art, and media panel downloads\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
