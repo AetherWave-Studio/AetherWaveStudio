@@ -8,7 +8,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
+   /*:root {
+      --aetherwave-pink: #ff2ea6;
+      --aetherwave-purple: #8b5cf6;
+      --dark-bg: #0d0b15;
+      --card-bg: #1a1625;
+      --text-primary: #e9e8ff;
+      --text-muted: #b7b3d9;
+      --border-color: #2d2640;
+    } */
+	:root {
       --aetherwave-pink: #ff2ea6;
       --aetherwave-purple: #8b5cf6;
       --dark-bg: #0d0b15;
@@ -17,6 +26,7 @@
       --text-muted: #b7b3d9;
       --border-color: #2d2640;
     }
+
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -115,6 +125,17 @@
       width: 32px;
       height: 32px;
       background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+    }
+	.logo-icon2 {
+      width: 100px;
+      height: 100px;
+      /*background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple));*/
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -657,7 +678,7 @@
 
   <header>
     <a href="/" class="logo">
-      <div class="logo-icon">AW</div>
+      <div class="logo-icon2"><img class='logo-icon2' src='./assets/Logo_360_Transparent.gif'></div>
       <span>AetherWave Studio</span>
     </a>
     <nav>
