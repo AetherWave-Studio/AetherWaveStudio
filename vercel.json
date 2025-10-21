@@ -12,6 +12,9 @@
     "api/generate-video.js": {
       "maxDuration": 10
     },
+    "api/generate-video-fal.js": {
+      "maxDuration": 60
+    },
     "api/video-status.js": {
       "maxDuration": 10
     },
