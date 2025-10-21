@@ -1,0 +1,9 @@
+1. Changed Album Art and Music video generations to Fal.ai API to avoid SUO polling failures.
+2. Need to add member login and accounts 
+	Add membership tiers
+	Freemium structure
+	Login for Ghost Musician will be managed at their profile page
+3. Restrict Free accounts to SUNO v4.0
+4. Restrict Free accounts to 2 unique song generations
+5. Restrict Free accounts to 5 sec video, if 10 second can be added for paid accounts
+6. Restrict Free accounts Media Generator access
