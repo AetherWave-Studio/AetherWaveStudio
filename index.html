@@ -1267,6 +1267,31 @@
       imageModeSelection.style.display = 'none';
     });
 
+    // Helper function to download files properly (bypasses CORS and preview issues)
+    async function downloadFile(url, filename) {
+      try {
+        console.log('Downloading file:', url);
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up the blob URL after a delay
+        setTimeout(() => window.URL.revokeObjectURL(blobUrl), 100);
+        console.log('Download initiated for:', filename);
+      } catch (error) {
+        console.error('Download failed:', error);
+        // Fallback to opening in new tab if download fails
+        window.open(url, '_blank');
+      }
+    }
+
     // Add message to chat
     function addMessage(content, type = 'user') {
       const messageDiv = document.createElement('div');
@@ -1598,7 +1623,7 @@
                 <div class="result-title">✅ Image Generated with DALL-E 3</div>
                 <img src="${data.imageUrl}" alt="Generated image" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
                 <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
-                  <a href="${data.imageUrl}" download="aetherwave-${selectedUseCase}.png" class="download-btn">Download Image</a>
+                  <button onclick="downloadFile('${data.imageUrl}', 'aetherwave-${selectedUseCase}.png')" class="download-btn" style="cursor: pointer;">Download Image</button>
                 </div>
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
                   Use Case: ${selectedUseCase} · Style: ${data.style}
@@ -1652,7 +1677,7 @@
             <div class="result-title">✅ Image Generated with DALL-E 3</div>
             <img src="${data.imageUrl}" alt="Generated image" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
             <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
-              <a href="${data.imageUrl}" download="aetherwave-${selectedUseCase}.png" class="download-btn">Download Image</a>
+              <button onclick="downloadFile('${data.imageUrl}', 'aetherwave-${selectedUseCase}.png')" class="download-btn" style="cursor: pointer;">Download Image</button>
             </div>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
               Use Case: ${selectedUseCase} · Style: ${data.style}
@@ -1794,7 +1819,7 @@
           </video>
           ${data.coverUrl ? `<img src="${data.coverUrl}" alt="Video thumbnail" style="display: none;">` : ''}
           <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
-            <a href="${data.videoUrl}" download="seedance-video.mp4" class="download-btn">Download Video</a>
+            <button onclick="downloadFile('${data.videoUrl}', 'seedance-video.mp4')" class="download-btn" style="cursor: pointer;">Download Video</button>
             ${data.seed ? `<span class="download-btn" style="cursor: default;">Seed: ${data.seed}</span>` : ''}
           </div>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem;">
@@ -1855,7 +1880,7 @@
               <video controls autoplay loop style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
                 <source src="${data.videoUrl}" type="video/mp4">
               </video>
-              <a href="${data.videoUrl}" download="${trackTitle}-video.mp4" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Video</a>
+              <button onclick="downloadFile('${data.videoUrl}', '${trackTitle}-video.mp4')" class="download-btn" style="margin-top: 0.5rem; cursor: pointer;">Download Video</button>
             `;
           } else if (response.status === 202 || data.status === 'processing') {
             // Fallback for async responses (shouldn't happen with Fal.ai)
@@ -1899,7 +1924,7 @@
                     <video controls style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
                       <source src="${statusData.videoUrl}" type="video/mp4">
                     </video>
-                    <a href="${statusData.videoUrl}" download="${trackTitle}-video.mp4" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Video</a>
+                    <button onclick="downloadFile('${statusData.videoUrl}', '${trackTitle}-video.mp4')" class="download-btn" style="margin-top: 0.5rem; cursor: pointer;">Download Video</button>
                   `;
                 } else if (statusData.status === 'failed') {
                   clearInterval(checkInterval);
@@ -1944,7 +1969,7 @@
               <video controls style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
                 <source src="${data.videoUrl}" type="video/mp4">
               </video>
-              <a href="${data.videoUrl}" download="${trackTitle}-video.mp4" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Video</a>
+              <button onclick="downloadFile('${data.videoUrl}', '${trackTitle}-video.mp4')" class="download-btn" style="margin-top: 0.5rem; cursor: pointer;">Download Video</button>
             `;
           }
         } else {
@@ -1979,7 +2004,7 @@
             resultDiv.innerHTML = `
               <p style="color: #4ade80; font-size: 0.9rem;">✅ Album art complete! (DALL-E 3)</p>
               <img src="${data.imageUrl}" alt="Album art" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
-              <a href="${data.imageUrl}" download="${trackTitle}-art.jpg" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Image</a>
+              <button onclick="downloadFile('${data.imageUrl}', '${trackTitle}-art.png')" class="download-btn" style="margin-top: 0.5rem; cursor: pointer;">Download Image</button>
               ${data.revisedPrompt ? `<p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem; font-style: italic;">DALL-E enhanced: ${data.revisedPrompt}</p>` : ''}
             `;
           } else {
