@@ -1,4 +1,5 @@
-1. Changed Album Art and Music video generations to Fal.ai API to avoid SUO polling failures.
+1. Changed Album Art and Music video generations to Fal.ai API to avoid SUNO polling failures.
+	Advanced music gen should have description input as well as styles and lyrics??
 2. Need to add member login and accounts 
 	Add membership tiers
 	Freemium structure
@@ -13,3 +14,6 @@ Quick hits:
 2. Image gen is stuck on abstract style, style option dropdown is missing
 3. The music generation is missing 2 sliders for wierdness and style influence, they should be in an advanced options dropdown.
 4. ai-Toolkit page does not have swipe to browse, must click
+
+
+A broadcast from a local news agency reportsThe band in the attached image had a run in with local authorities last night after one of their concerts, for a noise violation in Loveland Colorado. the singer known only as Crow was cited for throwing a television out the tenth floor window of a hotel. When reached for comment. His response was simply, "because I have never done it before."  We see the news report and the short response from Crow, the figure in the middle of the reference image on a television.

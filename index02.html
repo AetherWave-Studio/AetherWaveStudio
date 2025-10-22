@@ -757,22 +757,6 @@
     <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.5rem;">Create a song without lyrics</div>
     </div>
 
-    <!-- Album Art Style Selector -->
-    <div class="form-group">
-    <label class="form-label">Album Art Style (for auto-generated art)</label>
-    <select id="album-art-style">
-    <option value="photorealistic">Photorealistic</option>
-    <option value="abstract">Abstract</option>
-    <option value="cyberpunk">Cyberpunk</option>
-    <option value="retro">Retro</option>
-    <option value="minimal">Minimal</option>
-    <option value="surreal">Surreal</option>
-    <option value="cinematic">Cinematic</option>
-    <option value="artistic">Artistic</option>
-    </select>
-    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Choose the visual style for album art generated with your tracks</div>
-    </div>
-
     <button class="btn-primary" id="generate-music-btn">Generate Music</button>
     <div id="music-result" style="display: none;"></div>
     </div>
@@ -944,6 +928,19 @@
     <textarea id="user-vision" rows="2" placeholder="e.g., wearing leather jacket, vintage 80s aesthetic, purple color scheme..."></textarea>
     </div>
 
+    <!-- Image Style Selector (shown only for images) -->
+    <div class="form-group" id="media-image-style-group" style="display: block;">
+    <label class="form-label">Image Style</label>
+    <select id="media-image-style">
+    <option value="abstract">Abstract</option>
+    <option value="cyberpunk">Cyberpunk</option>
+    <option value="retro">Retro</option>
+    <option value="minimal">Minimal</option>
+    <option value="surreal">Surreal</option>
+    <option value="photorealistic">Photorealistic</option>
+    </select>
+    </div>
+
     <!-- Image Upload (Optional) -->
     <div class="form-group" id="image-upload-group">
     <label class="form-label">
@@ -1102,6 +1099,8 @@
     const videoSettingsGroup = document.getElementById('video-settings-group');
     const videoResolutionGroup = document.getElementById('video-resolution-group');
     const videoDurationGroup = document.getElementById('video-duration-group');
+    const mediaImageStyleGroup = document.getElementById('media-image-style-group');
+    const mediaImageStyle = document.getElementById('media-image-style');
 
     // State management
     let selectedMediaType = 'image'; // 'image' or 'video'
@@ -1157,10 +1156,12 @@
     videoSettingsGroup.style.display = 'block';
     videoResolutionGroup.style.display = 'block';
     videoDurationGroup.style.display = 'block';
+    mediaImageStyleGroup.style.display = 'none';
     } else {
     videoSettingsGroup.style.display = 'none';
     videoResolutionGroup.style.display = 'none';
     videoDurationGroup.style.display = 'none';
+    mediaImageStyleGroup.style.display = 'block';
     }
 
     // Update enhanced prompt if use case already selected
@@ -1613,7 +1614,7 @@
     // Image generation with OpenAI DALL-E 3
     const requestBody = {
     prompt: prompt,
-    style: 'abstract' // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
+    style: mediaImageStyle.value // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
     };
 
     console.log('Generating image with DALL-E 3...');
@@ -1992,20 +1993,17 @@
     // Generate album art using OpenAI DALL-E 3 (synchronous!)
     resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎨 Generating album art with DALL-E 3...</p>`;
 
-    // Get the selected album art style from the dropdown
-    const selectedStyle = document.getElementById('album-art-style').value;
-
     // Create a prompt based on the track title
     const artPrompt = `Album cover art for the song "${trackTitle}". Music-themed, artistic, vibrant, professional album artwork design`;
 
-    console.log('Generating album art with prompt:', artPrompt, 'Style:', selectedStyle);
+    console.log('Generating album art with prompt:', artPrompt);
 
     const response = await fetch('/api/generate-art', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
     prompt: artPrompt,
-    style: selectedStyle // Use the selected style from dropdown
+    style: 'abstract' // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
     })
     });
 
