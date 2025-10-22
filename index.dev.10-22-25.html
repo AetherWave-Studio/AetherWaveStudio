@@ -670,7 +670,6 @@
   </style>
 </head>
 <body>
-
   <div class="bg-container">
     <div class="bg-grid"></div>
     <div class="orb orb-1"></div>
@@ -680,7 +679,7 @@
   <header>
     <a href="/" class="logo">
       <div class="logo-icon2"><img class="logo-icon2" src='.\assets\Logo-SilverAlloy-Loop-1.gif'></div>
-      <span><img width='300px' height='60px' src='.\assets\aws-logo.png'></span>
+      <span><img width='300px' height='50px' src='.\assets\aws-logo.png'></span>
     </a>
     <nav>
       <a href="https://ai-hub.aetherwavestudio.com">AI Hub</a>
@@ -693,7 +692,7 @@
 
   <main>
     <div class="hero-text">
-      <h1>Music Media Center Deluxe</h1>
+      <h1>AI Music and Media Center</h1>
       <p class="subtitle">Create music, chat with AI, and generate album art - all in one creative studio</p>
     </div>
 
@@ -1268,6 +1267,31 @@
       imageModeSelection.style.display = 'none';
     });
 
+    // Helper function to download files properly (bypasses CORS and preview issues)
+    async function downloadFile(url, filename) {
+      try {
+        console.log('Downloading file:', url);
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up the blob URL after a delay
+        setTimeout(() => window.URL.revokeObjectURL(blobUrl), 100);
+        console.log('Download initiated for:', filename);
+      } catch (error) {
+        console.error('Download failed:', error);
+        // Fallback to opening in new tab if download fails
+        window.open(url, '_blank');
+      }
+    }
+
     // Add message to chat
     function addMessage(content, type = 'user') {
       const messageDiv = document.createElement('div');
@@ -1599,7 +1623,7 @@
                 <div class="result-title">✅ Image Generated with DALL-E 3</div>
                 <img src="${data.imageUrl}" alt="Generated image" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
                 <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
-                  <a href="${data.imageUrl}" download="aetherwave-${selectedUseCase}.png" class="download-btn">Download Image</a>
+                  <button onclick="downloadFile('${data.imageUrl}', 'aetherwave-${selectedUseCase}.png')" class="download-btn" style="cursor: pointer;">Download Image</button>
                 </div>
                 <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
                   Use Case: ${selectedUseCase} · Style: ${data.style}
@@ -1653,7 +1677,7 @@
             <div class="result-title">✅ Image Generated with DALL-E 3</div>
             <img src="${data.imageUrl}" alt="Generated image" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
             <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
-              <a href="${data.imageUrl}" download="aetherwave-${selectedUseCase}.png" class="download-btn">Download Image</a>
+              <button onclick="downloadFile('${data.imageUrl}', 'aetherwave-${selectedUseCase}.png')" class="download-btn" style="cursor: pointer;">Download Image</button>
             </div>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
               Use Case: ${selectedUseCase} · Style: ${data.style}
@@ -1795,7 +1819,7 @@
           </video>
           ${data.coverUrl ? `<img src="${data.coverUrl}" alt="Video thumbnail" style="display: none;">` : ''}
           <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
-            <a href="${data.videoUrl}" download="seedance-video.mp4" class="download-btn">Download Video</a>
+            <button onclick="downloadFile('${data.videoUrl}', 'seedance-video.mp4')" class="download-btn" style="cursor: pointer;">Download Video</button>
             ${data.seed ? `<span class="download-btn" style="cursor: default;">Seed: ${data.seed}</span>` : ''}
           </div>
           <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem;">
@@ -1827,56 +1851,116 @@
 
       try {
         if (type === 'video') {
-          // Generate music video using Seedance 1.0
-          const response = await fetch('/api/generate-video', {
+          // Generate music video using Fal.ai Seedance 1.0 (synchronous - no polling!)
+          const response = await fetch('/api/generate-video-fal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               prompt: prompt,
+              modelVersion: 'lite', // Fast generation
               resolution: '720p',
               duration: '5',
-              musicTaskId: musicTaskId,
-              audioId: trackId
+              enableSafetyChecker: true
             })
           });
 
           const data = await response.json();
 
-          if (!response.ok && response.status !== 202) {
+          console.log('Fal.ai video generation response:', data);
+
+          if (!response.ok) {
             console.error('Video generation error response:', data);
             throw new Error(data.details || data.error || 'Failed to generate video');
           }
 
-          // Video generation is async - poll for completion
-          if (response.status === 202 || data.status === 'processing') {
-            resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎬 Video generation started with Seedance 1.0! This may take 5-10 minutes.</p>`;
-
+          // Fal.ai returns video synchronously - display immediately
+          if (data.status === 'complete' && data.videoUrl) {
+            resultDiv.innerHTML = `
+              <p style="color: #4ade80; font-size: 0.9rem;">✅ Music video complete! (Fal.ai Seedance)</p>
+              <video controls autoplay loop style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
+                <source src="${data.videoUrl}" type="video/mp4">
+              </video>
+              <button onclick="downloadFile('${data.videoUrl}', '${trackTitle}-video.mp4')" class="download-btn" style="margin-top: 0.5rem; cursor: pointer;">Download Video</button>
+            `;
+          } else if (response.status === 202 || data.status === 'processing') {
+            // Fallback for async responses (shouldn't happen with Fal.ai)
             const videoTaskId = data.taskId;
+
+            console.log('Video generation started. Task ID:', videoTaskId);
+
+            resultDiv.innerHTML = `
+              <p style="color: var(--accent-color); font-size: 0.9rem;">🎬 Video generation started with Seedance 1.0!</p>
+              <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;">Task ID: ${videoTaskId}</p>
+              <p style="color: var(--text-muted); font-size: 0.8rem;">This may take 5-10 minutes. Checking status every 10 seconds...</p>
+            `;
+
+            let pollCount = 0;
+            const maxPolls = 60; // 10 minutes max (60 * 10 seconds)
 
             // Poll for completion
             const checkInterval = setInterval(async () => {
+              pollCount++;
+              console.log(`Poll attempt ${pollCount}/${maxPolls} for video task: ${videoTaskId}`);
+
               try {
                 const statusResponse = await fetch(`/api/video-status?taskId=${videoTaskId}`);
+                console.log('Status response status:', statusResponse.status);
+
+                if (!statusResponse.ok) {
+                  console.error('Status check failed with status:', statusResponse.status);
+                  const errorText = await statusResponse.text();
+                  console.error('Error response:', errorText);
+                  throw new Error(`Status check failed: ${statusResponse.status} - ${errorText}`);
+                }
+
                 const statusData = await statusResponse.json();
+                console.log('Status data received:', statusData);
 
                 if (statusData.status === 'complete') {
                   clearInterval(checkInterval);
+                  console.log('Video complete! URL:', statusData.videoUrl);
                   resultDiv.innerHTML = `
                     <p style="color: #4ade80; font-size: 0.9rem;">✅ Music video complete! (Seedance 1.0)</p>
                     <video controls style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
                       <source src="${statusData.videoUrl}" type="video/mp4">
                     </video>
-                    <a href="${statusData.videoUrl}" download="${trackTitle}-video.mp4" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Video</a>
+                    <button onclick="downloadFile('${statusData.videoUrl}', '${trackTitle}-video.mp4')" class="download-btn" style="margin-top: 0.5rem; cursor: pointer;">Download Video</button>
                   `;
                 } else if (statusData.status === 'failed') {
                   clearInterval(checkInterval);
+                  console.error('Video generation failed:', statusData.error || statusData.details);
                   resultDiv.innerHTML = `<p style="color: #ff6b6b; font-size: 0.9rem;">❌ Video generation failed: ${statusData.error || statusData.details || 'Unknown error'}</p>`;
                 } else {
                   // Still processing - update message with progress
-                  resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎬 Generating music video with Seedance 1.0... (${statusData.jobStatus || 'processing'})</p>`;
+                  const progressMsg = statusData.jobStatus || statusData.status || 'processing';
+                  const elapsedTime = Math.floor((pollCount * 10) / 60);
+                  const elapsedSeconds = (pollCount * 10) % 60;
+                  console.log('Still processing. Status:', progressMsg, 'Full status data:', JSON.stringify(statusData));
+                  resultDiv.innerHTML = `
+                    <p style="color: var(--accent-color); font-size: 0.9rem;">🎬 Generating music video... (${progressMsg})</p>
+                    <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;">Time elapsed: ${elapsedTime}m ${elapsedSeconds}s</p>
+                    <p style="color: var(--text-muted); font-size: 0.8rem;">Poll ${pollCount}/${maxPolls} - Task: ${videoTaskId}</p>
+                  `;
+                }
+
+                // Timeout check
+                if (pollCount >= maxPolls) {
+                  clearInterval(checkInterval);
+                  console.error('Video generation timed out after', maxPolls * 10, 'seconds');
+                  resultDiv.innerHTML = `
+                    <p style="color: #ff6b6b; font-size: 0.9rem;">⏱️ Video generation timed out</p>
+                    <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;">The video may still be processing. Task ID: ${videoTaskId}</p>
+                    <p style="color: var(--text-muted); font-size: 0.8rem;">Check the browser console for more details.</p>
+                  `;
                 }
               } catch (error) {
                 console.error('Status check error:', error);
+                resultDiv.innerHTML = `
+                  <p style="color: #ff6b6b; font-size: 0.9rem;">❌ Error checking video status</p>
+                  <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;">${error.message}</p>
+                  <p style="color: var(--text-muted); font-size: 0.8rem;">Check browser console for details. Task: ${videoTaskId}</p>
+                `;
+                clearInterval(checkInterval);
               }
             }, 10000); // Check every 10 seconds
           } else if (data.videoUrl) {
@@ -1885,60 +1969,46 @@
               <video controls style="width: 100%; border-radius: 8px; margin-top: 0.5rem;">
                 <source src="${data.videoUrl}" type="video/mp4">
               </video>
-              <a href="${data.videoUrl}" download="${trackTitle}-video.mp4" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Video</a>
+              <button onclick="downloadFile('${data.videoUrl}', '${trackTitle}-video.mp4')" class="download-btn" style="margin-top: 0.5rem; cursor: pointer;">Download Video</button>
             `;
           }
         } else {
-          // Generate album art using SUNO API (audio-based, no prompt needed)
-          const response = await fetch('/api/generate-cover', {
+          // Generate album art using OpenAI DALL-E 3 (synchronous!)
+          resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎨 Generating album art with DALL-E 3...</p>`;
+
+          // Create a prompt based on the track title
+          const artPrompt = `Album cover art for the song "${trackTitle}". Music-themed, artistic, vibrant, professional album artwork design`;
+
+          console.log('Generating album art with prompt:', artPrompt);
+
+          const response = await fetch('/api/generate-art', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              musicTaskId: musicTaskId
+              prompt: artPrompt,
+              style: 'abstract' // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
             })
           });
 
           if (!response.ok) {
             const data = await response.json();
-            throw new Error(data.error || 'Failed to generate album art');
+            console.error('Album art generation error:', data);
+            throw new Error(data.error || data.details || 'Failed to generate album art');
           }
 
           const data = await response.json();
+          console.log('Album art generated successfully:', data);
 
-          // Cover generation is async - poll for completion
-          if (data.status === 'processing') {
-            resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎨 Album art generation started! Checking status...</p>`;
-
-            // Poll for completion
-            const checkInterval = setInterval(async () => {
-              try {
-                const statusResponse = await fetch(`/api/cover-status?taskId=${musicTaskId}`);
-                const statusData = await statusResponse.json();
-
-                if (statusData.status === 'complete') {
-                  clearInterval(checkInterval);
-                  resultDiv.innerHTML = `
-                    <p style="color: #4ade80; font-size: 0.9rem;">✅ Album art complete!</p>
-                    <img src="${statusData.imageUrl}" alt="Album art" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
-                    <a href="${statusData.imageUrl}" download="${trackTitle}-art.jpg" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Image</a>
-                  `;
-                } else if (statusData.status === 'failed') {
-                  clearInterval(checkInterval);
-                  resultDiv.innerHTML = `<p style="color: #ff6b6b; font-size: 0.9rem;">❌ Album art generation failed: ${statusData.error || 'Unknown error'}</p>`;
-                } else {
-                  // Still processing
-                  resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎨 Album art is being generated...</p>`;
-                }
-              } catch (error) {
-                console.error('Cover status check error:', error);
-              }
-            }, 5000); // Check every 5 seconds (faster than video)
-          } else if (data.imageUrl) {
-            // Cover already complete
+          // DALL-E returns image synchronously - display immediately
+          if (data.imageUrl) {
             resultDiv.innerHTML = `
+              <p style="color: #4ade80; font-size: 0.9rem;">✅ Album art complete! (DALL-E 3)</p>
               <img src="${data.imageUrl}" alt="Album art" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
-              <a href="${data.imageUrl}" download="${trackTitle}-art.jpg" class="download-btn" style="margin-top: 0.5rem; display: inline-block;">Download Image</a>
+              <button onclick="downloadFile('${data.imageUrl}', '${trackTitle}-art.png')" class="download-btn" style="margin-top: 0.5rem; cursor: pointer;">Download Image</button>
+              ${data.revisedPrompt ? `<p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem; font-style: italic;">DALL-E enhanced: ${data.revisedPrompt}</p>` : ''}
             `;
+          } else {
+            throw new Error('Album art generated but no image URL returned');
           }
         }
       } catch (error) {

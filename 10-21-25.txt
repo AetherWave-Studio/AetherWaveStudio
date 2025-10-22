@@ -7,3 +7,9 @@
 4. Restrict Free accounts to 2 unique song generations
 5. Restrict Free accounts to 5 sec video, if 10 second can be added for paid accounts
 6. Restrict Free accounts Media Generator access
+
+Quick hits:
+1. Video Media generation>>change button to say generate video
+2. Image gen is stuck on abstract style, style option dropdown is missing
+3. The music generation is missing 2 sliders for wierdness and style influence, they should be in an advanced options dropdown.
+4. ai-Toolkit page does not have swipe to browse, must click
