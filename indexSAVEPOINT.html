@@ -990,21 +990,6 @@
     <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal; margin-left: 0.5rem;">- For video: animate image or use as reference</span>
     </label>
     <input type="file" id="media-image-upload" accept="image/*" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer;">
-	<!-- Start Image (First Frame) Uploader -->
-	<div class="form-group" id="start-image-group" style="display:none;">
-	<label class="form-label">Start Frame (Image or URL)</label>
-	<input type="file" id="start-image-file" accept="image/*" style="margin-bottom:0.5rem;">
-	<input type="text" id="start-image-url" placeholder="or paste image URL" style="width:100%;">
-	</div>
-
-	<!-- End Image (Last Frame) Uploader -->
-	<div class="form-group" id="end-image-group" style="display:none;">
-	<label class="form-label">End Frame (Image or URL)</label>
-	<input type="file" id="end-image-file" accept="image/*" style="margin-bottom:0.5rem;">
-	<input type="text" id="end-image-url" placeholder="or paste image URL" style="width:100%;">
-	</div>
-
-
 
     <!-- Image Mode Selection (shown only for video when image uploaded) -->
     <div id="image-mode-selection" style="display: none; margin-top: 0.75rem;">
@@ -1126,24 +1111,6 @@
     const simpleCharCount = document.getElementById('simple-char-count');
     const customCharCount = document.getElementById('custom-char-count');
 
-	// Place this near other helper functions or at top, after DOM ready
-	async function handleImageInput(fileInput, urlInput) {
-	const file = fileInput.files[0];
-	if (file) {
-    return new Promise((resolve, reject) => {
-     const reader = new FileReader();
-     reader.onload = e => resolve(e.target.result);
-     reader.onerror = e => reject(e);
-     reader.readAsDataURL(file);
-    });
-  }
-  // If no file, but URL provided
-  if (urlInput.value && urlInput.value.trim() !== '') {
-    return urlInput.value.trim();
-  }
-  return null;
-}
-
     // Custom Mode Toggle
     customModeToggle.addEventListener('change', () => {
     if (customModeToggle.checked) {
@@ -1164,20 +1131,6 @@ customModeToggle.addEventListener('change', function() {
   } else {
     advancedOptions.style.display = 'none';
   }
-});
-// Assuming selectedMediaType is already used for main toggling
-function updateMediaInputs() {
-  if (selectedMediaType === "video") {
-    document.getElementById('start-image-group').style.display = 'block';
-    document.getElementById('end-image-group').style.display = 'block';
-  } else {
-    document.getElementById('start-image-group').style.display = 'none';
-    document.getElementById('end-image-group').style.display = 'none';
-  }
-}
-// Call updateMediaInputs whenever media type is toggled
-mediaTypeBtns.forEach(btn => {
-  btn.addEventListener('click', updateMediaInputs);
 });
 
 // Also set initial visibility at page load:
@@ -1721,18 +1674,6 @@ if (customModeToggle.checked) {
     cameraFixed: false,
     enableSafetyChecker: mediaSafetyChecker.checked
     };
-
- // *** ADD THIS BLOCK HERE ***
-      const startImageVal = await handleImageInput(
-        document.getElementById('start-image-file'),
-        document.getElementById('start-image-url')
-      );
-      const endImageVal = await handleImageInput(
-        document.getElementById('end-image-file'),
-        document.getElementById('end-image-url')
-      );
-      if (startImageVal) requestBody.image_url = startImageVal;
-      if (endImageVal) requestBody.end_image_url = endImageVal;
 
     // Add uploaded image data if provided
     if (uploadedImageData) {
