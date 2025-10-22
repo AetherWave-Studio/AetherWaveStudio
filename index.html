@@ -736,6 +736,42 @@
     </div>
     </div>
 
+<div id="advanced-options" style="display: none;">
+  <details open>
+    <summary style="cursor:pointer; font-weight:600; color:var(--aetherwave-purple); margin-bottom:1rem;">
+      Advanced Options
+    </summary>
+    <div class="form-group">
+      <label class="form-label">Vocal Gender Preference:</label>
+      <input type="radio" id="vocal-gender-m" value="m" aria-label="male">
+      <label for="vocal-gender-m">Male</label>
+      <input type="radio" id="vocal-gender-f" value="f" style="margin-left:1rem;" aria-label="female">
+      <label for="vocal-gender-f">Female</label>
+    </div>
+    <div class="form-group">
+      <label for="style-weight" class="form-label">
+        Style Weight (0–1):
+      </label>
+      <input type="range" id="style-weight" min="0" max="1" step="0.01" value="0.65">
+      <span id="style-weight-value">0.65</span>
+    </div>
+    <div class="form-group">
+      <label for="weirdness-constraint" class="form-label">
+        Weirdness Constraint (0–1):
+      </label>
+      <input type="range" id="weirdness-constraint" min="0" max="1" step="0.01" value="0.65">
+      <span id="weirdness-constraint-value">0.65</span>
+    </div>
+    <div class="form-group">
+      <label for="audio-weight" class="form-label">
+        Audio Weight (0–1):
+      </label>
+      <input type="range" id="audio-weight" min="0" max="1" step="0.01" value="0.65">
+      <span id="audio-weight-value">0.65</span>
+    </div>
+  </details>
+</div>
+
     <!-- Model Version (Always visible) -->
     <div class="form-group">
     <label class="form-label">Model Version</label>
@@ -758,10 +794,11 @@
     </div>
 
     <!-- Album Art Style Selector -->
-    <div class="form-group">
-    <label class="form-label">Album Art Style (for auto-generated art)</label>
-    <select id="album-art-style">
-    <option value="photorealistic">Photorealistic</option>
+    <!-- Wrap this dropdown in a container div -->
+	<div id="album-art-style-container" style="display:none;">
+	<label class="form-label">Album Art Style for auto-generated art</label>
+	<select id="album-art-style">
+    <option value="photorealistic" selected>Photorealistic</option>
     <option value="abstract">Abstract</option>
     <option value="cyberpunk">Cyberpunk</option>
     <option value="retro">Retro</option>
@@ -769,9 +806,11 @@
     <option value="surreal">Surreal</option>
     <option value="cinematic">Cinematic</option>
     <option value="artistic">Artistic</option>
-    </select>
-    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Choose the visual style for album art generated with your tracks</div>
-    </div>
+	</select>
+	<div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+    Choose the visual style for Album Art
+  </div>
+</div>
 
     <button class="btn-primary" id="generate-music-btn">Generate Music</button>
     <div id="music-result" style="display: none;"></div>
@@ -1082,6 +1121,34 @@
     customModeFields.style.display = 'none';
     }
     });
+	const customModeToggle = document.getElementById('custom-mode-toggle');
+const advancedOptions = document.getElementById('advanced-options');
+
+// Show/hide Advanced Options based on custom mode
+customModeToggle.addEventListener('change', function() {
+  if (customModeToggle.checked) {
+    advancedOptions.style.display = 'block';
+  } else {
+    advancedOptions.style.display = 'none';
+  }
+});
+
+// Also set initial visibility at page load:
+if (customModeToggle.checked) {
+  advancedOptions.style.display = 'block';
+} else {
+  advancedOptions.style.display = 'none';
+}
+
+// Slider live value update logic
+['style-weight', 'weirdness-constraint', 'audio-weight'].forEach(function(id) {
+  const slider = document.getElementById(id);
+  const output = document.getElementById(id + '-value');
+  slider.addEventListener('input', function() {
+    output.textContent = slider.value;
+  });
+});
+
 
     // Character counter for Simple Mode
     musicPromptSimple.addEventListener('input', () => {
@@ -1162,7 +1229,16 @@
     }
     };
 
-    // Media type toggle
+    
+	// When Generate Album Art button is clicked, show the dropdown.
+	document.addEventListener('click', function(e) {
+	if (e.target && e.target.matches('.download-btn[onclick*="Generate Album Art"]')) {
+    document.getElementById('album-art-style-container').style.display = 'block';
+    document.getElementById('album-art-style').value = 'photorealistic';
+		}
+	});
+
+	// Media type toggle
     mediaTypeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
     mediaTypeBtns.forEach(b => b.classList.remove('active'));
