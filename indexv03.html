@@ -971,22 +971,6 @@
     </div>
     </div>
 
-    <!-- Image Style Selector (only for images, not videos) -->
-    <div class="form-group" id="image-style-group" style="display: block;">
-    <label class="form-label">Image Style</label>
-    <select id="media-image-style">
-    <option value="photorealistic">Photorealistic</option>
-    <option value="abstract">Abstract</option>
-    <option value="cyberpunk">Cyberpunk</option>
-    <option value="retro">Retro</option>
-    <option value="minimal">Minimal</option>
-    <option value="surreal">Surreal</option>
-    <option value="cinematic">Cinematic</option>
-    <option value="artistic">Artistic</option>
-    </select>
-    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Choose the visual style for your generated image</div>
-    </div>
-
     <!-- Advanced Settings (collapsible) -->
     <div class="form-group">
     <details>
@@ -1118,8 +1102,6 @@
     const videoSettingsGroup = document.getElementById('video-settings-group');
     const videoResolutionGroup = document.getElementById('video-resolution-group');
     const videoDurationGroup = document.getElementById('video-duration-group');
-    const imageStyleGroup = document.getElementById('image-style-group');
-    const mediaImageStyle = document.getElementById('media-image-style');
 
     // State management
     let selectedMediaType = 'image'; // 'image' or 'video'
@@ -1170,17 +1152,15 @@
     selectedMediaType = btn.dataset.type;
     mediaTypeLabel.textContent = selectedMediaType === 'image' ? 'Image' : 'Video';
 
-    // Show/hide video-specific settings and image-specific settings
+    // Show/hide video-specific settings
     if (selectedMediaType === 'video') {
     videoSettingsGroup.style.display = 'block';
     videoResolutionGroup.style.display = 'block';
     videoDurationGroup.style.display = 'block';
-    imageStyleGroup.style.display = 'none'; // Hide image style for video
     } else {
     videoSettingsGroup.style.display = 'none';
     videoResolutionGroup.style.display = 'none';
     videoDurationGroup.style.display = 'none';
-    imageStyleGroup.style.display = 'block'; // Show image style for image
     }
 
     // Update enhanced prompt if use case already selected
