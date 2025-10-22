@@ -1175,10 +1175,7 @@ function updateMediaInputs() {
     document.getElementById('end-image-group').style.display = 'none';
   }
 }
-// Call updateMediaInputs whenever media type is toggled
-mediaTypeBtns.forEach(btn => {
-  btn.addEventListener('click', updateMediaInputs);
-});
+
 
 // Also set initial visibility at page load:
 if (customModeToggle.checked) {
@@ -1305,7 +1302,10 @@ if (customModeToggle.checked) {
     videoDurationGroup.style.display = 'none';
     imageStyleGroup.style.display = 'block'; // Show image style for image
     }
-
+	// Call updateMediaInputs whenever media type is toggled
+	mediaTypeBtns.forEach(btn => {
+	btn.addEventListener('click', updateMediaInputs);
+	});
     // Update enhanced prompt if use case already selected
     if (selectedUseCase) {
     updateEnhancedPrompt();
@@ -1547,6 +1547,7 @@ if (customModeToggle.checked) {
     alert('Please describe your song');
     return;
     }
+
 
     requestBody.customMode = false;
     requestBody.prompt = prompt;
