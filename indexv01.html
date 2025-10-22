@@ -928,19 +928,6 @@
     <textarea id="user-vision" rows="2" placeholder="e.g., wearing leather jacket, vintage 80s aesthetic, purple color scheme..."></textarea>
     </div>
 
-    <!-- Image Style Selector (shown only for images) -->
-    <div class="form-group" id="media-image-style-group" style="display: block;">
-    <label class="form-label">Image Style</label>
-    <select id="media-image-style">
-    <option value="abstract">Abstract</option>
-    <option value="cyberpunk">Cyberpunk</option>
-    <option value="retro">Retro</option>
-    <option value="minimal">Minimal</option>
-    <option value="surreal">Surreal</option>
-    <option value="photorealistic">Photorealistic</option>
-    </select>
-    </div>
-
     <!-- Image Upload (Optional) -->
     <div class="form-group" id="image-upload-group">
     <label class="form-label">
@@ -1099,8 +1086,6 @@
     const videoSettingsGroup = document.getElementById('video-settings-group');
     const videoResolutionGroup = document.getElementById('video-resolution-group');
     const videoDurationGroup = document.getElementById('video-duration-group');
-    const mediaImageStyleGroup = document.getElementById('media-image-style-group');
-    const mediaImageStyle = document.getElementById('media-image-style');
 
     // State management
     let selectedMediaType = 'image'; // 'image' or 'video'
@@ -1156,12 +1141,10 @@
     videoSettingsGroup.style.display = 'block';
     videoResolutionGroup.style.display = 'block';
     videoDurationGroup.style.display = 'block';
-    mediaImageStyleGroup.style.display = 'none';
     } else {
     videoSettingsGroup.style.display = 'none';
     videoResolutionGroup.style.display = 'none';
     videoDurationGroup.style.display = 'none';
-    mediaImageStyleGroup.style.display = 'block';
     }
 
     // Update enhanced prompt if use case already selected
@@ -1614,7 +1597,7 @@
     // Image generation with OpenAI DALL-E 3
     const requestBody = {
     prompt: prompt,
-    style: mediaImageStyle.value // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
+    style: 'photorealistic' // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
     };
 
     console.log('Generating image with DALL-E 3...');
@@ -1991,19 +1974,49 @@
     }
     } else {
     // Generate album art using OpenAI DALL-E 3 (synchronous!)
-    resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎨 Generating album art with DALL-E 3...</p>`;
+    
+    // Ask user to select image style
+    const styleChoice = window.prompt(
+    `Select image style for "${trackTitle}" album art:\n\n` +
+    `1. Photorealistic (default)\n` +
+    `2. Abstract\n` +
+    `3. Cyberpunk\n` +
+    `4. Retro\n` +
+    `5. Minimal\n` +
+    `6. Surreal\n` +
+    `7. Cinematic\n` +
+    `8. Artistic\n\n` +
+    `Enter number (1-8) or press Enter for Photorealistic:`,
+    '1'
+    );
+    
+    // Map user choice to style
+    const styleMap = {
+    '1': 'photorealistic',
+    '2': 'abstract',
+    '3': 'cyberpunk',
+    '4': 'retro',
+    '5': 'minimal',
+    '6': 'surreal',
+    '7': 'cinematic',
+    '8': 'artistic'
+    };
+    
+    const selectedStyle = styleMap[styleChoice] || 'photorealistic';
+    
+    resultDiv.innerHTML = `<p style="color: var(--accent-color); font-size: 0.9rem;">🎨 Generating ${selectedStyle} album art with DALL-E 3...</p>`;
 
     // Create a prompt based on the track title
     const artPrompt = `Album cover art for the song "${trackTitle}". Music-themed, artistic, vibrant, professional album artwork design`;
 
-    console.log('Generating album art with prompt:', artPrompt);
+    console.log('Generating album art with prompt:', artPrompt, 'Style:', selectedStyle);
 
     const response = await fetch('/api/generate-art', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
     prompt: artPrompt,
-    style: 'abstract' // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
+    style: selectedStyle
     })
     });
 
