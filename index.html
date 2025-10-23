@@ -1107,7 +1107,7 @@
     console.error('Global error:', e.message, e.filename, e.lineno, e.colno);
     });
 
-	let selectedMediaType = document.querySelector('.media-type-btn.active').dataset.type;
+
 
     // Chat functionality
     const chatMessages = document.querySelector('.chat-messages');
@@ -1204,7 +1204,7 @@ if (customModeToggle.checked) {
     });
 
     // NEW Visual Generation System - Use Case Based
-    //const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
+    const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
     const useCaseCards = document.querySelectorAll('.use-case-card');
     const generationSettings = document.getElementById('generation-settings');
     const enhancedPrompt = document.getElementById('enhanced-prompt');
@@ -1230,7 +1230,7 @@ if (customModeToggle.checked) {
     const mediaImageStyle = document.getElementById('media-image-style');
 
     // State management
-    <!--let selectedMediaType = 'image'; // 'image' or 'video'-->
+    let selectedMediaType = 'image'; // 'image' or 'video'
     let selectedUseCase = null;
     let uploadedImageData = null;
 
@@ -2223,9 +2223,9 @@ if (customModeToggle.checked) {
     generateVideoBtn.addEventListener('click', generateVideo);
 	
 	 // --- Place this block last ---
-  const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
+ 
   
-
+	let selectedMediaType = document.querySelector('.media-type-btn.active').dataset.type;
   function updateMediaInputs() {
     if (selectedMediaType === "video") {
       document.getElementById('start-image-group').style.display = 'block';
