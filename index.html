@@ -1202,7 +1202,7 @@ if (customModeToggle.checked) {
     });
 
     // NEW Visual Generation System - Use Case Based
-    //const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
+    const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
     const useCaseCards = document.querySelectorAll('.use-case-card');
     const generationSettings = document.getElementById('generation-settings');
     const enhancedPrompt = document.getElementById('enhanced-prompt');
@@ -2219,7 +2219,7 @@ if (customModeToggle.checked) {
     generateVideoBtn.addEventListener('click', generateVideo);
 	
 	 // --- Place this block last ---
-  const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
+  //const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
   let selectedMediaType = document.querySelector('.media-type-btn.active').dataset.type;
 
   function updateMediaInputs() {
