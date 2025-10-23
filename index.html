@@ -987,7 +987,7 @@
 <div class="form-group" id="image-upload-group">
   <label class="form-label">
     <span>Upload Image (Optional)</span>
-    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal; margin-left: 0.5rem;">- For video: animate image or use as reference</span>
+    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal; margin-left: 0.5rem;">- Upload image here if using it for refernence and NOT as a First Frame</span>
   </label>
   <input type="file" id="media-image-upload" accept="image/*" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer;">
 </div>
@@ -1128,16 +1128,7 @@
     const simpleCharCount = document.getElementById('simple-char-count');
     const customCharCount = document.getElementById('custom-char-count');
 
-// Assuming selectedMediaType is already used for main toggling
-function updateMediaInputs() {
-  if (selectedMediaType === "video") {
-    document.getElementById('start-image-group').style.display = 'block';
-    document.getElementById('end-image-group').style.display = 'block';
-  } else {
-    document.getElementById('start-image-group').style.display = 'none';
-    document.getElementById('end-image-group').style.display = 'none';
-  }
-}
+
 
 	// Place this near other helper functions or at top, after DOM ready
 	async function handleImageInput(fileInput, urlInput) {
@@ -1240,6 +1231,18 @@ if (customModeToggle.checked) {
     let selectedMediaType = 'image'; // 'image' or 'video'
     let selectedUseCase = null;
     let uploadedImageData = null;
+
+// Assuming selectedMediaType is already used for main toggling
+function updateMediaInputs() {
+  if (selectedMediaType === "video") {
+    document.getElementById('start-image-group').style.display = 'block';
+    document.getElementById('end-image-group').style.display = 'block';
+  } else {
+    document.getElementById('start-image-group').style.display = 'none';
+    document.getElementById('end-image-group').style.display = 'none';
+  }
+}
+
 
     // Prompt templates for each use case
     const promptTemplates = {
