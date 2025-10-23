@@ -7,7 +7,8 @@ import multer from "multer";
 import { db } from "./db";
 import { 
   uploadedAudio, 
-  PLAN_FEATURES, 
+  PLAN_FEATURES,
+  SERVICE_CREDIT_COSTS,
   type PlanType,
   type VideoResolution,
   type ImageEngine,
@@ -57,24 +58,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
       
-      // Server-side credit check and deduction (5 credits per generation)
-      const creditCost = 5;
+      // Centralized credit check and deduction
+      const creditResult = await storage.deductCredits(userId, 'music_generation');
       
-      // Paid users have unlimited music credits (studio, creator, all_access)
-      if (user.planType !== 'studio' && user.planType !== 'creator' && user.planType !== 'all_access') {
-        // Free users need credits
-        if (user.credits < creditCost) {
-          return res.status(403).json({ 
-            error: 'Insufficient credits',
-            credits: user.credits,
-            required: creditCost,
-            message: 'You need more credits to generate music. Upgrade your plan or wait for daily reset.'
-          });
-        }
-        
-        // Deduct credits
-        const newCredits = Math.max(0, user.credits - creditCost);
-        await storage.updateUserCredits(userId, newCredits);
+      if (!creditResult.success) {
+        return res.status(403).json({ 
+          error: 'Insufficient credits',
+          credits: creditResult.newBalance,
+          required: SERVICE_CREDIT_COSTS.music_generation,
+          message: creditResult.error || 'You need more credits to generate music. Upgrade your plan or wait for daily reset.'
+        });
       }
       
       const { 
@@ -186,24 +179,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
       
-      // Server-side credit check and deduction (5 credits per generation)
-      const creditCost = 5;
+      // Centralized credit check and deduction
+      const creditResult = await storage.deductCredits(userId, 'music_generation');
       
-      // Paid users have unlimited music credits (studio, creator, all_access)
-      if (user.planType !== 'studio' && user.planType !== 'creator' && user.planType !== 'all_access') {
-        // Free users need credits
-        if (user.credits < creditCost) {
-          return res.status(403).json({ 
-            error: 'Insufficient credits',
-            credits: user.credits,
-            required: creditCost,
-            message: 'You need more credits to generate music. Upgrade your plan or wait for daily reset.'
-          });
-        }
-        
-        // Deduct credits
-        const newCredits = Math.max(0, user.credits - creditCost);
-        await storage.updateUserCredits(userId, newCredits);
+      if (!creditResult.success) {
+        return res.status(403).json({ 
+          error: 'Insufficient credits',
+          credits: creditResult.newBalance,
+          required: SERVICE_CREDIT_COSTS.music_generation,
+          message: creditResult.error || 'You need more credits to generate music. Upgrade your plan or wait for daily reset.'
+        });
       }
       
       const { 
