@@ -20,12 +20,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Music generation route with vocal gender support
+  // Music generation route with vocal gender support (KIE.ai API)
   app.post("/api/generate-music", async (req, res) => {
     try {
       const { 
         prompt, 
-        model = 'V5', 
+        model = 'V4_5', 
         instrumental = false, 
         vocalGender = 'm',
         customMode = false,
@@ -39,29 +39,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!sunoApiKey) {
         return res.status(500).json({ 
           error: 'SUNO API key not configured',
-          details: 'Please add SUNO_API_KEY to your secrets'
+          details: 'Please add SUNO_API_KEY to your Replit Secrets'
         });
       }
 
-      // Build SUNO API request with vocal gender
+      // Build KIE.ai API request with vocal gender
       const sunoPayload: any = {
+        prompt: prompt,
         model: model,
         instrumental: instrumental,
-        gender: vocalGender
+        vocalGender: vocalGender,
+        customMode: customMode
       };
 
-      if (customMode) {
-        sunoPayload.custom_mode = true;
+      if (customMode && title) {
         sunoPayload.title = title;
-        sunoPayload.tags = style;
-        sunoPayload.prompt = prompt;
-      } else {
-        sunoPayload.custom_mode = false;
-        sunoPayload.prompt = prompt;
+      }
+      
+      if (customMode && style) {
+        sunoPayload.style = style;
       }
 
-      // Call SUNO API
-      const sunoResponse = await fetch('https://studio-api.prod.suno.com/api/generate', {
+      console.log('Sending to KIE.ai:', JSON.stringify(sunoPayload, null, 2));
+
+      // Call KIE.ai SUNO API
+      const sunoResponse = await fetch('https://api.kie.ai/api/v1/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,19 +74,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (!sunoResponse.ok) {
         const errorData = await sunoResponse.json().catch(() => ({}));
+        console.error('KIE.ai API error:', errorData);
         return res.status(sunoResponse.status).json({
           error: 'SUNO API error',
-          details: errorData.message || sunoResponse.statusText
+          details: errorData.msg || errorData.message || sunoResponse.statusText
         });
       }
 
       const sunoData = await sunoResponse.json();
+      console.log('KIE.ai response:', JSON.stringify(sunoData, null, 2));
       
-      // Return formatted response
-      res.json({
-        taskId: sunoData.id || sunoData.task_id,
-        tracks: sunoData.clips || sunoData.tracks || []
-      });
+      // KIE.ai returns { code: 200, msg: "success", data: { taskId: "xxx" } }
+      if (sunoData.code === 200) {
+        // Return task ID - frontend will need to poll for results
+        res.json({
+          taskId: sunoData.data.taskId,
+          status: 'processing',
+          message: 'Music generation started. Check status with task ID.'
+        });
+      } else {
+        res.status(500).json({
+          error: 'Generation failed',
+          details: sunoData.msg || 'Unknown error'
+        });
+      }
 
     } catch (error: any) {
       console.error('Music generation error:', error);
@@ -95,10 +108,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User preferences route
-  app.get("/api/user/preferences", async (req, res) => {
+  // Get music generation status (for KIE.ai polling)
+  app.get("/api/music-status/:taskId", async (req, res) => {
     try {
-      const userId = (req as any).user?.sub;
+      const { taskId } = req.params;
+      const sunoApiKey = process.env.SUNO_API_KEY;
+
+      if (!sunoApiKey) {
+        return res.status(500).json({ error: 'API key not configured' });
+      }
+
+      const response = await fetch(`https://api.kie.ai/api/v1/get?ids=${taskId}`, {
+        headers: {
+          'Authorization': `Bearer ${sunoApiKey}`
+        }
+      });
+
+      const data = await response.json();
+      
+      // Format response for frontend
+      if (data.code === 200 && data.data && data.data.length > 0) {
+        const tracks = data.data.map((track: any) => ({
+          id: track.id,
+          title: track.title,
+          audioUrl: track.audio_url,
+          streamAudioUrl: track.stream_audio_url,
+          imageUrl: track.image_url,
+          status: track.status
+        }));
+
+        res.json({
+          status: data.data[0].status,
+          tracks: tracks
+        });
+      } else {
+        res.json({ status: 'pending', tracks: [] });
+      }
+
+    } catch (error: any) {
+      console.error('Status check error:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // User preferences route
+  app.get("/api/user/preferences", isAuthenticated, async (req, res) => {
+    try {
+      const userId = (req as any).user?.claims?.sub;
       if (!userId) {
         return res.status(401).json({ error: 'Not authenticated' });
       }
@@ -115,9 +171,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Update user vocal preference
-  app.post("/api/user/preferences", async (req, res) => {
+  app.post("/api/user/preferences", isAuthenticated, async (req, res) => {
     try {
-      const userId = (req as any).user?.sub;
+      const userId = (req as any).user?.claims?.sub;
       if (!userId) {
         return res.status(401).json({ error: 'Not authenticated' });
       }
