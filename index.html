@@ -1165,16 +1165,7 @@ customModeToggle.addEventListener('change', function() {
     advancedOptions.style.display = 'none';
   }
 });
-// Assuming selectedMediaType is already used for main toggling
-function updateMediaInputs() {
-  if (selectedMediaType === "video") {
-    document.getElementById('start-image-group').style.display = 'block';
-    document.getElementById('end-image-group').style.display = 'block';
-  } else {
-    document.getElementById('start-image-group').style.display = 'none';
-    document.getElementById('end-image-group').style.display = 'none';
-  }
-}
+
 
 
 // Also set initial visibility at page load:
@@ -1319,6 +1310,17 @@ if (customModeToggle.checked) {
     useCaseCards.forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
     selectedUseCase = card.dataset.useCase;
+
+// Assuming selectedMediaType is already used for main toggling
+function updateMediaInputs() {
+  if (selectedMediaType === "video") {
+    document.getElementById('start-image-group').style.display = 'block';
+    document.getElementById('end-image-group').style.display = 'block';
+  } else {
+    document.getElementById('start-image-group').style.display = 'none';
+    document.getElementById('end-image-group').style.display = 'none';
+  }
+}
 
     // Show generation settings
     generationSettings.style.display = 'block';
