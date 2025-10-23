@@ -562,44 +562,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Deduct credits (called before music generation)
+  // Check if user has sufficient credits for a service (pre-validation)
+  app.post('/api/user/credits/check', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { serviceType } = req.body;
+      
+      if (!serviceType || !SERVICE_CREDIT_COSTS[serviceType as keyof typeof SERVICE_CREDIT_COSTS]) {
+        return res.status(400).json({ 
+          error: 'Invalid service type',
+          validTypes: Object.keys(SERVICE_CREDIT_COSTS)
+        });
+      }
+      
+      const checkResult = await storage.checkCredits(userId, serviceType);
+      
+      res.json({
+        allowed: checkResult.allowed,
+        reason: checkResult.reason,
+        currentCredits: checkResult.currentCredits,
+        requiredCredits: checkResult.requiredCredits,
+        planType: checkResult.planType,
+        serviceCost: SERVICE_CREDIT_COSTS[serviceType as keyof typeof SERVICE_CREDIT_COSTS]
+      });
+    } catch (error) {
+      console.error("Error checking credits:", error);
+      res.status(500).json({ message: "Failed to check credits" });
+    }
+  });
+  
+  // Deduct credits for a specific service (used internally by generation endpoints)
   app.post('/api/user/credits/deduct', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const { amount = 5 } = req.body; // Default 5 credits per generation
+      const { serviceType } = req.body;
       
-      const user = await storage.getUser(userId);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
+      if (!serviceType || !SERVICE_CREDIT_COSTS[serviceType as keyof typeof SERVICE_CREDIT_COSTS]) {
+        return res.status(400).json({ 
+          error: 'Invalid service type',
+          validTypes: Object.keys(SERVICE_CREDIT_COSTS)
+        });
       }
       
-      // Check if user has enough credits (free users only)
-      if (user.planType === 'free' && user.credits < amount) {
+      const deductResult = await storage.deductCredits(userId, serviceType);
+      
+      if (!deductResult.success) {
         return res.status(403).json({ 
-          message: "Insufficient credits",
-          credits: user.credits,
-          required: amount
+          error: 'Credit deduction failed',
+          message: deductResult.error,
+          currentCredits: deductResult.newBalance
         });
       }
-      
-      // Paid users have unlimited music credits
-      if (user.planType === 'studio' || user.planType === 'creator' || user.planType === 'all_access') {
-        return res.json({ 
-          success: true,
-          credits: 999999, // Display unlimited
-          unlimited: true
-        });
-      }
-      
-      // Deduct credits for free users
-      const newCredits = Math.max(0, user.credits - amount);
-      await storage.updateUserCredits(userId, newCredits);
       
       res.json({ 
         success: true,
-        credits: newCredits,
-        deducted: amount
+        newBalance: deductResult.newBalance,
+        amountDeducted: deductResult.amountDeducted,
+        wasUnlimited: deductResult.wasUnlimited
       });
     } catch (error) {
       console.error("Error deducting credits:", error);
