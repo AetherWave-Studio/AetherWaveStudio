@@ -163,3 +163,45 @@ export function getAllowedOptions<T>(
   
   return PLAN_FEATURES[planType][featureMap[optionType]] as T[];
 }
+
+// Service types for credit deduction
+export const ServiceType = z.enum([
+  'music_generation',
+  'video_generation', 
+  'image_generation',
+  'wav_conversion'
+]);
+export type ServiceType = z.infer<typeof ServiceType>;
+
+// Credit cost configuration for each service type
+export const SERVICE_CREDIT_COSTS: Record<ServiceType, number> = {
+  music_generation: 5,
+  video_generation: 10,
+  image_generation: 3,
+  wav_conversion: 2,
+};
+
+// Plans that have unlimited access to specific services
+export const UNLIMITED_SERVICE_PLANS: Record<ServiceType, PlanType[]> = {
+  music_generation: ['studio', 'creator', 'all_access'],
+  video_generation: ['all_access'],
+  image_generation: ['all_access'],
+  wav_conversion: ['studio', 'creator', 'all_access'], // WAV conversion free for paid plans
+};
+
+// Result types for credit operations
+export interface CreditCheckResult {
+  allowed: boolean;
+  reason?: 'insufficient_credits' | 'unlimited' | 'success';
+  currentCredits?: number;
+  requiredCredits?: number;
+  planType?: PlanType;
+}
+
+export interface CreditDeductionResult {
+  success: boolean;
+  newBalance: number;
+  amountDeducted: number;
+  wasUnlimited: boolean;
+  error?: string;
+}
