@@ -987,7 +987,7 @@
 <div class="form-group" id="image-upload-group">
   <label class="form-label">
     <span>Upload Image (Optional)</span>
-    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal; margin-left: 0.5rem;">- Upload image here if using it for refernence and NOT as a First Frame</span>
+    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal; margin-left: 0.5rem;">- Upload reference image here</span>
   </label>
   <input type="file" id="media-image-upload" accept="image/*" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer;">
 </div>
@@ -1237,9 +1237,11 @@ function updateMediaInputs() {
   if (selectedMediaType === "video") {
     document.getElementById('start-image-group').style.display = 'block';
     document.getElementById('end-image-group').style.display = 'block';
+	document.getElementById('image-upload-group').style.display = 'none';
   } else {
     document.getElementById('start-image-group').style.display = 'none';
     document.getElementById('end-image-group').style.display = 'none';
+	document.getElementById('image-upload-group').style.display = 'BLOCK';
   }
 }
 
