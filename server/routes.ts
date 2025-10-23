@@ -149,14 +149,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         prompt: prompt,
         model: model,
         instrumental: instrumental,
+        vocalGender: vocalGender, // Always include vocal gender preference
         customMode: customMode,
         callBackUrl: '' // Optional - we're polling instead
       };
-
-      // Add vocal gender only in custom mode
-      if (customMode) {
-        coverPayload.vocalGender = vocalGender;
-      }
 
       if (customMode && title) {
         coverPayload.title = title;

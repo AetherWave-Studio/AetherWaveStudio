@@ -75,11 +75,13 @@ Preferred communication style: Simple, everyday language.
 
 **Third-Party APIs**:
 - **KIE.ai Music Generation API** (SUNO_API_KEY): Primary music generation service
-  - Supports multiple models (V4_5, etc.)
+  - Supports multiple models (V3_5, V4, V4_5, V4_5PLUS, V5)
   - Vocal gender selection (male/female)
   - Instrumental/vocal mode toggle
   - Custom mode for advanced users (title, style parameters)
-  - RESTful integration pattern
+  - Upload & Cover Audio: Transform existing audio into new style while preserving melody
+  - Advanced parameters: styleWeight, weirdnessConstraint, audioWeight
+  - RESTful integration pattern with async taskId polling
 
 **Authentication**:
 - **Replit OIDC Provider**: Enterprise authentication service
