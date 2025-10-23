@@ -1702,136 +1702,139 @@ if (customModeToggle.checked) {
 
     // Generate video with Seedance
     // Generate Media (Image or Video) with new use case system
-    async function generateMedia() {
+
+async function generateMedia() {
     if (!selectedUseCase) {
-    alert('Please select a use case first');
-    return;
+        alert('Please select a use case first');
+        return;
     }
 
     const prompt = enhancedPrompt.value.trim();
     if (!prompt) {
-    alert('Please provide a prompt');
-    return;
+        alert('Please provide a prompt');
+        return;
     }
 
     generateMediaBtn.disabled = true;
-    const originalBtnText =  ${selectedMediaType}...`;
-    mediaResult.style.displagenerateMediaBtn.innerHTML;
-    generateMediaBtn.innerHTML = `⏳ Generatingy = 'none';
+    const originalBtnText = generateMediaBtn.innerHTML;
+    generateMediaBtn.innerHTML = `⏳ Generating ${selectedMediaType}...`;
+    mediaResult.style.display = 'none';
 
     try {
-    if (selectedMediaType === 'video') {
-    // Video generation with Fal.ai Seedance 1.0
-    const requestBody = {
-    prompt: prompt,
-    modelVersion: mediaQuality.value,
-    resolution: mediaResolution.value,
-    duration: mediaDuration.value,
-    cameraFixed: false,
-    enableSafetyChecker: mediaSafetyChecker.checked
-    };
+        if (selectedMediaType === 'video') {
+            // Video generation with Fal.ai Seedance 1.0
+            const requestBody = {
+                prompt: prompt,
+                modelVersion: mediaQuality.value,
+                resolution: mediaResolution.value,
+                duration: mediaDuration.value,
+                cameraFixed: false,
+                enableSafetyChecker: mediaSafetyChecker.checked
+            };
 
- // *** ADD THIS BLOCK HERE ***
-      const startImageVal = await handleImageInput(
-        document.getElementById('start-image-file'),
-        document.getElementById('start-image-url')
-      );
-      const endImageVal = await handleImageInput(
-        document.getElementById('end-image-file'),
-        document.getElementById('end-image-url')
-      );
-      if (startImageVal) requestBody.image_url = startImageVal;
-      if (endImageVal) requestBody.end_image_url = endImageVal;
+            // *** ADD THIS BLOCK HERE ***
+            const startImageVal = await handleImageInput(
+                document.getElementById('start-image-file'),
+                document.getElementById('start-image-url')
+            );
+            const endImageVal = await handleImageInput(
+                document.getElementById('end-image-file'),
+                document.getElementById('end-image-url')
+            );
+            if (startImageVal) requestBody.image_url = startImageVal;
+            if (endImageVal) requestBody.end_image_url = endImageVal;
 
-    // Add uploaded image data if provided
-    if (uploadedImageData) {
-    requestBody.imageData = uploadedImageData;
-    requestBody.imageMode = imageMode.value; // 'first-frame' or 'reference'
-    }
+            // Add uploaded image data if provided
+            if (uploadedImageData) {
+                requestBody.imageData = uploadedImageData;
+                requestBody.imageMode = imageMode.value; // 'first-frame' or 'reference'
+            }
 
-    console.log('Generating video with Fal.ai Seedance 1.0...');
+            console.log('Generating video with Fal.ai Seedance 1.0...');
+            const response = await fetch('/api/generate-video-fal', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
 
-    const response = await fetch('/api/generate-video-fal', {
-    method: 'POST',
-    headers: {
-    'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(requestBody)
-    });
+            const data = await response.json();
 
-    const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || data.details || 'Failed to generate video');
+            }
 
-    if (!response.ok) {
-    throw new Error(data.error || data.details || 'Failed to generate video');
-    }
+            // Fal.ai returns video synchronously - display immediately
+            if (data.status === 'complete' && data.videoUrl) {
+                displayMediaResult(data, 'video');
+                return;
+            } else {
+                throw new Error('Video generated but no URL returned');
+            }
 
-    // Fal.ai returns video synchronously - display immediately
-    if (data.status === 'complete' && data.videoUrl) {
-    displayMediaResult(data, 'video');
-    return;
-    } else {
-    throw new Error('Video generated but no URL returned');
-    }
+        } else {
+            // Image generation with OpenAI DALL-E 3
+            const requestBody = {
+                prompt: prompt,
+                style: document.getElementById('media-image-style').value  // Fixed: Pull from dropdown!
+            };
 
-    } else {
-    // Image generation with OpenAI DALL-E 3
-    const requestBody = {
-    prompt: prompt,
-    style: document.getElementById('media-image-style').value // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
-    };
+            console.log('Generating image with DALL-E 3...');
 
-    console.log('Generating image with DALL-E 3...');
+            const response = await fetch('/api/generate-art', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
 
-    const response = await fetch('/api/generate-art', {
-    method: 'POST',
-    headers: {
-    'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(requestBody)
-    });
+            const data = await response.json();
 
-    const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || data.details || 'Failed to generate image');
+            }
 
-    if (!response.ok) {
-    throw new Error(data.error || data.details || 'Failed to generate image');
-    }
-
-    // Display image result
-    if (data.imageUrl) {
-    mediaResult.innerHTML = `
-    <div class="result-box">
-    <div class="result-title">✅ Image Generated with DALL-E 3</div>
-    <img src="${data.imageUrl}" alt="Generated image" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
-    <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
-    <button onclick="downloadFile('${data.imageUrl}', 'aetherwave-${selectedUseCase}.png')" class="download-btn" style="cursor: pointer;">Download Image</button>
-    </div>
-    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
-    Use Case: ${selectedUseCase} · Style: ${data.style}
-    </p>
-    ${data.revisedPrompt ? `<p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem; font-style: italic;">Revised: ${data.revisedPrompt}</p>` : ''}
-    </div>
-    `;
-    mediaResult.style.display = 'block';
-    return;
-    } else {
-    throw new Error('Image generated but no URL returned');
-    }
-    }
+            // Display image result
+            if (data.imageUrl) {
+                mediaResult.innerHTML = `
+                    <div class="result-box">
+                        <div class="result-title">✅ Image Generated with DALL-E 3</div>
+                        <img src="${data.imageUrl}" alt="Generated image" style="width: 100%; border-radius: 8px; margin-top: 0.5rem;" />
+                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                            <button onclick="downloadFile('${data.imageUrl}', 'aetherwave-${selectedUseCase}.png')" class="download-btn" style="cursor: pointer;">Download Image</button>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
+                            Use Case: ${selectedUseCase} · Style: ${data.style}
+                        </p>
+                        ${data.revisedPrompt ? `<p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem; font-style: italic;">Revised: ${data.revisedPrompt}</p>` : ''}
+                    </div>
+                `;
+                mediaResult.style.display = 'block';
+                return;
+            } else {
+                throw new Error('Image generated but no URL returned');
+            }
+        }
 
     } catch (error) {
-    console.error('Media generation error:', error);
-    mediaResult.innerHTML = `
-    <div class="result-box">
-    <div class="result-title">Error</div>
-    <p style="color: var(--text-muted); font-size: 0.9rem;">Unable to generate ${selectedMediaType}. ${error.message}</p>
-    </div>
-    `;
-    mediaResult.style.display = 'block';
+        console.error('Media generation error:', error);
+        mediaResult.innerHTML = `
+            <div class="result-box">
+                <div class="result-title">Error</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Unable to generate ${selectedMediaType}. ${error.message}</p>
+            </div>
+        `;
+        mediaResult.style.display = 'block';
     } finally {
-    generateMediaBtn.disabled = false;
-    generateMediaBtn.innerHTML = originalBtnText;
+        generateMediaBtn.disabled = false;
+        generateMediaBtn.innerHTML = originalBtnText;
     }
-    }
+}
+ 
+   
+ 
 
     // Display media result
     function displayMediaResult(data, type) {
