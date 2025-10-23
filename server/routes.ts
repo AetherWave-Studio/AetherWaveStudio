@@ -58,18 +58,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
       
-      // Centralized credit check and deduction
-      const creditResult = await storage.deductCredits(userId, 'music_generation');
-      
-      if (!creditResult.success) {
-        return res.status(403).json({ 
-          error: 'Insufficient credits',
-          credits: creditResult.newBalance,
-          required: SERVICE_CREDIT_COSTS.music_generation,
-          message: creditResult.error || 'You need more credits to generate music. Upgrade your plan or wait for daily reset.'
-        });
-      }
-      
       const { 
         prompt, 
         model = 'V4_5', 
@@ -80,13 +68,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         style
       } = req.body;
 
-      // Validate music model is allowed for user's plan
+      // Validate music model is allowed for user's plan BEFORE deducting credits
       const userPlan = user.planType as PlanType;
       if (!validateMusicModel(userPlan, model)) {
         return res.status(403).json({
           error: 'Model not allowed',
           message: `Your ${user.planType} plan does not include ${model} model. Upgrade to Studio or higher to unlock premium models.`,
           allowedModels: PLAN_FEATURES[userPlan].allowedMusicModels
+        });
+      }
+
+      // Centralized credit check and deduction (AFTER validation)
+      const creditResult = await storage.deductCredits(userId, 'music_generation');
+      
+      if (!creditResult.success) {
+        return res.status(403).json({ 
+          error: 'Insufficient credits',
+          credits: creditResult.newBalance,
+          required: SERVICE_CREDIT_COSTS.music_generation,
+          message: creditResult.error || 'You need more credits to generate music. Upgrade your plan or wait for daily reset.'
         });
       }
 
@@ -179,18 +179,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "User not found" });
       }
       
-      // Centralized credit check and deduction
-      const creditResult = await storage.deductCredits(userId, 'music_generation');
-      
-      if (!creditResult.success) {
-        return res.status(403).json({ 
-          error: 'Insufficient credits',
-          credits: creditResult.newBalance,
-          required: SERVICE_CREDIT_COSTS.music_generation,
-          message: creditResult.error || 'You need more credits to generate music. Upgrade your plan or wait for daily reset.'
-        });
-      }
-      
       const { 
         uploadUrl,
         prompt, 
@@ -206,13 +194,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         negativeTags
       } = req.body;
 
-      // Validate music model is allowed for user's plan
+      // Validate required fields BEFORE deducting credits
+      if (!uploadUrl) {
+        return res.status(400).json({
+          error: 'Upload URL required',
+          details: 'Please provide an audio URL to cover'
+        });
+      }
+
+      // Validate music model is allowed for user's plan BEFORE deducting credits
       const userPlan = user.planType as PlanType;
       if (!validateMusicModel(userPlan, model)) {
         return res.status(403).json({
           error: 'Model not allowed',
           message: `Your ${user.planType} plan does not include ${model} model. Upgrade to Studio or higher to unlock premium models.`,
           allowedModels: PLAN_FEATURES[userPlan].allowedMusicModels
+        });
+      }
+
+      // Centralized credit check and deduction (AFTER validation)
+      const creditResult = await storage.deductCredits(userId, 'music_generation');
+      
+      if (!creditResult.success) {
+        return res.status(403).json({ 
+          error: 'Insufficient credits',
+          credits: creditResult.newBalance,
+          required: SERVICE_CREDIT_COSTS.music_generation,
+          message: creditResult.error || 'You need more credits to generate music. Upgrade your plan or wait for daily reset.'
         });
       }
 
@@ -223,13 +231,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ 
           error: 'SUNO API key not configured',
           details: 'Please add SUNO_API_KEY to your Replit Secrets'
-        });
-      }
-
-      if (!uploadUrl) {
-        return res.status(400).json({
-          error: 'Upload URL required',
-          details: 'Please provide an audio URL to cover'
         });
       }
 
