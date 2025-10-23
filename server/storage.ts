@@ -1,4 +1,4 @@
-import { type User, type InsertUser } from "@shared/schema";
+import { type User, type InsertUser, type UpsertUser } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 // modify the interface with any CRUD methods
@@ -9,6 +9,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  upsertUser(user: UpsertUser): Promise<User>;
   updateUserVocalPreference(userId: string, preference: string): Promise<User | undefined>;
 }
 
@@ -47,13 +48,42 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
     const user: User = { 
-      ...insertUser, 
       id,
-      vocalGenderPreference: insertUser.vocalGenderPreference || 'm',
-      createdAt: new Date()
+      email: insertUser.email ?? null,
+      firstName: insertUser.firstName ?? null,
+      lastName: insertUser.lastName ?? null,
+      profileImageUrl: insertUser.profileImageUrl ?? null,
+      username: insertUser.username ?? null,
+      vocalGenderPreference: insertUser.vocalGenderPreference ?? 'm',
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
     this.users.set(id, user);
     return user;
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const existingUser = this.users.get(userData.id as string);
+    
+    if (existingUser) {
+      const updatedUser: User = {
+        ...existingUser,
+        ...userData,
+        updatedAt: new Date()
+      };
+      this.users.set(updatedUser.id, updatedUser);
+      return updatedUser;
+    } else {
+      const newUser: User = {
+        ...userData,
+        id: userData.id || randomUUID(),
+        vocalGenderPreference: userData.vocalGenderPreference || 'm',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      } as User;
+      this.users.set(newUser.id, newUser);
+      return newUser;
+    }
   }
 }
 
