@@ -722,7 +722,7 @@
 
     <!-- Upload & Cover Audio File (Optional) -->
     <div class="form-group">
-    <label class="form-label">Audio File to Cover (Optional)</label>
+    <label class="form-label" id="upload-file-label">Audio File to Cover (Optional)</label>
     <div style="display: flex; gap: 0.5rem; align-items: center;">
       <input type="file" id="upload-file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac" style="display: none;" data-testid="input-upload-file">
       <button type="button" id="upload-file-btn" style="padding: 0.75rem 1rem; background: var(--aetherwave-purple); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; flex-shrink: 0;" data-testid="button-upload-file">Choose Audio File</button>
@@ -730,13 +730,13 @@
       <button type="button" id="clear-upload-btn" style="display: none; padding: 0.5rem 0.75rem; background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;" data-testid="button-clear-upload">Clear</button>
     </div>
     <input type="hidden" id="upload-url" data-testid="hidden-upload-url">
-    <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">Upload an audio file to cover it with a new style while keeping the melody. Max 2 minutes, max 10MB.</p>
+    <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">Upload an audio file to cover it with a new style while keeping the melody. Max 8 minutes, max 10MB.</p>
     </div>
 
     <!-- Simple Mode Fields -->
     <div id="simple-mode-fields">
     <div class="form-group">
-    <label class="form-label">Song Description <span id="simple-char-count" style="color: var(--text-muted); font-size: 0.85rem;">(0/199)</span></label>
+    <label class="form-label" id="simple-prompt-label">Song Description <span id="simple-char-count" style="color: var(--text-muted); font-size: 0.85rem;">(0/199)</span></label>
     <textarea id="music-prompt-simple" maxlength="199" placeholder="Describe the style of music and the topic you want, AI will generate lyrics for you"></textarea>
     </div>
     </div>
@@ -744,15 +744,15 @@
     <!-- Custom Mode Fields -->
     <div id="custom-mode-fields" style="display: none;">
     <div class="form-group">
-    <label class="form-label">Title</label>
+    <label class="form-label" id="custom-title-label">Title</label>
     <input type="text" id="music-title" placeholder="Song title" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;">
     </div>
     <div class="form-group">
-    <label class="form-label">Style of Music</label>
+    <label class="form-label" id="custom-style-label">Style of Music</label>
     <input type="text" id="music-style" placeholder="e.g., ethereal, funk, dreamy, anthemic" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;">
     </div>
     <div class="form-group">
-    <label class="form-label">Lyrics <span id="custom-char-count" style="color: var(--text-muted); font-size: 0.85rem;">(0/3000)</span></label>
+    <label class="form-label" id="custom-lyrics-label">Lyrics <span id="custom-char-count" style="color: var(--text-muted); font-size: 0.85rem;">(0/3000)</span></label>
     <textarea id="music-lyrics" maxlength="3000" placeholder="Write your own lyrics, two verses (8 lines) for the best result" style="min-height: 120px;"></textarea>
     </div>
     </div>
@@ -1255,6 +1255,63 @@ if (customModeToggle.checked) {
   });
 });
 
+// Function to update required field indicators (red asterisks)
+function updateRequiredFields() {
+  const uploadUrl = document.getElementById('upload-url').value.trim();
+  const isCustomMode = customModeToggle.checked;
+  const isInstrumental = musicInstrumental.checked;
+  
+  // Get label elements
+  const simpleLabelEl = document.getElementById('simple-prompt-label');
+  const titleLabelEl = document.getElementById('custom-title-label');
+  const styleLabelEl = document.getElementById('custom-style-label');
+  const lyricsLabelEl = document.getElementById('custom-lyrics-label');
+  
+  // Reset all labels to base text
+  simpleLabelEl.innerHTML = 'Song Description <span id="simple-char-count" style="color: var(--text-muted); font-size: 0.85rem;">(0/199)</span>';
+  titleLabelEl.textContent = 'Title';
+  styleLabelEl.textContent = 'Style of Music';
+  lyricsLabelEl.innerHTML = 'Lyrics <span id="custom-char-count" style="color: var(--text-muted); font-size: 0.85rem;">(0/3000)</span>';
+  
+  // Apply red asterisk to required fields
+  const asterisk = '<span style="color: #ff2ea6; margin-left: 0.25rem;">*</span>';
+  
+  if (!isCustomMode) {
+    // Non-custom mode: prompt is always required
+    simpleLabelEl.innerHTML = 'Song Description' + asterisk + ' <span id="simple-char-count" style="color: var(--text-muted); font-size: 0.85rem;">(0/199)</span>';
+  } else {
+    // Custom mode
+    // Title and Style are always required in custom mode
+    titleLabelEl.innerHTML = 'Title' + asterisk;
+    styleLabelEl.innerHTML = 'Style of Music' + asterisk;
+    
+    // Lyrics only required if NOT instrumental
+    if (!isInstrumental) {
+      lyricsLabelEl.innerHTML = 'Lyrics' + asterisk + ' <span id="custom-char-count" style="color: var(--text-muted); font-size: 0.85rem;">(0/3000)</span>';
+    }
+  }
+  
+  // Update character counters after HTML changes
+  const simpleCount = musicPromptSimple.value.length;
+  const customCount = musicLyrics.value.length;
+  const simpleCharCountEl = document.getElementById('simple-char-count');
+  const customCharCountEl = document.getElementById('custom-char-count');
+  if (simpleCharCountEl) simpleCharCountEl.textContent = `(${simpleCount}/199)`;
+  if (customCharCountEl) customCharCountEl.textContent = `(${customCount}/3000)`;
+}
+
+// Update required fields on mode/instrumental changes
+customModeToggle.addEventListener('change', updateRequiredFields);
+musicInstrumental.addEventListener('change', updateRequiredFields);
+
+// Update on file upload/clear
+const uploadUrlHidden = document.getElementById('upload-url');
+const observer = new MutationObserver(updateRequiredFields);
+observer.observe(uploadUrlHidden, { attributes: true, attributeFilter: ['value'] });
+
+// Initial update
+updateRequiredFields();
+
 
     // Character counter for Simple Mode
     musicPromptSimple.addEventListener('input', () => {
@@ -1681,7 +1738,7 @@ if (customModeToggle.checked) {
     if (!isNaN(audioWeight)) requestBody.audioWeight = audioWeight;
 
     if (isCustomMode) {
-    // Custom Mode - requires title, style, and lyrics
+    // Custom Mode - validation depends on instrumental setting
     const title = musicTitle.value.trim();
     const style = musicStyle.value.trim();
     const lyrics = musicLyrics.value.trim();
@@ -1690,26 +1747,33 @@ if (customModeToggle.checked) {
     console.log('Custom Mode - Style:', style);
     console.log('Custom Mode - Lyrics length:', lyrics.length);
 
+    // Title and Style are always required in custom mode
     if (!title || !style) {
     alert('Please provide both Title and Style of Music for Custom Mode');
+    return;
+    }
+
+    // If NOT instrumental, lyrics (prompt) are required
+    if (!instrumental && !lyrics) {
+    alert('Please provide Lyrics for Custom Mode (or enable "Make Instrumental")');
     return;
     }
 
     requestBody.customMode = true;
     requestBody.title = title;
     requestBody.style = style;
-    requestBody.prompt = lyrics || ''; // Lyrics can be optional
+    requestBody.prompt = lyrics || ''; // Lyrics required if NOT instrumental
     
     // vocalGender is only effective when customMode is true
     requestBody.vocalGender = vocalGender;
     } else {
-    // Simple Mode - requires prompt
+    // Non-custom Mode - prompt is always required
     const prompt = musicPromptSimple.value.trim();
 
-    console.log('Simple Mode - Prompt:', prompt);
+    console.log('Non-custom Mode - Prompt:', prompt);
 
     if (!prompt) {
-    alert('Please describe your song');
+    alert('Please provide a Song Description');
     return;
     }
 
