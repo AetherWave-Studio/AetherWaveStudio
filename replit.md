@@ -81,6 +81,12 @@ Preferred communication style: Simple, everyday language.
 - Credits are deducted atomically on the server (5 credits per music generation)
 - Payment modal displays upgrade options when users run out of credits
 - Credits display shows real-time balance for authenticated users, hides for unauthenticated
+- **Implemented plan-based feature restrictions system**:
+  - Free users limited to lowest video resolution (720p), basic image engines (dall-e-2), and beginner music models (V3_5, V4)
+  - Paid users (Studio+) unlock all resolutions (1080p, 4K), all image engines, and premium music models
+  - Created reusable `UpgradeTooltip` component for non-intrusive upgrade prompts
+  - Added `usePlanFeatures` hook for filtering available options based on user plan
+  - Server-side validation functions prevent bypassing restrictions via API
 
 ### External Dependencies
 
@@ -138,6 +144,85 @@ Preferred communication style: Simple, everyday language.
 - Credit checks happen server-side, preventing client-side bypass
 - 403 responses trigger payment modal, 401 responses hide credits display
 - No path exists for unauthenticated or unpaid users to invoke generation endpoints
+
+### Plan-Based Feature Restrictions
+
+**Overview**: AetherWave implements a comprehensive tier-based restriction system ensuring free users receive basic/beginner features while paid users unlock premium quality and advanced engines.
+
+**Architecture**:
+- **Shared Types** (`shared/schema.ts`): Centralized `PLAN_FEATURES` object defining allowed options per plan
+- **Server Validation** (`server/routes.ts`): Validation functions prevent API bypass of restrictions
+- **Frontend Filtering** (`usePlanFeatures` hook): Automatically filters UI options based on user plan
+- **Upgrade UX** (`UpgradeTooltip` component): Non-intrusive tooltips encourage upgrades without blocking
+
+**Restriction Matrix**:
+
+| Feature | Free | Studio | Creator | All Access |
+|---------|------|--------|---------|------------|
+| **Music Models** | V3_5, V4 | All models | All models | All models |
+| **Video Resolution** | 720p only | 720p, 1080p, 4K | 720p, 1080p, 4K | 720p, 1080p, 4K |
+| **Image Engines** | dall-e-2 only | All engines | All engines | All engines |
+| **Music Credits** | 50/day | Unlimited | Unlimited | Unlimited |
+| **Media Credits** | N/A | N/A | 100/month | Unlimited |
+| **Commercial License** | ❌ | ✅ | ✅ | ✅ |
+| **API Access** | ❌ | ❌ | ❌ | ✅ |
+
+**Implementation Guide** (for future video/image features):
+
+1. **Backend Endpoint**:
+```typescript
+// Example: Video generation endpoint
+app.post("/api/generate-video", isAuthenticated, async (req: any, res) => {
+  const user = await storage.getUser(req.user.claims.sub);
+  const { resolution } = req.body;
+  
+  // Validate resolution is allowed for user's plan
+  if (!validateVideoResolution(user.planType, resolution)) {
+    return res.status(403).json({
+      error: 'Resolution not allowed',
+      message: `Your ${user.planType} plan does not include ${resolution} resolution. Upgrade to unlock.`
+    });
+  }
+  
+  // Proceed with video generation...
+});
+```
+
+2. **Frontend Component**:
+```typescript
+import { usePlanFeatures } from '@/hooks/use-plan-features';
+import { UpgradeTooltip } from '@/components/UpgradeTooltip';
+
+function VideoGenerator() {
+  const { getAllowedVideoResolutions, isVideoResolutionAllowed, isPaid } = usePlanFeatures();
+  const allowedResolutions = getAllowedVideoResolutions();
+  
+  return (
+    <Select>
+      {['720p', '1080p', '4k'].map(res => {
+        const isAllowed = isVideoResolutionAllowed(res);
+        const option = (
+          <SelectItem 
+            value={res} 
+            disabled={!isAllowed}
+          >
+            {res}
+          </SelectItem>
+        );
+        
+        return isAllowed ? option : (
+          <UpgradeTooltip 
+            feature={`${res} Resolution`}
+            requiredPlan="Studio"
+          >
+            {option}
+          </UpgradeTooltip>
+        );
+      })}
+    </Select>
+  );
+}
+```
 
 **Environment Requirements**:
 - `DATABASE_URL`: PostgreSQL connection string (required)

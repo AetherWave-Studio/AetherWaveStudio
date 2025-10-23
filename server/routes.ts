@@ -5,8 +5,31 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 import { z } from "zod";
 import multer from "multer";
 import { db } from "./db";
-import { uploadedAudio } from "@shared/schema";
+import { 
+  uploadedAudio, 
+  PLAN_FEATURES, 
+  type PlanType,
+  type VideoResolution,
+  type ImageEngine,
+  type MusicModel
+} from "@shared/schema";
 import { eq } from "drizzle-orm";
+
+// Plan-based validation helpers
+function validateVideoResolution(planType: PlanType, resolution: VideoResolution): boolean {
+  const allowedResolutions = PLAN_FEATURES[planType].allowedVideoResolutions;
+  return allowedResolutions.includes(resolution);
+}
+
+function validateImageEngine(planType: PlanType, engine: ImageEngine): boolean {
+  const allowedEngines = PLAN_FEATURES[planType].allowedImageEngines;
+  return allowedEngines.includes(engine);
+}
+
+function validateMusicModel(planType: PlanType, model: MusicModel): boolean {
+  const allowedModels = PLAN_FEATURES[planType].allowedMusicModels;
+  return allowedModels.includes(model);
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth
@@ -63,6 +86,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         title,
         style
       } = req.body;
+
+      // Validate music model is allowed for user's plan
+      const userPlan = user.planType as PlanType;
+      if (!validateMusicModel(userPlan, model)) {
+        return res.status(403).json({
+          error: 'Model not allowed',
+          message: `Your ${user.planType} plan does not include ${model} model. Upgrade to Studio or higher to unlock premium models.`,
+          allowedModels: PLAN_FEATURES[userPlan].allowedMusicModels
+        });
+      }
 
       console.log('Music generation request:', { prompt, model, instrumental, vocalGender, customMode, title, style });
 
@@ -187,6 +220,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         audioWeight,
         negativeTags
       } = req.body;
+
+      // Validate music model is allowed for user's plan
+      const userPlan = user.planType as PlanType;
+      if (!validateMusicModel(userPlan, model)) {
+        return res.status(403).json({
+          error: 'Model not allowed',
+          message: `Your ${user.planType} plan does not include ${model} model. Upgrade to Studio or higher to unlock premium models.`,
+          allowedModels: PLAN_FEATURES[userPlan].allowedMusicModels
+        });
+      }
 
       console.log('Upload-cover request:', { uploadUrl, prompt, model, instrumental, vocalGender, customMode });
 
@@ -576,6 +619,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error deducting credits:", error);
       res.status(500).json({ message: "Failed to deduct credits" });
+    }
+  });
+
+  // Example: Video generation endpoint stub (for future implementation)
+  // This demonstrates server-side plan validation for video resolution
+  app.post("/api/generate-video", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const { prompt, resolution = '720p' } = req.body;
+      const userPlan = user.planType as PlanType;
+      
+      // Validate resolution is allowed for user's plan
+      if (!validateVideoResolution(userPlan, resolution as VideoResolution)) {
+        return res.status(403).json({
+          error: 'Resolution not allowed',
+          message: `Your ${user.planType} plan does not include ${resolution} resolution. Upgrade to Studio or higher to unlock HD and 4K video.`,
+          allowedResolutions: PLAN_FEATURES[userPlan].allowedVideoResolutions
+        });
+      }
+      
+      // TODO: Call video generation API (e.g., Fal.ai Seedance)
+      return res.status(501).json({
+        message: 'Video generation not yet implemented',
+        validatedResolution: resolution
+      });
+    } catch (error: any) {
+      console.error('Video generation error:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Example: Image generation endpoint stub (for future implementation)
+  // This demonstrates server-side plan validation for image engines
+  app.post("/api/generate-image", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const { prompt, engine = 'dall-e-2' } = req.body;
+      const userPlan = user.planType as PlanType;
+      
+      // Validate engine is allowed for user's plan
+      if (!validateImageEngine(userPlan, engine as ImageEngine)) {
+        return res.status(403).json({
+          error: 'Engine not allowed',
+          message: `Your ${user.planType} plan does not include ${engine} engine. Upgrade to Studio or higher to unlock premium image engines.`,
+          allowedEngines: PLAN_FEATURES[userPlan].allowedImageEngines
+        });
+      }
+      
+      // TODO: Call image generation API (e.g., OpenAI DALL-E, Stability AI, etc.)
+      return res.status(501).json({
+        message: 'Image generation not yet implemented',
+        validatedEngine: engine
+      });
+    } catch (error: any) {
+      console.error('Image generation error:', error);
+      res.status(500).json({ error: error.message });
     }
   });
 

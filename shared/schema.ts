@@ -60,3 +60,101 @@ export const insertUploadedAudioSchema = createInsertSchema(uploadedAudio).omit(
 
 export type InsertUploadedAudio = z.infer<typeof insertUploadedAudioSchema>;
 export type UploadedAudio = typeof uploadedAudio.$inferSelect;
+
+// Plan-based feature restrictions
+export const PlanType = z.enum(['free', 'studio', 'creator', 'all_access']);
+export type PlanType = z.infer<typeof PlanType>;
+
+// Video resolution options (for future video generation)
+export const VideoResolution = z.enum(['720p', '1080p', '4k']);
+export type VideoResolution = z.infer<typeof VideoResolution>;
+
+// Image engine options (for future image generation)
+export const ImageEngine = z.enum(['dall-e-2', 'dall-e-3', 'flux', 'midjourney', 'stable-diffusion']);
+export type ImageEngine = z.infer<typeof ImageEngine>;
+
+// Music model options (existing)
+export const MusicModel = z.enum(['V3_5', 'V4', 'V4_5', 'V4_5PLUS', 'V5']);
+export type MusicModel = z.infer<typeof MusicModel>;
+
+// Plan feature access definitions
+export interface PlanFeatures {
+  musicGeneration: boolean;
+  videoGeneration: boolean;
+  imageGeneration: boolean;
+  allowedVideoResolutions: VideoResolution[];
+  allowedImageEngines: ImageEngine[];
+  allowedMusicModels: MusicModel[];
+  maxCreditsPerDay: number | 'unlimited';
+  commercialLicense: boolean;
+  apiAccess: boolean;
+}
+
+export const PLAN_FEATURES: Record<PlanType, PlanFeatures> = {
+  free: {
+    musicGeneration: true,
+    videoGeneration: true,
+    imageGeneration: true,
+    allowedVideoResolutions: ['720p'], // Only lowest resolution
+    allowedImageEngines: ['dall-e-2'], // Only basic engine
+    allowedMusicModels: ['V3_5', 'V4'], // Only beginner models
+    maxCreditsPerDay: 50,
+    commercialLicense: false,
+    apiAccess: false,
+  },
+  studio: {
+    musicGeneration: true,
+    videoGeneration: true,
+    imageGeneration: true,
+    allowedVideoResolutions: ['720p', '1080p', '4k'], // All resolutions
+    allowedImageEngines: ['dall-e-2', 'dall-e-3', 'flux', 'midjourney', 'stable-diffusion'], // All engines
+    allowedMusicModels: ['V3_5', 'V4', 'V4_5', 'V4_5PLUS', 'V5'], // All models
+    maxCreditsPerDay: 'unlimited',
+    commercialLicense: true,
+    apiAccess: false,
+  },
+  creator: {
+    musicGeneration: true,
+    videoGeneration: true,
+    imageGeneration: true,
+    allowedVideoResolutions: ['720p', '1080p', '4k'], // All resolutions
+    allowedImageEngines: ['dall-e-2', 'dall-e-3', 'flux', 'midjourney', 'stable-diffusion'], // All engines
+    allowedMusicModels: ['V3_5', 'V4', 'V4_5', 'V4_5PLUS', 'V5'], // All models
+    maxCreditsPerDay: 'unlimited',
+    commercialLicense: true,
+    apiAccess: false,
+  },
+  all_access: {
+    musicGeneration: true,
+    videoGeneration: true,
+    imageGeneration: true,
+    allowedVideoResolutions: ['720p', '1080p', '4k'], // All resolutions
+    allowedImageEngines: ['dall-e-2', 'dall-e-3', 'flux', 'midjourney', 'stable-diffusion'], // All engines
+    allowedMusicModels: ['V3_5', 'V4', 'V4_5', 'V4_5PLUS', 'V5'], // All models
+    maxCreditsPerDay: 'unlimited',
+    commercialLicense: true,
+    apiAccess: true,
+  },
+};
+
+// Helper function to check boolean features for a plan
+export function isPlanFeatureEnabled(
+  planType: PlanType,
+  feature: 'musicGeneration' | 'videoGeneration' | 'imageGeneration' | 'commercialLicense' | 'apiAccess'
+): boolean {
+  return PLAN_FEATURES[planType][feature];
+}
+
+// Helper function to get allowed options for a plan
+export function getAllowedOptions<T>(
+  planType: PlanType,
+  optionType: 'videoResolutions' | 'imageEngines' | 'musicModels'
+): T[] {
+  const featureMap = {
+    videoResolutions: 'allowedVideoResolutions',
+    imageEngines: 'allowedImageEngines',
+    musicModels: 'allowedMusicModels',
+  } as const;
+  
+  return PLAN_FEATURES[planType][featureMap[optionType]] as T[];
+}
