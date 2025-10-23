@@ -1,4 +1,13 @@
-import { type User, type InsertUser, type UpsertUser } from "@shared/schema";
+import { 
+  type User, 
+  type InsertUser, 
+  type UpsertUser,
+  type ServiceType,
+  type CreditCheckResult,
+  type CreditDeductionResult,
+  SERVICE_CREDIT_COSTS,
+  UNLIMITED_SERVICE_PLANS,
+} from "@shared/schema";
 import { randomUUID } from "crypto";
 
 // modify the interface with any CRUD methods
@@ -12,6 +21,10 @@ export interface IStorage {
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserVocalPreference(userId: string, preference: string): Promise<User | undefined>;
   updateUserCredits(userId: string, credits: number, lastReset?: Date): Promise<User | undefined>;
+  
+  // Centralized credit management
+  checkCredits(userId: string, serviceType: ServiceType): Promise<CreditCheckResult>;
+  deductCredits(userId: string, serviceType: ServiceType): Promise<CreditDeductionResult>;
 }
 
 export class MemStorage implements IStorage {
@@ -110,6 +123,90 @@ export class MemStorage implements IStorage {
       this.users.set(newUser.id, newUser);
       return newUser;
     }
+  }
+
+  async checkCredits(userId: string, serviceType: ServiceType): Promise<CreditCheckResult> {
+    const user = this.users.get(userId);
+    
+    if (!user) {
+      return {
+        allowed: false,
+        reason: 'insufficient_credits',
+        currentCredits: 0,
+        requiredCredits: SERVICE_CREDIT_COSTS[serviceType],
+      };
+    }
+
+    const requiredCredits = SERVICE_CREDIT_COSTS[serviceType];
+    const hasUnlimitedAccess = UNLIMITED_SERVICE_PLANS[serviceType].includes(user.planType as any);
+
+    if (hasUnlimitedAccess) {
+      return {
+        allowed: true,
+        reason: 'unlimited',
+        currentCredits: user.credits,
+        requiredCredits: 0,
+        planType: user.planType as any,
+      };
+    }
+
+    const hasSufficientCredits = user.credits >= requiredCredits;
+    
+    return {
+      allowed: hasSufficientCredits,
+      reason: hasSufficientCredits ? 'success' : 'insufficient_credits',
+      currentCredits: user.credits,
+      requiredCredits,
+      planType: user.planType as any,
+    };
+  }
+
+  async deductCredits(userId: string, serviceType: ServiceType): Promise<CreditDeductionResult> {
+    const user = this.users.get(userId);
+    
+    if (!user) {
+      return {
+        success: false,
+        newBalance: 0,
+        amountDeducted: 0,
+        wasUnlimited: false,
+        error: 'User not found',
+      };
+    }
+
+    const requiredCredits = SERVICE_CREDIT_COSTS[serviceType];
+    const hasUnlimitedAccess = UNLIMITED_SERVICE_PLANS[serviceType].includes(user.planType as any);
+
+    if (hasUnlimitedAccess) {
+      return {
+        success: true,
+        newBalance: user.credits,
+        amountDeducted: 0,
+        wasUnlimited: true,
+      };
+    }
+
+    if (user.credits < requiredCredits) {
+      return {
+        success: false,
+        newBalance: user.credits,
+        amountDeducted: 0,
+        wasUnlimited: false,
+        error: `Insufficient credits. Required: ${requiredCredits}, Available: ${user.credits}`,
+      };
+    }
+
+    const newCredits = Math.max(0, user.credits - requiredCredits);
+    user.credits = newCredits;
+    user.updatedAt = new Date();
+    this.users.set(userId, user);
+
+    return {
+      success: true,
+      newBalance: newCredits,
+      amountDeducted: requiredCredits,
+      wasUnlimited: false,
+    };
   }
 }
 
