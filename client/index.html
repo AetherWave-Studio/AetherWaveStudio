@@ -249,6 +249,45 @@
     padding: 1.25rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
     background: rgba(13, 11, 21, 0.5);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    }
+    
+    .music-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .credits-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255, 46, 166, 0.1);
+      border: 1px solid rgba(255, 46, 166, 0.3);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+    
+    .version-dropdown {
+      padding: 0.5rem 1rem;
+      background: var(--dark-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .version-dropdown:hover {
+      border-color: var(--aetherwave-purple);
     }
 
     .panel-title {
@@ -325,6 +364,148 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    }
+    
+    /* Gender Toggle Buttons */
+    .gender-toggle-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .gender-toggle-btn {
+      flex: 1;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-align: center;
+    }
+    
+    .gender-toggle-btn:hover {
+      border-color: var(--aetherwave-purple);
+      background: rgba(139, 92, 246, 0.1);
+    }
+    
+    .gender-toggle-btn.active {
+      background: linear-gradient(135deg, var(--aetherwave-purple), var(--aetherwave-pink));
+      border-color: var(--aetherwave-pink);
+      color: white;
+      font-weight: 600;
+    }
+    
+    /* Premium Gradient Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      outline: none;
+      margin: 0.5rem 0;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple));
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(255, 46, 166, 0.5);
+      transition: all 0.2s;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 12px rgba(255, 46, 166, 0.8);
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple));
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 8px rgba(255, 46, 166, 0.5);
+      transition: all 0.2s;
+    }
+    
+    input[type="range"]::-moz-range-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 12px rgba(255, 46, 166, 0.8);
+    }
+    
+    /* Slider value display */
+    .slider-value-display {
+      display: inline-block;
+      min-width: 3rem;
+      text-align: right;
+      color: var(--aetherwave-purple);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .slider-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    /* Premium Upload Audio Button */
+    .premium-upload-btn {
+      position: relative;
+      padding: 0.75rem 2rem;
+      background: linear-gradient(135deg, rgba(13, 11, 21, 0.95), rgba(20, 15, 35, 0.95));
+      border: 2px solid transparent;
+      border-radius: 24px;
+      color: white;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(24px);
+      box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    .premium-upload-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 24px;
+      padding: 2px;
+      background: linear-gradient(135deg, #00f5ff, #ff2ea6);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 1;
+      transition: opacity 0.3s;
+    }
+    
+    .premium-upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 8px 24px rgba(255, 46, 166, 0.3),
+        0 0 20px rgba(0, 245, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    
+    .premium-upload-btn:active {
+      transform: translateY(0);
     }
 
     .form-label {
@@ -1047,8 +1228,27 @@
     <!-- Music Generation Panel -->
     <div class="panel">
     <div class="panel-header">
-    <div class="panel-title">🎵 Music Generation</div>
-    <div class="panel-description">Create AI-generated music with SUNO</div>
+    <div class="music-panel-header">
+      <div class="credits-indicator" data-testid="credits-display">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+          <path d="M2 17l10 5 10-5"></path>
+          <path d="M2 12l10 5 10-5"></path>
+        </svg>
+        <span id="user-credits">9.2k</span>
+      </div>
+      <select id="music-model-header" class="version-dropdown" data-testid="select-version">
+        <option value="V5">v5 ▼</option>
+        <option value="V4_5PLUS">v4.5+ ▼</option>
+        <option value="V4_5">v4.5 ▼</option>
+        <option value="V4">v4 ▼</option>
+        <option value="V3_5">v3.5 ▼</option>
+      </select>
+    </div>
+    <div style="margin-top: 0.5rem;">
+      <div class="panel-title">🎵 Music Generation</div>
+      <div class="panel-description">Create AI-generated music with SUNO</div>
+    </div>
     </div>
     <div class="panel-content">
     <!-- Custom Mode Toggle -->
@@ -1062,10 +1262,10 @@
     <!-- Upload & Cover Audio File (Optional) -->
     <div class="form-group">
     <label class="form-label" id="upload-file-label">Audio File to Cover (Optional)</label>
-    <div style="display: flex; gap: 0.5rem; align-items: center;">
+    <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
       <input type="file" id="upload-file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac" style="display: none;" data-testid="input-upload-file">
-      <button type="button" id="upload-file-btn" style="padding: 0.75rem 1rem; background: var(--aetherwave-purple); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; flex-shrink: 0;" data-testid="button-upload-file">Choose Audio File</button>
-      <span id="upload-file-name" style="color: var(--text-muted); font-size: 0.85rem; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No file selected</span>
+      <button type="button" id="upload-file-btn" class="premium-upload-btn" data-testid="button-upload-file">UPLOAD AUDIO</button>
+      <span id="upload-file-name" style="color: var(--text-muted); font-size: 0.85rem; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 120px;">No file selected</span>
       <button type="button" id="clear-upload-btn" style="display: none; padding: 0.5rem 0.75rem; background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;" data-testid="button-clear-upload">Clear</button>
     </div>
     <input type="hidden" id="upload-url" data-testid="hidden-upload-url">
@@ -1102,47 +1302,42 @@
       Advanced Options
     </summary>
     <div class="form-group">
-      <label class="form-label">Vocal Gender Preference:</label>
-      <input type="radio" id="vocal-gender-m" name="vocalGender" value="m" aria-label="male" checked>
-      <label for="vocal-gender-m">Male</label>
-      <input type="radio" id="vocal-gender-f" name="vocalGender" value="f" style="margin-left:1rem;" aria-label="female">
-      <label for="vocal-gender-f">Female</label>
+      <label class="form-label">Vocal Gender 
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; opacity: 0.5;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 16v-4"></path>
+          <path d="M12 8h.01"></path>
+        </svg>
+      </label>
+      <div class="gender-toggle-group">
+        <button type="button" class="gender-toggle-btn active" data-gender="m" data-testid="button-gender-male">Male</button>
+        <button type="button" class="gender-toggle-btn" data-gender="f" data-testid="button-gender-female">Female</button>
+      </div>
+      <input type="hidden" id="vocal-gender-value" value="m">
     </div>
     <div class="form-group">
-      <label for="style-weight" class="form-label">
-        Style Weight (0–1):
-      </label>
+      <div class="slider-label-row">
+        <label for="style-weight" class="form-label">Style Weight</label>
+        <span class="slider-value-display" id="style-weight-value">65%</span>
+      </div>
       <input type="range" id="style-weight" min="0" max="1" step="0.01" value="0.65">
-      <span id="style-weight-value">0.65</span>
     </div>
     <div class="form-group">
-      <label for="weirdness-constraint" class="form-label">
-        Weirdness Constraint (0–1):
-      </label>
+      <div class="slider-label-row">
+        <label for="weirdness-constraint" class="form-label">Weirdness</label>
+        <span class="slider-value-display" id="weirdness-constraint-value">65%</span>
+      </div>
       <input type="range" id="weirdness-constraint" min="0" max="1" step="0.01" value="0.65">
-      <span id="weirdness-constraint-value">0.65</span>
     </div>
     <div class="form-group">
-      <label for="audio-weight" class="form-label">
-        Audio Weight (0–1):
-      </label>
+      <div class="slider-label-row">
+        <label for="audio-weight" class="form-label">Audio Weight</label>
+        <span class="slider-value-display" id="audio-weight-value">65%</span>
+      </div>
       <input type="range" id="audio-weight" min="0" max="1" step="0.01" value="0.65">
-      <span id="audio-weight-value">0.65</span>
     </div>
   </details>
 </div>
-
-    <!-- Model Version (Always visible) -->
-    <div class="form-group">
-    <label class="form-label">Model Version</label>
-    <select id="music-model">
-    <option value="V5">V5 (Latest - Fastest)</option>
-    <option value="V4_5PLUS">V4.5+ (Enhanced)</option>
-    <option value="V4_5">V4.5</option>
-    <option value="V4">V4</option>
-    <option value="V3_5">V3.5</option>
-    </select>
-    </div>
 
     <!-- Make Instrumental Toggle -->
     <div class="form-group">
@@ -1488,8 +1683,12 @@
           
           // Load user's vocal gender preference
           if (user.vocalGenderPreference) {
-            const radio = document.querySelector(`input[name="vocalGender"][value="${user.vocalGenderPreference}"]`);
-            if (radio) radio.checked = true;
+            const genderBtn = document.querySelector(`.gender-toggle-btn[data-gender="${user.vocalGenderPreference}"]`);
+            if (genderBtn) {
+              document.querySelectorAll('.gender-toggle-btn').forEach(b => b.classList.remove('active'));
+              genderBtn.classList.add('active');
+              document.getElementById('vocal-gender-value').value = user.vocalGenderPreference;
+            }
           }
         } else {
           // User not logged in
@@ -1527,7 +1726,7 @@
     const musicTitle = document.getElementById('music-title');
     const musicStyle = document.getElementById('music-style');
     const musicLyrics = document.getElementById('music-lyrics');
-    const musicModel = document.getElementById('music-model');
+    const musicModelHeader = document.getElementById('music-model-header');
     const musicInstrumental = document.getElementById('music-instrumental');
     const generateMusicBtn = document.getElementById('generate-music-btn');
     const musicResult = document.getElementById('music-result');
@@ -1585,13 +1784,29 @@ if (customModeToggle.checked) {
   advancedOptions.style.display = 'none';
 }
 
-// Slider live value update logic
+// Gender Toggle Button Logic
+const genderToggleBtns = document.querySelectorAll('.gender-toggle-btn');
+const vocalGenderValue = document.getElementById('vocal-gender-value');
+
+genderToggleBtns.forEach(btn => {
+  btn.addEventListener('click', function() {
+    // Remove active from all buttons
+    genderToggleBtns.forEach(b => b.classList.remove('active'));
+    // Add active to clicked button
+    this.classList.add('active');
+    // Update hidden input value
+    vocalGenderValue.value = this.dataset.gender;
+  });
+});
+
+// Slider live value update logic (with percentage display)
 ['style-weight', 'weirdness-constraint', 'audio-weight'].forEach(function(id) {
   const slider = document.getElementById(id);
   const output = document.getElementById(id + '-value');
   if (slider && output) {
     slider.addEventListener('input', function() {
-      output.textContent = slider.value;
+      const percentage = Math.round(slider.value * 100);
+      output.textContent = percentage + '%';
     });
   }
 });
@@ -2256,9 +2471,9 @@ window.premiumPlayer = {
     // Generate music
     async function generateMusic() {
     const isCustomMode = customModeToggle.checked;
-    const model = musicModel.value;
+    const model = musicModelHeader.value;
     const instrumental = musicInstrumental.checked;
-    const vocalGender = document.querySelector('input[name="vocalGender"]:checked')?.value || 'm';
+    const vocalGender = document.getElementById('vocal-gender-value')?.value || 'm';
     const uploadUrl = document.getElementById('upload-url').value.trim();
 
     console.log('=== Generate Music Called ===');
