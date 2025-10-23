@@ -687,6 +687,14 @@
     <a href="/featured-artist/">Featured Artist</a>
     <a href="/virtual-artists/">Virtual Artists</a>
     <a href="/shop/">Shop</a>
+    <div id="auth-section" style="display: flex; align-items: center; gap: 1rem;">
+      <a href="/api/login" class="nav-btn" id="login-btn" data-testid="button-login">Login</a>
+      <div id="user-profile" style="display: none; align-items: center; gap: 0.75rem;">
+        <img id="user-avatar" src="" alt="" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--aetherwave-purple);">
+        <span id="user-name" style="color: var(--text-primary); font-size: 0.9rem;" data-testid="text-username"></span>
+        <a href="/api/logout" class="nav-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;" data-testid="button-logout">Logout</a>
+      </div>
+    </div>
     </nav>
   </header>
 
@@ -1106,6 +1114,46 @@
     window.addEventListener('error', (e) => {
     console.error('Global error:', e.message, e.filename, e.lineno, e.colno);
     });
+
+    // Check authentication status and update UI
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/auth/user');
+        if (response.ok) {
+          const user = await response.json();
+          // User is logged in
+          document.getElementById('login-btn').style.display = 'none';
+          document.getElementById('user-profile').style.display = 'flex';
+          document.getElementById('user-name').textContent = user.firstName || user.email || 'User';
+          if (user.profileImageUrl) {
+            document.getElementById('user-avatar').src = user.profileImageUrl;
+            document.getElementById('user-avatar').alt = user.firstName || 'User';
+          } else {
+            // Use a default avatar if no profile image
+            document.getElementById('user-avatar').src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%238b5cf6"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+            document.getElementById('user-avatar').alt = user.email || 'User';
+          }
+          
+          // Load user's vocal gender preference
+          if (user.vocalGenderPreference) {
+            const radio = document.querySelector(`input[name="vocalGender"][value="${user.vocalGenderPreference}"]`);
+            if (radio) radio.checked = true;
+          }
+        } else {
+          // User not logged in
+          document.getElementById('login-btn').style.display = 'inline-block';
+          document.getElementById('user-profile').style.display = 'none';
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        // Show login button on error
+        document.getElementById('login-btn').style.display = 'inline-block';
+        document.getElementById('user-profile').style.display = 'none';
+      }
+    }
+
+    // Check auth on page load
+    checkAuth();
 
         const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
         let selectedMediaType = document.querySelector('.media-type-btn.active').dataset.type;
