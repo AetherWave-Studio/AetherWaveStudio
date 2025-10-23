@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, jsonb, index } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, jsonb, integer, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -23,6 +23,11 @@ export const users = pgTable("users", {
   profileImageUrl: varchar("profile_image_url"),
   username: varchar("username").unique(),
   vocalGenderPreference: varchar("vocal_gender_preference").default('m'),
+  credits: integer("credits").default(50).notNull(),
+  planType: varchar("plan_type").default('free').notNull(), // 'free', 'studio', 'all_access'
+  lastCreditReset: timestamp("last_credit_reset").defaultNow().notNull(),
+  stripeCustomerId: varchar("stripe_customer_id"),
+  stripeSubscriptionId: varchar("stripe_subscription_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

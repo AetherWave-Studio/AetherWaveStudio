@@ -413,6 +413,118 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Credit Management Routes
+  
+  // Get user's current credits
+  app.get('/api/user/credits', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json({ 
+        credits: user.credits,
+        planType: user.planType,
+        lastCreditReset: user.lastCreditReset
+      });
+    } catch (error) {
+      console.error("Error fetching credits:", error);
+      res.status(500).json({ message: "Failed to fetch credits" });
+    }
+  });
+  
+  // Check and reset daily credits if needed
+  app.post('/api/user/credits/check-reset', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Only reset for free users
+      if (user.planType !== 'free') {
+        return res.json({ 
+          credits: user.credits,
+          resetOccurred: false 
+        });
+      }
+      
+      // Check if 24 hours have passed since last reset
+      const now = new Date();
+      const lastReset = new Date(user.lastCreditReset);
+      const hoursSinceReset = (now.getTime() - lastReset.getTime()) / (1000 * 60 * 60);
+      
+      if (hoursSinceReset >= 24) {
+        // Reset credits to 50 for free users
+        await storage.updateUserCredits(userId, 50, now);
+        res.json({ 
+          credits: 50,
+          resetOccurred: true,
+          message: "Daily credits reset to 50"
+        });
+      } else {
+        res.json({ 
+          credits: user.credits,
+          resetOccurred: false,
+          hoursUntilReset: Math.ceil(24 - hoursSinceReset)
+        });
+      }
+    } catch (error) {
+      console.error("Error checking credit reset:", error);
+      res.status(500).json({ message: "Failed to check credit reset" });
+    }
+  });
+  
+  // Deduct credits (called before music generation)
+  app.post('/api/user/credits/deduct', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { amount = 5 } = req.body; // Default 5 credits per generation
+      
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Check if user has enough credits (free users only)
+      if (user.planType === 'free' && user.credits < amount) {
+        return res.status(403).json({ 
+          message: "Insufficient credits",
+          credits: user.credits,
+          required: amount
+        });
+      }
+      
+      // Paid users have unlimited credits
+      if (user.planType === 'studio' || user.planType === 'all_access') {
+        return res.json({ 
+          success: true,
+          credits: 999999, // Display unlimited
+          unlimited: true
+        });
+      }
+      
+      // Deduct credits for free users
+      const newCredits = Math.max(0, user.credits - amount);
+      await storage.updateUserCredits(userId, newCredits);
+      
+      res.json({ 
+        success: true,
+        credits: newCredits,
+        deducted: amount
+      });
+    } catch (error) {
+      console.error("Error deducting credits:", error);
+      res.status(500).json({ message: "Failed to deduct credits" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

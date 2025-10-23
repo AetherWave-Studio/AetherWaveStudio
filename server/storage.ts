@@ -11,6 +11,7 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserVocalPreference(userId: string, preference: string): Promise<User | undefined>;
+  updateUserCredits(userId: string, credits: number, lastReset?: Date): Promise<User | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -45,8 +46,22 @@ export class MemStorage implements IStorage {
     return user;
   }
 
+  async updateUserCredits(userId: string, credits: number, lastReset?: Date): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (user) {
+      user.credits = credits;
+      if (lastReset) {
+        user.lastCreditReset = lastReset;
+      }
+      user.updatedAt = new Date();
+      this.users.set(userId, user);
+    }
+    return user;
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
+    const now = new Date();
     const user: User = { 
       id,
       email: insertUser.email ?? null,
@@ -55,8 +70,13 @@ export class MemStorage implements IStorage {
       profileImageUrl: insertUser.profileImageUrl ?? null,
       username: insertUser.username ?? null,
       vocalGenderPreference: insertUser.vocalGenderPreference ?? 'm',
-      createdAt: new Date(),
-      updatedAt: new Date()
+      credits: 50,
+      planType: 'free',
+      lastCreditReset: now,
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+      createdAt: now,
+      updatedAt: now
     };
     this.users.set(id, user);
     return user;
@@ -64,12 +84,13 @@ export class MemStorage implements IStorage {
 
   async upsertUser(userData: UpsertUser): Promise<User> {
     const existingUser = this.users.get(userData.id as string);
+    const now = new Date();
     
     if (existingUser) {
       const updatedUser: User = {
         ...existingUser,
         ...userData,
-        updatedAt: new Date()
+        updatedAt: now
       };
       this.users.set(updatedUser.id, updatedUser);
       return updatedUser;
@@ -78,8 +99,13 @@ export class MemStorage implements IStorage {
         ...userData,
         id: userData.id || randomUUID(),
         vocalGenderPreference: userData.vocalGenderPreference || 'm',
-        createdAt: new Date(),
-        updatedAt: new Date()
+        credits: userData.credits ?? 50,
+        planType: userData.planType || 'free',
+        lastCreditReset: userData.lastCreditReset || now,
+        stripeCustomerId: userData.stripeCustomerId || null,
+        stripeSubscriptionId: userData.stripeSubscriptionId || null,
+        createdAt: now,
+        updatedAt: now
       } as User;
       this.users.set(newUser.id, newUser);
       return newUser;
