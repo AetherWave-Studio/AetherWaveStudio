@@ -82,6 +82,7 @@ export interface PlanFeatures {
   musicGeneration: boolean;
   videoGeneration: boolean;
   imageGeneration: boolean;
+  wavConversion: boolean; // Convert audio to high-quality WAV format
   allowedVideoResolutions: VideoResolution[];
   allowedImageEngines: ImageEngine[];
   allowedMusicModels: MusicModel[];
@@ -95,6 +96,7 @@ export const PLAN_FEATURES: Record<PlanType, PlanFeatures> = {
     musicGeneration: true,
     videoGeneration: true,
     imageGeneration: true,
+    wavConversion: false, // WAV conversion is paid-only
     allowedVideoResolutions: ['720p'], // Only lowest resolution
     allowedImageEngines: ['dall-e-2'], // Only basic engine
     allowedMusicModels: ['V3_5', 'V4'], // Only beginner models
@@ -106,6 +108,7 @@ export const PLAN_FEATURES: Record<PlanType, PlanFeatures> = {
     musicGeneration: true,
     videoGeneration: true,
     imageGeneration: true,
+    wavConversion: true, // WAV conversion available
     allowedVideoResolutions: ['720p', '1080p', '4k'], // All resolutions
     allowedImageEngines: ['dall-e-2', 'dall-e-3', 'flux', 'midjourney', 'stable-diffusion'], // All engines
     allowedMusicModels: ['V3_5', 'V4', 'V4_5', 'V4_5PLUS', 'V5'], // All models
@@ -117,6 +120,7 @@ export const PLAN_FEATURES: Record<PlanType, PlanFeatures> = {
     musicGeneration: true,
     videoGeneration: true,
     imageGeneration: true,
+    wavConversion: true, // WAV conversion available
     allowedVideoResolutions: ['720p', '1080p', '4k'], // All resolutions
     allowedImageEngines: ['dall-e-2', 'dall-e-3', 'flux', 'midjourney', 'stable-diffusion'], // All engines
     allowedMusicModels: ['V3_5', 'V4', 'V4_5', 'V4_5PLUS', 'V5'], // All models
@@ -128,6 +132,7 @@ export const PLAN_FEATURES: Record<PlanType, PlanFeatures> = {
     musicGeneration: true,
     videoGeneration: true,
     imageGeneration: true,
+    wavConversion: true, // WAV conversion available
     allowedVideoResolutions: ['720p', '1080p', '4k'], // All resolutions
     allowedImageEngines: ['dall-e-2', 'dall-e-3', 'flux', 'midjourney', 'stable-diffusion'], // All engines
     allowedMusicModels: ['V3_5', 'V4', 'V4_5', 'V4_5PLUS', 'V5'], // All models
@@ -140,7 +145,7 @@ export const PLAN_FEATURES: Record<PlanType, PlanFeatures> = {
 // Helper function to check boolean features for a plan
 export function isPlanFeatureEnabled(
   planType: PlanType,
-  feature: 'musicGeneration' | 'videoGeneration' | 'imageGeneration' | 'commercialLicense' | 'apiAccess'
+  feature: 'musicGeneration' | 'videoGeneration' | 'imageGeneration' | 'wavConversion' | 'commercialLicense' | 'apiAccess'
 ): boolean {
   return PLAN_FEATURES[planType][feature];
 }

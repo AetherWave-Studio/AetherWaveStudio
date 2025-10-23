@@ -83,10 +83,16 @@ Preferred communication style: Simple, everyday language.
 - Credits display shows real-time balance for authenticated users, hides for unauthenticated
 - **Implemented plan-based feature restrictions system**:
   - Free users limited to lowest video resolution (720p), basic image engines (dall-e-2), and beginner music models (V3_5, V4)
-  - Paid users (Studio+) unlock all resolutions (1080p, 4K), all image engines, and premium music models
+  - Paid users (Studio+) unlock all resolutions (1080p, 4K), all image engines, and premium music models (V4_5, V4_5PLUS, V5)
   - Created reusable `UpgradeTooltip` component for non-intrusive upgrade prompts
   - Added `usePlanFeatures` hook for filtering available options based on user plan
   - Server-side validation functions prevent bypassing restrictions via API
+- **Added WAV conversion feature for paid users**:
+  - New `/api/convert-to-wav` endpoint converts generated music to high-quality WAV format
+  - Restricted to Studio, Creator, and All Access plans only
+  - Automatic callback URL generation for receiving conversion completion updates
+  - Polling endpoint `/api/wav-status/:taskId` for checking conversion status
+  - Callback endpoint `/api/wav-callback` receives SUNO completion notifications
 
 ### External Dependencies
 
@@ -98,6 +104,10 @@ Preferred communication style: Simple, everyday language.
   - Custom mode for advanced users (title, style parameters)
   - Upload & Cover Audio: Transform existing audio into new style while preserving melody
   - Advanced parameters: styleWeight, weirdnessConstraint, audioWeight
+  - **WAV Conversion**: Convert generated music to high-quality WAV format (paid users only)
+    - Endpoint: `/api/v1/wav/generate`
+    - Requires taskId and audioId from previous generation
+    - Callback-based or polling for completion status
   - RESTful integration pattern with async taskId polling
 
 **Authentication**:
@@ -160,6 +170,7 @@ Preferred communication style: Simple, everyday language.
 | Feature | Free | Studio | Creator | All Access |
 |---------|------|--------|---------|------------|
 | **Music Models** | V3_5, V4 | All models | All models | All models |
+| **WAV Conversion** | ❌ | ✅ | ✅ | ✅ |
 | **Video Resolution** | 720p only | 720p, 1080p, 4K | 720p, 1080p, 4K | 720p, 1080p, 4K |
 | **Image Engines** | dall-e-2 only | All engines | All engines | All engines |
 | **Music Credits** | 50/day | Unlimited | Unlimited | Unlimited |

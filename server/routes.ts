@@ -656,6 +656,166 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Convert audio to WAV format (paid users only)
+  app.post("/api/convert-to-wav", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const userPlan = user.planType as PlanType;
+      
+      // WAV conversion is paid-only feature
+      if (!PLAN_FEATURES[userPlan].wavConversion) {
+        return res.status(403).json({
+          error: 'WAV conversion not available',
+          message: 'WAV conversion is only available for Studio, Creator, and All Access plans. Upgrade to unlock high-quality WAV exports.',
+          requiredPlan: 'Studio'
+        });
+      }
+      
+      const { taskId, audioId } = req.body;
+      
+      if (!taskId || !audioId) {
+        return res.status(400).json({
+          error: 'Missing parameters',
+          message: 'taskId and audioId are required'
+        });
+      }
+      
+      const sunoApiKey = process.env.SUNO_API_KEY;
+      if (!sunoApiKey) {
+        return res.status(500).json({ 
+          error: 'SUNO API key not configured',
+          details: 'Please add SUNO_API_KEY to your Replit Secrets'
+        });
+      }
+      
+      // Construct callback URL (will be called when conversion completes)
+      const replitDomains = process.env.REPLIT_DOMAINS || process.env.REPLIT_DEV_DOMAIN;
+      const domain = replitDomains?.split(',')[0] || 'localhost:5000';
+      const protocol = domain.includes('localhost') ? 'http' : 'https';
+      const callBackUrl = `${protocol}://${domain}/api/wav-callback`;
+      
+      console.log('WAV conversion request:', { taskId, audioId, callBackUrl });
+      
+      // Call SUNO WAV conversion API
+      const wavResponse = await fetch('https://api.kie.ai/api/v1/wav/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sunoApiKey}`
+        },
+        body: JSON.stringify({
+          taskId,
+          audioId,
+          callBackUrl
+        })
+      });
+      
+      if (!wavResponse.ok) {
+        const errorData = await wavResponse.json().catch(() => ({}));
+        console.error('SUNO WAV API error:', errorData);
+        return res.status(wavResponse.status).json({
+          error: 'WAV conversion failed',
+          details: errorData.msg || errorData.message || wavResponse.statusText
+        });
+      }
+      
+      const wavData = await wavResponse.json();
+      console.log('SUNO WAV response:', JSON.stringify(wavData, null, 2));
+      
+      if (wavData.code === 200) {
+        res.json({
+          taskId: wavData.data.taskId,
+          status: 'processing',
+          message: 'WAV conversion started. You will receive the download URL via callback or can poll the status endpoint.'
+        });
+      } else {
+        res.status(500).json({
+          error: 'WAV conversion failed',
+          details: wavData.msg || 'Unknown error'
+        });
+      }
+      
+    } catch (error: any) {
+      console.error('WAV conversion error:', error);
+      res.status(500).json({ 
+        error: 'Failed to convert to WAV',
+        details: error.message 
+      });
+    }
+  });
+  
+  // WAV conversion callback (receives completion updates from SUNO)
+  app.post("/api/wav-callback", async (req, res) => {
+    try {
+      // Basic validation - ensure callback has expected SUNO structure
+      const { code, data, msg } = req.body;
+      
+      if (typeof code !== 'number') {
+        console.warn('Invalid WAV callback structure - missing code');
+        return res.status(400).json({ error: 'Invalid callback format' });
+      }
+      
+      console.log('WAV callback received:', JSON.stringify(req.body, null, 2));
+      
+      // TODO: Store WAV conversion result in database or emit via WebSocket
+      // The callback includes:
+      // - code: status code
+      // - data: { taskId, wavUrl, ... }
+      // - msg: message
+      
+      // For now, just acknowledge receipt
+      // When implementing storage/notification:
+      // 1. Store data.wavUrl in database linked to taskId
+      // 2. Emit WebSocket event to notify user
+      // 3. Or have frontend poll /api/wav-status/:taskId
+      
+      res.json({ received: true });
+      
+    } catch (error: any) {
+      console.error('WAV callback error:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
+  // Get WAV conversion status (polling alternative to callback)
+  app.get("/api/wav-status/:taskId", isAuthenticated, async (req: any, res) => {
+    try {
+      const { taskId } = req.params;
+      const sunoApiKey = process.env.SUNO_API_KEY;
+      
+      if (!sunoApiKey) {
+        return res.status(500).json({ error: 'API key not configured' });
+      }
+      
+      // Call SUNO API to get WAV status
+      // Note: Exact endpoint for status polling may vary - check SUNO docs
+      const response = await fetch(`https://api.kie.ai/api/v1/wav/get?taskId=${taskId}`, {
+        headers: {
+          'Authorization': `Bearer ${sunoApiKey}`
+        }
+      });
+      
+      if (!response.ok) {
+        return res.status(response.status).json({
+          error: 'Failed to fetch WAV status'
+        });
+      }
+      
+      const data = await response.json();
+      res.json(data);
+      
+    } catch (error: any) {
+      console.error('WAV status check error:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Example: Image generation endpoint stub (for future implementation)
   // This demonstrates server-side plan validation for image engines
   app.post("/api/generate-image", isAuthenticated, async (req: any, res) => {
