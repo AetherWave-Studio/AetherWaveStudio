@@ -5,16 +5,21 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 import { z } from "zod";
 import multer from "multer";
 import { db } from "./db";
+import Stripe from "stripe";
 import { 
   uploadedAudio, 
   PLAN_FEATURES,
   SERVICE_CREDIT_COSTS,
+  CREDIT_BUNDLES,
   type PlanType,
   type VideoResolution,
   type ImageEngine,
   type MusicModel
 } from "@shared/schema";
 import { eq } from "drizzle-orm";
+
+// Initialize Stripe
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // Plan-based validation helpers
 function validateVideoResolution(planType: PlanType, resolution: VideoResolution): boolean {
@@ -852,6 +857,142 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error('Image generation error:', error);
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get available credit bundles
+  app.get("/api/credit-bundles", async (req, res) => {
+    try {
+      res.json({ bundles: CREDIT_BUNDLES });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Create payment intent for credit bundle purchase
+  app.post("/api/create-payment-intent", isAuthenticated, async (req: any, res) => {
+    try {
+      const { bundleId } = req.body;
+      
+      const bundle = CREDIT_BUNDLES.find(b => b.id === bundleId);
+      if (!bundle) {
+        return res.status(400).json({ error: 'Invalid bundle ID' });
+      }
+
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      // Create payment intent
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(bundle.priceUSD * 100), // Convert to cents
+        currency: "usd",
+        metadata: {
+          userId: user.id,
+          bundleId: bundle.id,
+          credits: bundle.credits + (bundle.bonus || 0),
+        },
+        description: `${bundle.name} - ${bundle.credits}${bundle.bonus ? ` + ${bundle.bonus} bonus` : ''} credits`,
+      });
+
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        bundle: bundle
+      });
+    } catch (error: any) {
+      console.error('Error creating payment intent:', error);
+      res.status(500).json({ 
+        error: 'Failed to create payment intent',
+        details: error.message 
+      });
+    }
+  });
+
+  // Stripe webhook handler for payment confirmation
+  app.post("/api/stripe-webhook", async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+
+    let event: Stripe.Event;
+
+    try {
+      // For webhook signature verification, you'd need STRIPE_WEBHOOK_SECRET
+      // For now, we'll handle the event without verification (development only)
+      event = req.body as Stripe.Event;
+    } catch (err: any) {
+      console.error('Webhook signature verification failed:', err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the event
+    if (event.type === 'payment_intent.succeeded') {
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      
+      // Extract metadata
+      const { userId, credits } = paymentIntent.metadata;
+      
+      if (userId && credits) {
+        try {
+          const user = await storage.getUser(userId);
+          if (user) {
+            const newCredits = user.credits + parseInt(credits);
+            await storage.updateUserCredits(userId, newCredits);
+            console.log(`Added ${credits} credits to user ${userId}. New balance: ${newCredits}`);
+          }
+        } catch (error) {
+          console.error('Error updating user credits:', error);
+        }
+      }
+    }
+
+    res.json({ received: true });
+  });
+
+  // Manual credit addition after payment (fallback if webhook fails)
+  app.post("/api/confirm-payment", isAuthenticated, async (req: any, res) => {
+    try {
+      const { paymentIntentId } = req.body;
+      const userId = req.user.claims.sub;
+      
+      // Retrieve the payment intent to verify it's paid
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      
+      if (paymentIntent.status !== 'succeeded') {
+        return res.status(400).json({ 
+          error: 'Payment not completed',
+          status: paymentIntent.status 
+        });
+      }
+      
+      // Verify the payment belongs to this user
+      if (paymentIntent.metadata.userId !== userId) {
+        return res.status(403).json({ error: 'Payment does not belong to this user' });
+      }
+      
+      // Add credits to user account
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      const creditsToAdd = parseInt(paymentIntent.metadata.credits);
+      const newCredits = user.credits + creditsToAdd;
+      await storage.updateUserCredits(userId, newCredits);
+      
+      res.json({
+        success: true,
+        creditsAdded: creditsToAdd,
+        newBalance: newCredits,
+        bundleId: paymentIntent.metadata.bundleId
+      });
+    } catch (error: any) {
+      console.error('Error confirming payment:', error);
+      res.status(500).json({ 
+        error: 'Failed to confirm payment',
+        details: error.message 
+      });
     }
   });
 
