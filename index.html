@@ -1232,18 +1232,8 @@ if (customModeToggle.checked) {
     let selectedUseCase = null;
     let uploadedImageData = null;
 
-// Assuming selectedMediaType is already used for main toggling
-function updateMediaInputs() {
-  if (selectedMediaType === "video") {
-    document.getElementById('start-image-group').style.display = 'block';
-    document.getElementById('end-image-group').style.display = 'block';
-	document.getElementById('image-upload-group').style.display = 'none';
-  } else {
-    document.getElementById('start-image-group').style.display = 'none';
-    document.getElementById('end-image-group').style.display = 'none';
-	document.getElementById('image-upload-group').style.display = 'block';
-  }
-}
+
+
 
 
     // Prompt templates for each use case
