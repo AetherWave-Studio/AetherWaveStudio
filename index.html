@@ -1107,6 +1107,10 @@
     console.error('Global error:', e.message, e.filename, e.lineno, e.colno);
     });
 
+	const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
+	let selectedMediaType = document.querySelector('.media-type-btn.active').dataset.type;
+
+// ...rest of your code, using mediaTypeBtns...
 
 
     // Chat functionality
@@ -1204,7 +1208,7 @@ if (customModeToggle.checked) {
     });
 
     // NEW Visual Generation System - Use Case Based
-    const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
+    //const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
     const useCaseCards = document.querySelectorAll('.use-case-card');
     const generationSettings = document.getElementById('generation-settings');
     const enhancedPrompt = document.getElementById('enhanced-prompt');
@@ -1229,8 +1233,7 @@ if (customModeToggle.checked) {
     const imageStyleGroup = document.getElementById('image-style-group');
     const mediaImageStyle = document.getElementById('media-image-style');
 
-    // State management
-    let selectedMediaType = 'image'; // 'image' or 'video'
+    // State management'
     let selectedUseCase = null;
     let uploadedImageData = null;
 
@@ -2224,28 +2227,30 @@ if (customModeToggle.checked) {
 	
 	 // --- Place this block last ---
  
-  
-	let selectedMediaType = document.querySelector('.media-type-btn.active').dataset.type;
-  function updateMediaInputs() {
-    if (selectedMediaType === "video") {
-      document.getElementById('start-image-group').style.display = 'block';
-      document.getElementById('end-image-group').style.display = 'block';
-      document.getElementById('image-upload-group').style.display = 'none';
-    } else {
-      document.getElementById('start-image-group').style.display = 'none';
-      document.getElementById('end-image-group').style.display = 'none';
-      document.getElementById('image-upload-group').style.display = 'block';
-    }
-  }
 
-  mediaTypeBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-      mediaTypeBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedMediaType = btn.dataset.type;
-      updateMediaInputs();
-    });
+function updateMediaInputs() {
+  if (selectedMediaType === "video") {
+    document.getElementById('start-image-group').style.display = 'block';
+    document.getElementById('end-image-group').style.display = 'block';
+    document.getElementById('image-upload-group').style.display = 'none';
+  } else {
+    document.getElementById('start-image-group').style.display = 'none';
+    document.getElementById('end-image-group').style.display = 'none';
+    document.getElementById('image-upload-group').style.display = 'block';
+  }
+}
+
+mediaTypeBtns.forEach(btn => {
+  btn.addEventListener('click', function() {
+    mediaTypeBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedMediaType = btn.dataset.type;
+    updateMediaInputs();
   });
+});
+
+// **Force correct UI and variable state immediately after setup**
+updateMediaInputs();
   </script>
 </body>
 </html>
