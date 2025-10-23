@@ -205,3 +205,51 @@ export interface CreditDeductionResult {
   wasUnlimited: boolean;
   error?: string;
 }
+
+// Credit bundle configuration for one-time purchases
+export interface CreditBundle {
+  id: string;
+  name: string;
+  credits: number;
+  priceUSD: number; // Price in dollars
+  popular?: boolean;
+  bonus?: number; // Bonus credits included
+}
+
+export const CREDIT_BUNDLES: CreditBundle[] = [
+  {
+    id: 'starter',
+    name: 'Starter Pack',
+    credits: 50,
+    priceUSD: 4.99,
+  },
+  {
+    id: 'basic',
+    name: 'Basic Bundle',
+    credits: 150,
+    priceUSD: 12.99,
+    bonus: 10,
+  },
+  {
+    id: 'popular',
+    name: 'Popular Choice',
+    credits: 350,
+    priceUSD: 24.99,
+    popular: true,
+    bonus: 50,
+  },
+  {
+    id: 'mega',
+    name: 'Mega Pack',
+    credits: 750,
+    priceUSD: 49.99,
+    bonus: 150,
+  },
+  {
+    id: 'ultimate',
+    name: 'Ultimate Bundle',
+    credits: 2000,
+    priceUSD: 99.99,
+    bonus: 500,
+  },
+];
