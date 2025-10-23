@@ -25,8 +25,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Music generation route with vocal gender support (KIE.ai API)
-  app.post("/api/generate-music", async (req, res) => {
+  app.post("/api/generate-music", isAuthenticated, async (req: any, res) => {
     try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Server-side credit check and deduction (5 credits per generation)
+      const creditCost = 5;
+      
+      // Paid users have unlimited credits
+      if (user.planType !== 'studio' && user.planType !== 'all_access') {
+        // Free users need credits
+        if (user.credits < creditCost) {
+          return res.status(403).json({ 
+            error: 'Insufficient credits',
+            credits: user.credits,
+            required: creditCost,
+            message: 'You need more credits to generate music. Upgrade your plan or wait for daily reset.'
+          });
+        }
+        
+        // Deduct credits
+        const newCredits = Math.max(0, user.credits - creditCost);
+        await storage.updateUserCredits(userId, newCredits);
+      }
+      
       const { 
         prompt, 
         model = 'V4_5', 
@@ -117,8 +144,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Upload & Cover Audio route (KIE.ai API)
-  app.post("/api/upload-cover-music", async (req, res) => {
+  app.post("/api/upload-cover-music", isAuthenticated, async (req: any, res) => {
     try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Server-side credit check and deduction (5 credits per generation)
+      const creditCost = 5;
+      
+      // Paid users have unlimited credits
+      if (user.planType !== 'studio' && user.planType !== 'all_access') {
+        // Free users need credits
+        if (user.credits < creditCost) {
+          return res.status(403).json({ 
+            error: 'Insufficient credits',
+            credits: user.credits,
+            required: creditCost,
+            message: 'You need more credits to generate music. Upgrade your plan or wait for daily reset.'
+          });
+        }
+        
+        // Deduct credits
+        const newCredits = Math.max(0, user.credits - creditCost);
+        await storage.updateUserCredits(userId, newCredits);
+      }
+      
       const { 
         uploadUrl,
         prompt, 

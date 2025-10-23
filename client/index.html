@@ -1748,6 +1748,282 @@
     // Check auth on page load
     checkAuth();
 
+    // Credit Management
+    let userCredits = 50;
+    let userPlanType = 'free';
+    
+    async function fetchUserCredits() {
+      try {
+        const response = await fetch('/api/user/credits');
+        if (response.ok) {
+          const data = await response.json();
+          userCredits = data.credits;
+          userPlanType = data.planType;
+          updateCreditsDisplay();
+          
+          // Auto-check for daily reset
+          await checkDailyReset();
+        } else if (response.status === 401) {
+          // User not authenticated - hide credits display
+          const creditsIndicator = document.querySelector('.credits-indicator');
+          if (creditsIndicator) {
+            creditsIndicator.style.display = 'none';
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch credits:', error);
+        // Hide credits on error
+        const creditsIndicator = document.querySelector('.credits-indicator');
+        if (creditsIndicator) {
+          creditsIndicator.style.display = 'none';
+        }
+      }
+    }
+    
+    async function checkDailyReset() {
+      try {
+        const response = await fetch('/api/user/credits/check-reset', { method: 'POST' });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.resetOccurred) {
+            userCredits = data.credits;
+            updateCreditsDisplay();
+            showNotification('Daily credits reset! You now have 50 credits.', 'success');
+          }
+        }
+      } catch (error) {
+        console.error('Failed to check daily reset:', error);
+      }
+    }
+    
+    function updateCreditsDisplay() {
+      const creditsElement = document.getElementById('credits-count');
+      const creditsIndicator = document.querySelector('.credits-indicator');
+      
+      if (creditsElement && creditsIndicator) {
+        // Show the indicator
+        creditsIndicator.style.display = 'flex';
+        
+        if (userPlanType === 'studio' || userPlanType === 'all_access') {
+          creditsElement.textContent = '∞';
+          creditsIndicator.title = 'Unlimited credits - Click to view plans';
+        } else {
+          creditsElement.textContent = userCredits;
+          creditsIndicator.title = `${userCredits} credits remaining - Click to upgrade`;
+        }
+      }
+    }
+    
+    async function deductCredits(amount = 5) {
+      try {
+        const response = await fetch('/api/user/credits/deduct', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount })
+        });
+        
+        if (!response.ok) {
+          const data = await response.json();
+          if (response.status === 403) {
+            // Insufficient credits - show payment modal
+            showPaymentModal();
+            throw new Error('Insufficient credits');
+          }
+          throw new Error(data.message || 'Failed to deduct credits');
+        }
+        
+        const data = await response.json();
+        userCredits = data.credits;
+        updateCreditsDisplay();
+        return true;
+      } catch (error) {
+        console.error('Failed to deduct credits:', error);
+        throw error;
+      }
+    }
+    
+    function showPaymentModal() {
+      const modal = document.createElement('div');
+      modal.id = 'payment-modal';
+      modal.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(13, 11, 21, 0.95);
+        backdrop-filter: blur(12px);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        animation: fadeIn 0.3s ease-out;
+      `;
+      
+      modal.innerHTML = `
+        <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 24px; max-width: 900px; width: 100%; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8); animation: slideUp 0.4s ease-out;">
+          <div style="padding: 2rem; border-bottom: 1px solid var(--border-color);">
+            <h2 style="font-size: 1.75rem; font-weight: 700; background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">
+              Upgrade Your Plan
+            </h2>
+            <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.95rem;">
+              You've run out of credits! Choose a plan to continue creating amazing content.
+            </p>
+          </div>
+          
+          <div style="padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+            
+            <!-- Free Plan -->
+            <div style="background: rgba(255, 255, 255, 0.02); border: 2px solid var(--border-color); border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column;">
+              <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎵</div>
+                <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin: 0 0 0.5rem 0;">Free</h3>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">$0<span style="font-size: 0.9rem; font-weight: 400; color: var(--text-muted);">/month</span></div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 0 0 1.5rem 0; flex: 1;">
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-purple);">✓</span>
+                  <span>50 credits/day</span>
+                </li>
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-purple);">✓</span>
+                  <span>Basic music generation</span>
+                </li>
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-purple);">✓</span>
+                  <span>Standard quality</span>
+                </li>
+              </ul>
+              <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 0.75rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px;">
+                Current Plan
+              </div>
+            </div>
+            
+            <!-- Studio Member -->
+            <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(255, 46, 166, 0.05)); border: 2px solid var(--aetherwave-purple); border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column; position: relative; overflow: hidden;">
+              <div style="position: absolute; top: 0.75rem; right: 0.75rem; background: var(--aetherwave-purple); color: white; font-size: 0.7rem; font-weight: 600; padding: 0.35rem 0.75rem; border-radius: 12px;">POPULAR</div>
+              <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎸</div>
+                <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin: 0 0 0.5rem 0;">Studio Member</h3>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">$20<span style="font-size: 0.9rem; font-weight: 400; color: var(--text-muted);">/month</span></div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 0 0 1.5rem 0; flex: 1;">
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-purple);">✓</span>
+                  <span><strong style="color: var(--text-primary);">Unlimited</strong> music credits</span>
+                </li>
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-purple);">✓</span>
+                  <span>High-quality audio</span>
+                </li>
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-purple);">✓</span>
+                  <span>Priority generation</span>
+                </li>
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-purple);">✓</span>
+                  <span>Commercial license</span>
+                </li>
+              </ul>
+              <button onclick="contactSupport('Studio Member')" style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple)); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(255, 46, 166, 0.4)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
+                Contact for Upgrade
+              </button>
+            </div>
+            
+            <!-- All Access Pass -->
+            <div style="background: rgba(255, 255, 255, 0.02); border: 2px solid var(--border-color); border-radius: 16px; padding: 1.75rem; display: flex; flex-direction: column;">
+              <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎬</div>
+                <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin: 0 0 0.5rem 0;">All Access Pass</h3>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">$50<span style="font-size: 0.9rem; font-weight: 400; color: var(--text-muted);">/month</span></div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 0 0 1.5rem 0; flex: 1;">
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-pink);">✓</span>
+                  <span><strong style="color: var(--text-primary);">Everything</strong> in Studio</span>
+                </li>
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-pink);">✓</span>
+                  <span><strong style="color: var(--text-primary);">Unlimited</strong> video/image</span>
+                </li>
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-pink);">✓</span>
+                  <span>4K video generation</span>
+                </li>
+                <li style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--aetherwave-pink);">✓</span>
+                  <span>API access</span>
+                </li>
+              </ul>
+              <button onclick="contactSupport('All Access Pass')" style="width: 100%; padding: 0.875rem; background: rgba(139, 92, 246, 0.2); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s;" onmouseover="this.style.background='rgba(139, 92, 246, 0.3)'; this.style.borderColor='var(--aetherwave-purple)'" onmouseout="this.style.background='rgba(139, 92, 246, 0.2)'; this.style.borderColor='var(--border-color)'">
+                Contact for Upgrade
+              </button>
+            </div>
+          </div>
+          
+          <div style="padding: 1.5rem 2rem; border-top: 1px solid var(--border-color); display: flex; justify-content: center;">
+            <button onclick="closePaymentModal()" style="padding: 0.75rem 2rem; background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); border-radius: 12px; font-weight: 500; cursor: pointer; font-size: 0.9rem; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--aetherwave-purple)'; this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-color)'; this.style.color='var(--text-muted)'">
+              Maybe Later
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+    }
+    
+    function closePaymentModal() {
+      const modal = document.getElementById('payment-modal');
+      if (modal) {
+        modal.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => modal.remove(), 300);
+      }
+    }
+    
+    function contactSupport(planName) {
+      alert(`To upgrade to ${planName}, please contact Replit support or the application developer. Payment integration coming soon!`);
+      closePaymentModal();
+    }
+    
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        background: ${type === 'success' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(139, 92, 246, 0.15)'};
+        border: 1px solid ${type === 'success' ? 'rgba(74, 222, 128, 0.3)' : 'rgba(139, 92, 246, 0.3)'};
+        color: var(--text-primary);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(12px);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease-out;
+        max-width: 400px;
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+    
+    // Add click handler to credits indicator to show payment modal
+    setTimeout(() => {
+      const creditsIndicator = document.querySelector('.credits-indicator');
+      if (creditsIndicator) {
+        creditsIndicator.style.cursor = 'pointer';
+        creditsIndicator.title = 'Click to upgrade';
+        creditsIndicator.addEventListener('click', showPaymentModal);
+      }
+    }, 1000);
+    
+    // Fetch credits on page load
+    setTimeout(() => {
+      fetchUserCredits();
+    }, 500);
+
         const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
         let selectedMediaType = document.querySelector('.media-type-btn.active').dataset.type;
 
@@ -2617,10 +2893,19 @@ window.premiumPlayer = {
     console.log('Response data:', data);
 
     if (!response.ok) {
+    // Handle insufficient credits
+    if (response.status === 403 && data.error === 'Insufficient credits') {
+      showPaymentModal();
+      throw new Error(data.message || 'Insufficient credits');
+    }
+    // Handle other errors
     const errorMsg = data.error || 'Failed to generate music';
     const errorDetails = data.details || '';
     throw new Error(`${errorMsg}${errorDetails ? ': ' + errorDetails : ''}`);
     }
+    
+    // Refresh credits after successful generation start
+    fetchUserCredits();
 
     // KIE.ai returns a taskId - we need to poll for results
     const musicTaskId = data.taskId;
