@@ -3,6 +3,10 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { z } from "zod";
+import multer from "multer";
+import { db } from "./db";
+import { uploadedAudio } from "@shared/schema";
+import { eq } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth
@@ -307,6 +311,101 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, vocalGenderPreference: user.vocalGenderPreference });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Configure multer for audio file uploads (in-memory)
+  const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+      fileSize: 10 * 1024 * 1024, // 10MB max
+    },
+    fileFilter: (req, file, cb) => {
+      const allowedMimeTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/m4a', 'audio/ogg', 'audio/flac', 'audio/x-m4a'];
+      if (allowedMimeTypes.includes(file.mimetype) || file.originalname.match(/\.(mp3|wav|m4a|ogg|flac)$/i)) {
+        cb(null, true);
+      } else {
+        cb(new Error('Invalid file type. Only audio files are allowed.'));
+      }
+    }
+  });
+
+  // Upload audio file endpoint
+  app.post("/api/upload-audio", upload.single('audio'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          error: 'No file uploaded',
+          details: 'Please select an audio file to upload'
+        });
+      }
+
+      const userId = (req as any).user?.claims?.sub || null;
+
+      // Convert buffer to base64
+      const base64Audio = req.file.buffer.toString('base64');
+
+      // Store in database
+      const [newAudio] = await db.insert(uploadedAudio).values({
+        fileName: req.file.originalname,
+        mimeType: req.file.mimetype,
+        fileSize: req.file.size.toString(),
+        audioData: base64Audio,
+        userId: userId,
+      }).returning();
+
+      // Return public URL for accessing the audio
+      const publicUrl = `${req.protocol}://${req.get('host')}/api/audio/${newAudio.id}`;
+
+      res.json({
+        success: true,
+        url: publicUrl,
+        id: newAudio.id,
+        fileName: newAudio.fileName,
+        fileSize: newAudio.fileSize
+      });
+
+    } catch (error: any) {
+      console.error('Audio upload error:', error);
+      res.status(500).json({
+        error: 'Failed to upload audio',
+        details: error.message
+      });
+    }
+  });
+
+  // Serve audio file by ID
+  app.get("/api/audio/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const [audio] = await db.select().from(uploadedAudio).where(eq(uploadedAudio.id, id));
+
+      if (!audio) {
+        return res.status(404).json({
+          error: 'Audio file not found'
+        });
+      }
+
+      // Convert base64 back to buffer
+      const audioBuffer = Buffer.from(audio.audioData, 'base64');
+
+      // Set appropriate headers
+      res.set({
+        'Content-Type': audio.mimeType,
+        'Content-Length': audioBuffer.length,
+        'Content-Disposition': `inline; filename="${audio.fileName}"`,
+        'Cache-Control': 'public, max-age=31536000', // Cache for 1 year
+      });
+
+      res.send(audioBuffer);
+
+    } catch (error: any) {
+      console.error('Audio serve error:', error);
+      res.status(500).json({
+        error: 'Failed to serve audio',
+        details: error.message
+      });
     }
   });
 

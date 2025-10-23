@@ -64,12 +64,17 @@ Preferred communication style: Simple, everyday language.
 **Schema Design**:
 - `users` table: Stores user profiles with vocal preference customization
 - `sessions` table: Required for Replit Auth session persistence
+- `uploaded_audio` table: Stores user-uploaded audio files for Cover Audio feature (base64-encoded)
 - UUID-based primary keys with automatic generation
 - Automatic timestamp tracking (createdAt, updatedAt)
 
 **Rationale**: Neon serverless provides auto-scaling PostgreSQL without connection overhead, ideal for Replit deployments. Drizzle offers excellent TypeScript integration and flexible schema management.
 
-**Recent Fix (Oct 23, 2025)**: Fixed user preference persistence bug where `/api/user/preferences` routes were accessing `req.user?.sub` instead of `req.user?.claims?.sub`, causing 401 errors for authenticated users. Both GET and POST endpoints now correctly extract user ID from `req.user?.claims?.sub` and use `isAuthenticated` middleware.
+**Recent Changes (Oct 23, 2025)**:
+- Fixed user preference persistence bug where `/api/user/preferences` routes were accessing `req.user?.sub` instead of `req.user?.claims?.sub`
+- Added file upload functionality for Cover Audio feature using multer and PostgreSQL storage
+- Changed "Audio URL to Cover" from text input to file upload button with database-backed storage
+- Audio files stored as base64 in PostgreSQL and served via `/api/audio/:id` endpoint
 
 ### External Dependencies
 

@@ -720,11 +720,17 @@
     </label>
     </div>
 
-    <!-- Upload & Cover Audio URL (Optional) -->
+    <!-- Upload & Cover Audio File (Optional) -->
     <div class="form-group">
-    <label class="form-label">Audio URL to Cover (Optional)</label>
-    <input type="url" id="upload-url" placeholder="https://example.com/audio.mp3 (transforms existing audio into new style)" style="width: 100%; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;" data-testid="input-upload-url">
-    <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">Provide an audio URL to cover it with a new style while keeping the melody. Max 2 minutes.</p>
+    <label class="form-label">Audio File to Cover (Optional)</label>
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <input type="file" id="upload-file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac" style="display: none;" data-testid="input-upload-file">
+      <button type="button" id="upload-file-btn" style="padding: 0.75rem 1rem; background: var(--aetherwave-purple); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; flex-shrink: 0;" data-testid="button-upload-file">Choose Audio File</button>
+      <span id="upload-file-name" style="color: var(--text-muted); font-size: 0.85rem; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">No file selected</span>
+      <button type="button" id="clear-upload-btn" style="display: none; padding: 0.5rem 0.75rem; background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.85rem;" data-testid="button-clear-upload">Clear</button>
+    </div>
+    <input type="hidden" id="upload-url" data-testid="hidden-upload-url">
+    <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">Upload an audio file to cover it with a new style while keeping the melody. Max 2 minutes, max 10MB.</p>
     </div>
 
     <!-- Simple Mode Fields -->
@@ -1487,6 +1493,85 @@ if (customModeToggle.checked) {
     mediaImagePreview.style.display = 'none';
     mediaPreviewImg.src = '';
     imageModeSelection.style.display = 'none';
+    });
+
+    // Handle audio file upload for music cover
+    const uploadFileInput = document.getElementById('upload-file');
+    const uploadFileBtn = document.getElementById('upload-file-btn');
+    const uploadFileName = document.getElementById('upload-file-name');
+    const clearUploadBtn = document.getElementById('clear-upload-btn');
+    const uploadUrlHidden = document.getElementById('upload-url');
+
+    uploadFileBtn.addEventListener('click', () => {
+    uploadFileInput.click();
+    });
+
+    uploadFileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check file type
+    const validTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/m4a', 'audio/ogg', 'audio/flac', 'audio/x-m4a'];
+    const validExtensions = ['.mp3', '.wav', '.m4a', '.ogg', '.flac'];
+    const hasValidType = validTypes.includes(file.type) || validExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+    
+    if (!hasValidType) {
+      alert('Invalid audio format. Please use MP3, WAV, M4A, OGG, or FLAC.');
+      uploadFileInput.value = '';
+      return;
+    }
+
+    // Check file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Audio file is too large. Please use a file under 10MB.');
+      uploadFileInput.value = '';
+      return;
+    }
+
+    // Show uploading status
+    uploadFileBtn.disabled = true;
+    uploadFileBtn.textContent = 'Uploading...';
+    uploadFileName.textContent = 'Uploading file...';
+
+    try {
+      // Upload file to server
+      const formData = new FormData();
+      formData.append('audio', file);
+
+      const response = await fetch('/api/upload-audio', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.details || 'Failed to upload audio file');
+      }
+
+      const data = await response.json();
+      
+      // Store the URL in hidden field
+      uploadUrlHidden.value = data.url;
+      uploadFileName.textContent = file.name;
+      clearUploadBtn.style.display = 'block';
+      
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Failed to upload audio file: ' + error.message);
+      uploadFileInput.value = '';
+      uploadUrlHidden.value = '';
+      uploadFileName.textContent = 'No file selected';
+    } finally {
+      uploadFileBtn.disabled = false;
+      uploadFileBtn.textContent = 'Choose Audio File';
+    }
+    });
+
+    clearUploadBtn.addEventListener('click', () => {
+    uploadFileInput.value = '';
+    uploadUrlHidden.value = '';
+    uploadFileName.textContent = 'No file selected';
+    clearUploadBtn.style.display = 'none';
     });
 
     // Helper function to download files properly (bypasses CORS and preview issues)

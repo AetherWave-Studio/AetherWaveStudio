@@ -36,3 +36,22 @@ export const insertUserSchema = createInsertSchema(users).omit({
 export type UpsertUser = typeof users.$inferInsert;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+// Uploaded audio files table
+export const uploadedAudio = pgTable("uploaded_audio", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  fileName: varchar("file_name").notNull(),
+  mimeType: varchar("mime_type").notNull(),
+  fileSize: varchar("file_size").notNull(),
+  audioData: text("audio_data").notNull(), // Base64 encoded audio data
+  userId: varchar("user_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertUploadedAudioSchema = createInsertSchema(uploadedAudio).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertUploadedAudio = z.infer<typeof insertUploadedAudioSchema>;
+export type UploadedAudio = typeof uploadedAudio.$inferSelect;
