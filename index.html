@@ -1126,6 +1126,17 @@
     const simpleCharCount = document.getElementById('simple-char-count');
     const customCharCount = document.getElementById('custom-char-count');
 
+// Assuming selectedMediaType is already used for main toggling
+function updateMediaInputs() {
+  if (selectedMediaType === "video") {
+    document.getElementById('start-image-group').style.display = 'block';
+    document.getElementById('end-image-group').style.display = 'block';
+  } else {
+    document.getElementById('start-image-group').style.display = 'none';
+    document.getElementById('end-image-group').style.display = 'none';
+  }
+}
+
 	// Place this near other helper functions or at top, after DOM ready
 	async function handleImageInput(fileInput, urlInput) {
 	const file = fileInput.files[0];
@@ -1210,6 +1221,7 @@ if (customModeToggle.checked) {
     const imageModeSelection = document.getElementById('image-mode-selection');
     const imageMode = document.getElementById('image-mode');
     const mediaQuality = document.getElementById('media-quality');
+    const mediaResolution = document.getElementById('media-resolution');
     const mediaResolution = document.getElementById('media-resolution');
     const mediaDuration = document.getElementById('media-duration');
     const mediaSafetyChecker = document.getElementById('media-safety-checker');
@@ -1311,16 +1323,7 @@ if (customModeToggle.checked) {
     card.classList.add('selected');
     selectedUseCase = card.dataset.useCase;
 
-// Assuming selectedMediaType is already used for main toggling
-function updateMediaInputs() {
-  if (selectedMediaType === "video") {
-    document.getElementById('start-image-group').style.display = 'block';
-    document.getElementById('end-image-group').style.display = 'block';
-  } else {
-    document.getElementById('start-image-group').style.display = 'none';
-    document.getElementById('end-image-group').style.display = 'none';
-  }
-}
+
 
     // Show generation settings
     generationSettings.style.display = 'block';
