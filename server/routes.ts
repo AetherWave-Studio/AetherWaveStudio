@@ -108,6 +108,125 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Upload & Cover Audio route (KIE.ai API)
+  app.post("/api/upload-cover-music", async (req, res) => {
+    try {
+      const { 
+        uploadUrl,
+        prompt, 
+        model = 'V4_5', 
+        instrumental = false, 
+        vocalGender = 'm',
+        customMode = false,
+        title,
+        style,
+        styleWeight,
+        weirdnessConstraint,
+        audioWeight,
+        negativeTags
+      } = req.body;
+
+      console.log('Upload-cover request:', { uploadUrl, prompt, model, instrumental, vocalGender, customMode });
+
+      const sunoApiKey = process.env.SUNO_API_KEY;
+      if (!sunoApiKey) {
+        return res.status(500).json({ 
+          error: 'SUNO API key not configured',
+          details: 'Please add SUNO_API_KEY to your Replit Secrets'
+        });
+      }
+
+      if (!uploadUrl) {
+        return res.status(400).json({
+          error: 'Upload URL required',
+          details: 'Please provide an audio URL to cover'
+        });
+      }
+
+      // Build KIE.ai upload-cover API request
+      const coverPayload: any = {
+        uploadUrl: uploadUrl,
+        prompt: prompt,
+        model: model,
+        instrumental: instrumental,
+        customMode: customMode,
+        callBackUrl: '' // Optional - we're polling instead
+      };
+
+      // Add vocal gender only in custom mode
+      if (customMode) {
+        coverPayload.vocalGender = vocalGender;
+      }
+
+      if (customMode && title) {
+        coverPayload.title = title;
+      }
+      
+      if (customMode && style) {
+        coverPayload.style = style;
+      }
+
+      // Add optional advanced parameters
+      if (styleWeight !== undefined) {
+        coverPayload.styleWeight = styleWeight;
+      }
+      if (weirdnessConstraint !== undefined) {
+        coverPayload.weirdnessConstraint = weirdnessConstraint;
+      }
+      if (audioWeight !== undefined) {
+        coverPayload.audioWeight = audioWeight;
+      }
+      if (negativeTags) {
+        coverPayload.negativeTags = negativeTags;
+      }
+
+      console.log('Sending to KIE.ai upload-cover:', JSON.stringify(coverPayload, null, 2));
+
+      // Call KIE.ai upload-cover SUNO API
+      const sunoResponse = await fetch('https://api.kie.ai/api/v1/generate/upload-cover', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sunoApiKey}`
+        },
+        body: JSON.stringify(coverPayload)
+      });
+
+      if (!sunoResponse.ok) {
+        const errorData = await sunoResponse.json().catch(() => ({}));
+        console.error('KIE.ai upload-cover API error:', errorData);
+        return res.status(sunoResponse.status).json({
+          error: 'SUNO upload-cover API error',
+          details: errorData.msg || errorData.message || sunoResponse.statusText
+        });
+      }
+
+      const sunoData = await sunoResponse.json();
+      console.log('KIE.ai upload-cover response:', JSON.stringify(sunoData, null, 2));
+      
+      // KIE.ai returns { code: 200, msg: "success", data: { taskId: "xxx" } }
+      if (sunoData.code === 200) {
+        res.json({
+          taskId: sunoData.data.taskId,
+          status: 'processing',
+          message: 'Audio cover generation started. Check status with task ID.'
+        });
+      } else {
+        res.status(500).json({
+          error: 'Upload-cover generation failed',
+          details: sunoData.msg || 'Unknown error'
+        });
+      }
+
+    } catch (error: any) {
+      console.error('Upload-cover error:', error);
+      res.status(500).json({ 
+        error: 'Failed to cover audio',
+        details: error.message 
+      });
+    }
+  });
+
   // Get music generation status (for KIE.ai polling)
   app.get("/api/music-status/:taskId", async (req, res) => {
     try {
