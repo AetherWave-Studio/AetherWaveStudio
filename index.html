@@ -1228,7 +1228,7 @@ if (customModeToggle.checked) {
     const mediaImageStyle = document.getElementById('media-image-style');
 
     // State management
-    let selectedMediaType = 'image'; // 'image' or 'video'
+    <!--let selectedMediaType = 'image'; // 'image' or 'video'-->
     let selectedUseCase = null;
     let uploadedImageData = null;
 
@@ -1241,7 +1241,7 @@ function updateMediaInputs() {
   } else {
     document.getElementById('start-image-group').style.display = 'none';
     document.getElementById('end-image-group').style.display = 'none';
-	document.getElementById('image-upload-group').style.display = 'BLOCK';
+	document.getElementById('image-upload-group').style.display = 'block';
   }
 }
 
@@ -2227,6 +2227,31 @@ function updateMediaInputs() {
     // Event listeners - Visual (Art/Video)
     generateArtBtn.addEventListener('click', generateArt);
     generateVideoBtn.addEventListener('click', generateVideo);
+	
+	 // --- Place this block last ---
+  const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
+  let selectedMediaType = document.querySelector('.media-type-btn.active').dataset.type;
+
+  function updateMediaInputs() {
+    if (selectedMediaType === "video") {
+      document.getElementById('start-image-group').style.display = 'block';
+      document.getElementById('end-image-group').style.display = 'block';
+      document.getElementById('image-upload-group').style.display = 'none';
+    } else {
+      document.getElementById('start-image-group').style.display = 'none';
+      document.getElementById('end-image-group').style.display = 'none';
+      document.getElementById('image-upload-group').style.display = 'block';
+    }
+  }
+
+  mediaTypeBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      mediaTypeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedMediaType = btn.dataset.type;
+      updateMediaInputs();
+    });
+  });
   </script>
 </body>
 </html>
