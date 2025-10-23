@@ -75,7 +75,7 @@ Preferred communication style: Simple, everyday language.
 - Added file upload functionality for Cover Audio feature using multer and PostgreSQL storage
 - Changed "Audio URL to Cover" from text input to file upload button with database-backed storage
 - Audio files stored as base64 in PostgreSQL and served via `/api/audio/:id` endpoint
-- Implemented comprehensive credit management system with three-tier monetization (Free, Studio Member $20/mo, All Access Pass $50/mo)
+- Implemented comprehensive credit management system with four-tier monetization (Free, Studio $20/mo, Creator $35/mo, All Access $50/mo)
 - Added server-side credit enforcement to all music generation endpoints
 - Free users receive 50 credits daily with automatic reset after 24 hours
 - Credits are deducted atomically on the server (5 credits per music generation)
@@ -111,16 +111,17 @@ Preferred communication style: Simple, everyday language.
 
 ### Credit Management System
 
-**Monetization Strategy**: Three-tier subscription model
+**Monetization Strategy**: Four-tier subscription model
 - **Free Plan**: 50 credits/day with automatic 24-hour reset, basic music generation
-- **Studio Member ($20/month)**: Unlimited music credits, high-quality audio, priority generation, commercial license
-- **All Access Pass ($50/month)**: Everything in Studio + unlimited video/image generation, 4K video, API access
+- **Studio ($20/month)**: Unlimited music credits, HD audio quality, priority generation, commercial license
+- **Creator ($35/month)**: Everything in Studio + 100 media credits/month for video & image generation
+- **All Access ($50/month)**: Everything in Creator + unlimited video/image generation, 4K video, API access
 
 **Credit System Architecture**:
 - **Server-Side Enforcement**: All music generation endpoints (`/api/generate-music`, `/api/upload-cover-music`) require authentication and check credits before processing
 - **Atomic Deduction**: 5 credits deducted per music generation, happens on server before calling external APIs
 - **Daily Reset Logic**: Free users automatically receive 50 credits every 24 hours (tracked via `lastCreditReset` timestamp)
-- **Plan-Based Access**: Paid users (`studio`, `all_access`) bypass credit checks and enjoy unlimited generation
+- **Plan-Based Access**: Paid users (`studio`, `creator`, `all_access`) bypass credit checks for music and enjoy unlimited music generation
 - **Frontend Integration**: 
   - Real-time credits display in header for authenticated users
   - Payment modal with plan comparison shown when credits are insufficient

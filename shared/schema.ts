@@ -24,7 +24,7 @@ export const users = pgTable("users", {
   username: varchar("username").unique(),
   vocalGenderPreference: varchar("vocal_gender_preference").default('m'),
   credits: integer("credits").default(50).notNull(),
-  planType: varchar("plan_type").default('free').notNull(), // 'free', 'studio', 'all_access'
+  planType: varchar("plan_type").default('free').notNull(), // 'free', 'studio', 'creator', 'all_access'
   lastCreditReset: timestamp("last_credit_reset").defaultNow().notNull(),
   stripeCustomerId: varchar("stripe_customer_id"),
   stripeSubscriptionId: varchar("stripe_subscription_id"),

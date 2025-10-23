@@ -37,8 +37,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Server-side credit check and deduction (5 credits per generation)
       const creditCost = 5;
       
-      // Paid users have unlimited credits
-      if (user.planType !== 'studio' && user.planType !== 'all_access') {
+      // Paid users have unlimited music credits (studio, creator, all_access)
+      if (user.planType !== 'studio' && user.planType !== 'creator' && user.planType !== 'all_access') {
         // Free users need credits
         if (user.credits < creditCost) {
           return res.status(403).json({ 
@@ -156,8 +156,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Server-side credit check and deduction (5 credits per generation)
       const creditCost = 5;
       
-      // Paid users have unlimited credits
-      if (user.planType !== 'studio' && user.planType !== 'all_access') {
+      // Paid users have unlimited music credits (studio, creator, all_access)
+      if (user.planType !== 'studio' && user.planType !== 'creator' && user.planType !== 'all_access') {
         // Free users need credits
         if (user.credits < creditCost) {
           return res.status(403).json({ 
@@ -555,8 +555,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Paid users have unlimited credits
-      if (user.planType === 'studio' || user.planType === 'all_access') {
+      // Paid users have unlimited music credits
+      if (user.planType === 'studio' || user.planType === 'creator' || user.planType === 'all_access') {
         return res.json({ 
           success: true,
           credits: 999999, // Display unlimited
