@@ -1668,11 +1668,10 @@ if (customModeToggle.checked) {
 
     let requestBody = {
     model: model,
-    instrumental: instrumental,
-    vocalGender: vocalGender
+    instrumental: instrumental
     };
 
-    // Add advanced options if available
+    // Add advanced options if available (optional parameters)
     const styleWeight = parseFloat(document.getElementById('style-weight')?.value);
     const weirdnessConstraint = parseFloat(document.getElementById('weirdness-constraint')?.value);
     const audioWeight = parseFloat(document.getElementById('audio-weight')?.value);
@@ -1700,6 +1699,9 @@ if (customModeToggle.checked) {
     requestBody.title = title;
     requestBody.style = style;
     requestBody.prompt = lyrics || ''; // Lyrics can be optional
+    
+    // vocalGender is only effective when customMode is true
+    requestBody.vocalGender = vocalGender;
     } else {
     // Simple Mode - requires prompt
     const prompt = musicPromptSimple.value.trim();
@@ -1711,9 +1713,10 @@ if (customModeToggle.checked) {
     return;
     }
 
-
     requestBody.customMode = false;
     requestBody.prompt = prompt;
+    
+    // Note: vocalGender is NOT sent when customMode is false (per API docs)
     }
 
     // Determine endpoint based on uploadUrl

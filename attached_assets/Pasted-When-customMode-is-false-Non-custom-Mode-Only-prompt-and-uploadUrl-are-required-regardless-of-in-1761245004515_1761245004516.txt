@@ -1,0 +1,224 @@
+When customMode is false (Non-custom Mode):
+Only prompt and uploadUrl are required regardless of instrumental setting
+prompt length limit: 500 characters
+Other parameters should be left empty
+​
+Developer Notes
+Recommended settings for new users: Set customMode to false, instrumental to false, and only provide prompt and uploadUrl. This is the simplest configuration to quickly test the API and experience the results.
+Generated files will be deleted after 15 days
+Ensure all required parameters are provided based on customMode and instrumental settings to avoid errors
+Pay attention to character limits for prompt, style, and title to ensure successful processing
+Callback process has three stages: text (text generation complete), first (first track complete), complete (all tracks complete)
+You can use the Get Music Generation Details endpoint to actively check task status instead of waiting for callbacks
+The uploadUrl parameter is used to specify the upload location of the audio file; please provide a valid URL.
+​
+Optional parameters
+vocalGender (string): Vocal gender preference. Use m for male, f for female.
+styleWeight (number): Strength of adherence to style. Range 0–1, up to 2 decimals. Example: 0.65.
+weirdnessConstraint (number): Controls creative deviation. Range 0–1, up to 2 decimals. Example: 0.65.
+audioWeight (number): Balance weight for audio features. Range 0–1, up to 2 decimals. Example: 0.65.
+Authorizations
+​
+Authorization
+stringheaderrequired
+All APIs require authentication via Bearer Token.
+
+Get API Key:
+
+Visit API Key Management Page to get your API Key
+Usage:
+Add to request header:
+Authorization: Bearer YOUR_API_KEY
+
+Note:
+
+Keep your API Key secure and do not share it with others
+If you suspect your API Key has been compromised, reset it immediately in the management page
+Body
+application/json
+​
+uploadUrl
+string<uri>required
+The URL for uploading audio files, required regardless of whether customMode and instrumental are true or false. Ensure the uploaded audio does not exceed 2 minutes in length.
+
+Example:
+"https://storage.example.com/upload"
+
+​
+prompt
+stringrequired
+A description of the desired audio content.
+
+In Custom Mode (customMode: true): Required if instrumental is false. The prompt will be strictly used as the lyrics and sung in the generated track. Character limits by model:
+V5: Maximum 5000 characters
+V4_5PLUS & V4_5: Maximum 5000 characters
+V3_5 & V4: Maximum 3000 characters
+Example: "A calm and relaxing piano track with soft melodies"
+In Non-custom Mode (customMode: false): Always required. The prompt serves as the core idea, and lyrics will be automatically generated based on it (not strictly matching the input). Max length: 500 characters.
+Example: "A short relaxing piano tune"
+Example:
+"A calm and relaxing piano track with soft melodies"
+
+​
+customMode
+booleanrequired
+Enables Custom Mode for advanced audio generation settings.
+
+Set to true to use Custom Mode (requires style and title; prompt required if instrumental is false). The prompt will be strictly used as lyrics if instrumental is false.
+Set to false for Non-custom Mode (only prompt is required). Lyrics will be auto-generated based on the prompt.
+Example:
+true
+
+​
+instrumental
+booleanrequired
+Determines if the audio should be instrumental (no lyrics).
+
+In Custom Mode (customMode: true):
+If true: Only style and title are required.
+If false: style, title, and prompt are required (with prompt used as the exact lyrics).
+In Non-custom Mode (customMode: false): No impact on required fields (prompt only). Lyrics are auto-generated if instrumental is false.
+Example:
+true
+
+​
+model
+enum<string>required
+The AI model version to use for generation.
+
+Required for all requests.
+Available options:
+V5: Superior musical expression, faster generation.
+V4_5PLUS: V4.5+ is richer sound, new waysto create, max 8 min.
+V4_5: V4.5 is smarter prompts, fastergenerations, max 8 min.
+V4: V4 is improved vocal quality,max 4 min.
+V3_5: V3.5 is better song structure,max 4 min.
+Available options: V3_5, V4, V4_5, V4_5PLUS, V5 
+Example:
+"V3_5"
+
+​
+callBackUrl
+string<uri>required
+The URL to receive audio covering task completion updates. Required for all audio covering requests.
+
+System will POST task status and results to this URL when audio covering completes
+Callback includes generated covered audio files with new style while preserving original melody
+Your callback endpoint should accept POST requests with JSON payload containing covered track results and audio URLs
+For detailed callback format and implementation guide, see Audio Covering Callbacks
+Alternatively, use the Get Music Details endpoint to poll task status
+Example:
+"https://api.example.com/callback"
+
+​
+style
+string
+The music style or genre for the audio.
+
+Required in Custom Mode (customMode: true). Examples: "Jazz", "Classical", "Electronic". Character limits by model:
+V5: Maximum 1000 characters
+V4_5PLUS & V4_5: Maximum 1000 characters
+V3_5 & V4: Maximum 200 characters
+Example: "Classical"
+In Non-custom Mode (customMode: false): Leave empty.
+Example:
+"Classical"
+
+​
+title
+string
+The title of the generated music track.
+
+Required in Custom Mode (customMode: true). Character limits by model:
+V5: Maximum 100 characters
+V4_5PLUS & V4_5: Maximum 100 characters
+V3_5 & V4: Maximum 80 characters
+Example: "Peaceful Piano Meditation"
+In Non-custom Mode (customMode: false): Leave empty.
+Example:
+"Peaceful Piano Meditation"
+
+​
+negativeTags
+string
+Music styles or traits to exclude from the generated audio.
+
+Optional. Use to avoid specific styles.
+Example: "Heavy Metal, Upbeat Drums"
+Example:
+"Heavy Metal, Upbeat Drums"
+
+​
+vocalGender
+enum<string>
+Vocal gender preference for the singing voice. Optional. Use 'm' for male and 'f' for female. Note: This parameter is only effective when customMode is true. Based on practice, this parameter can only increase the probability but cannot guarantee adherence to male/female voice instructions.
+
+Available options: m, f 
+Example:
+"m"
+
+​
+styleWeight
+number
+Strength of adherence to the specified style. Optional. Range 0–1, up to 2 decimal places.
+
+Required range: 0 <= x <= 1Must be a multiple of 0.01
+Example:
+0.65
+
+​
+weirdnessConstraint
+number
+Controls experimental/creative deviation. Optional. Range 0–1, up to 2 decimal places.
+
+Required range: 0 <= x <= 1Must be a multiple of 0.01
+Example:
+0.65
+
+​
+audioWeight
+number
+Balance weight for audio features vs. other factors. Optional. Range 0–1, up to 2 decimal places.
+
+Required range: 0 <= x <= 1Must be a multiple of 0.01
+Example:
+0.65
+
+Response
+
+200
+
+application/json
+Request successful
+
+​
+code
+enum<integer>
+Response status code
+
+200: Success - Request has been processed successfully
+401: Unauthorized - Authentication credentials are missing or invalid
+402: Insufficient Credits - Account does not have enough credits to perform the operation
+404: Not Found - The requested resource or endpoint does not exist
+409: Conflict - WAV record already exists
+422: Validation Error - The request parameters failed validation checks
+429: Rate Limited - Request limit has been exceeded for this resource
+451: Unauthorized - Failed to fetch the image. Kindly verify any access limits set by you or your service provider.
+455: Service Unavailable - System is currently undergoing maintenance
+500: Server Error - An unexpected error occurred while processing the request
+Available options: 200, 401, 402, 404, 409, 422, 429, 451, 455, 500 
+​
+msg
+string
+Error message when code != 200
+
+Example:
+"success"
+
+​
+data
+object
+Show child attributes
+
+Music Extension Callbacks
+Audio Upload and Cover Callbacks

@@ -47,14 +47,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Build KIE.ai API request with vocal gender
+      // Build KIE.ai API request
       const sunoPayload: any = {
         prompt: prompt,
         model: model,
         instrumental: instrumental,
-        vocalGender: vocalGender,
         customMode: customMode
       };
+
+      // Add vocal gender only in custom mode (per KIE.ai API spec)
+      if (customMode) {
+        sunoPayload.vocalGender = vocalGender;
+      }
 
       if (customMode && title) {
         sunoPayload.title = title;
