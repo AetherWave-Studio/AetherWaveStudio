@@ -134,26 +134,55 @@ Preferred communication style: Simple, everyday language.
 - **All Access ($50/month)**: Everything in Creator + unlimited video/image generation, 4K video, API access
 
 **Credit System Architecture**:
-- **Server-Side Enforcement**: All music generation endpoints (`/api/generate-music`, `/api/upload-cover-music`) require authentication and check credits before processing
-- **Atomic Deduction**: 5 credits deducted per music generation, happens on server before calling external APIs
-- **Daily Reset Logic**: Free users automatically receive 50 credits every 24 hours (tracked via `lastCreditReset` timestamp)
-- **Plan-Based Access**: Paid users (`studio`, `creator`, `all_access`) bypass credit checks for music and enjoy unlimited music generation
-- **Frontend Integration**: 
-  - Real-time credits display in header for authenticated users
-  - Payment modal with plan comparison shown when credits are insufficient
-  - Credits automatically refresh after generation completes
-  - Unauthenticated users see hidden credits indicator
+- **Centralized Deduction System**: All paid services use unified `storage.deductCredits()` function with service-type routing
+- **Service Type Configuration**: Each service (music_generation, video_generation, image_generation, wav_conversion) has defined credit costs
+- **Atomic Operations**: Credit checks and deductions are atomic, preventing race conditions
+- **Plan-Based Unlimited Access**: Services define which plans have unlimited access (e.g., music generation unlimited for Studio+)
+- **Type-Safe Results**: Credit operations return structured `CreditCheckResult` and `CreditDeductionResult` with comprehensive error info
+
+**Service Credit Costs** (defined in `shared/schema.ts`):
+- `music_generation`: 5 credits
+- `video_generation`: 10 credits (future)
+- `image_generation`: 3 credits (future)
+- `wav_conversion`: 2 credits
+
+**Unlimited Service Access**:
+- `music_generation`: Studio, Creator, All Access
+- `video_generation`: All Access only
+- `image_generation`: All Access only
+- `wav_conversion`: Studio, Creator, All Access (free for paid users)
+
+**Storage Layer Functions**:
+- `checkCredits(userId, serviceType)`: Pre-validates credit availability without deduction
+- `deductCredits(userId, serviceType)`: Atomically deducts credits or bypasses for unlimited plans
 
 **Credit Management Routes**:
 - `GET /api/user/credits`: Fetch current credit balance and plan type
 - `POST /api/user/credits/check-reset`: Check and execute daily reset if 24+ hours elapsed
-- `POST /api/user/credits/deduct`: Manually deduct credits (internal use, mostly server-side now)
+- `POST /api/user/credits/check`: Pre-validate credit availability for a service type
+- `POST /api/user/credits/deduct`: Deduct credits for a specific service (accepts serviceType parameter)
+
+**Daily Reset Logic**: Free users automatically receive 50 credits every 24 hours (tracked via `lastCreditReset` timestamp)
+
+**Frontend Integration**: 
+- Real-time credits display in header for authenticated users
+- Payment modal with plan comparison shown when credits are insufficient
+- Credits automatically refresh after generation completes
+- Unauthenticated users see hidden credits indicator
 
 **Security Features**:
 - All credit routes protected by `isAuthenticated` middleware
 - Credit checks happen server-side, preventing client-side bypass
 - 403 responses trigger payment modal, 401 responses hide credits display
 - No path exists for unauthenticated or unpaid users to invoke generation endpoints
+
+**Scalability**:
+The credit system is designed to scale easily to new services:
+1. Add new service type to `ServiceType` enum in schema
+2. Define credit cost in `SERVICE_CREDIT_COSTS`
+3. Specify unlimited plans in `UNLIMITED_SERVICE_PLANS`
+4. Use `storage.deductCredits(userId, serviceType)` in your endpoint
+5. No additional credit management code needed
 
 ### Plan-Based Feature Restrictions
 
