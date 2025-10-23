@@ -1715,9 +1715,9 @@ if (customModeToggle.checked) {
     }
 
     generateMediaBtn.disabled = true;
-    const originalBtnText = generateMediaBtn.innerHTML;
-    generateMediaBtn.innerHTML = `⏳ Generating ${selectedMediaType}...`;
-    mediaResult.style.display = 'none';
+    const originalBtnText =  ${selectedMediaType}...`;
+    mediaResult.style.displagenerateMediaBtn.innerHTML;
+    generateMediaBtn.innerHTML = `⏳ Generatingy = 'none';
 
     try {
     if (selectedMediaType === 'video') {
@@ -1777,7 +1777,7 @@ if (customModeToggle.checked) {
     // Image generation with OpenAI DALL-E 3
     const requestBody = {
     prompt: prompt,
-    style: 'abstract' // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
+    style: document.getElementById('media-image-style').value // Can be: cyberpunk, abstract, retro, minimal, surreal, photorealistic
     };
 
     console.log('Generating image with DALL-E 3...');
