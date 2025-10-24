@@ -586,29 +586,37 @@
 
     .btn-primary {
     padding: 0.875rem 1.5rem;
-    background: linear-gradient(135deg, var(--aetherwave-pink), var(--aetherwave-purple));
+    background-image: url('/attached_assets/AWPrimaryButton_1761279646485.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
     color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: 28px;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
     font-size: 0.95rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    min-height: 48px;
     }
 
     .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 46, 166, 0.4);
+    box-shadow: 0 8px 24px rgba(255, 46, 166, 0.5);
+    filter: brightness(1.1);
     }
 
     .btn-primary:active {
     transform: translateY(0);
+    filter: brightness(0.95);
     }
 
     .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+    filter: grayscale(0.3);
     }
 
     .result-box {
