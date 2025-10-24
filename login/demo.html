@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+And the CSS:
+cssbody {
+  background: url('your-background-image.jpg') no-repeat center/cover; /* Or a gradient like linear-gradient(to right, #000, #333) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.glass-card {
+  width: 240px;
+  height: 360px;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37), inset 0 1px 0 rgba(0, 0, 0, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.1), inset 0 0 20px 10px rgba(0, 0, 0, 1);
+  position: relative;
+  overflow: hidden;
+  color: #fff; /* Light text for dark glass */
+  padding: 20px;
+  text-align: center;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.glass-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent, rgba(0, 0, 0, 0.3));
+}
+<body>
+  <div class="glass-card">
+    <!-- Your content here, like text or icons -->
+    <h2>Black Glass Card</h2>
+    <p>Some frosty content goes here.</p>
+  </div>
+</body>
+</html>
