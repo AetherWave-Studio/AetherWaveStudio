@@ -299,6 +299,15 @@
       font-weight: 600;
       color: var(--text-primary);
       font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .credits-indicator:hover {
+      background: rgba(255, 46, 166, 0.15);
+      border-color: rgba(255, 46, 166, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 46, 166, 0.3);
     }
     
     .version-dropdown {
@@ -1265,13 +1274,13 @@
     <div class="panel panel-music">
     <div class="panel-header">
     <div class="music-panel-header">
-      <div class="credits-indicator" data-testid="credits-display">
+      <div class="credits-indicator" data-testid="credits-display" onclick="openCheckout()" title="Click to view plans and upgrade">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
           <path d="M2 17l10 5 10-5"></path>
           <path d="M2 12l10 5 10-5"></path>
         </svg>
-        <span id="user-credits">9.2k</span>
+        <span id="credits-count">9.2k</span>
       </div>
       <select id="music-model-header" class="version-dropdown" data-testid="select-version">
         <option value="V5">v5 ▼</option>
@@ -1811,6 +1820,21 @@
           creditsElement.textContent = userCredits;
           creditsIndicator.title = `${userCredits} credits remaining - Click to upgrade`;
         }
+      }
+    }
+    
+    // Open checkout in new window
+    function openCheckout() {
+      // Open checkout page in new window with appropriate dimensions
+      const checkoutUrl = '/shop/';
+      const windowFeatures = 'width=1000,height=800,scrollbars=yes,resizable=yes,toolbar=no,menubar=no,location=yes,status=yes';
+      const checkoutWindow = window.open(checkoutUrl, 'AetherWaveCheckout', windowFeatures);
+      
+      if (checkoutWindow) {
+        checkoutWindow.focus();
+      } else {
+        // If popup was blocked, open in same tab
+        window.location.href = checkoutUrl;
       }
     }
     
