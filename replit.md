@@ -2,7 +2,7 @@
 
 ## Overview
 
-AetherWave Studio is an AI-powered music and media generation platform with the tagline "All Intelligence is Welcome Here". It enables users to generate music through AI services, specifically integrating with the KIE.ai API (referenced as SUNO in configuration). The platform features a modern, dark-optimized creative tool aesthetic inspired by professional AI creative platforms like Runway ML, Midjourney, and ElevenLabs, aiming to provide a comprehensive creative environment for AI-generated content.
+AetherWave Studio is an AI-powered music and media generation platform with the tagline "All Intelligence is Welcome Here". The application enables users to generate music through AI services, specifically integrating with the KIE.ai API (referenced as SUNO in configuration). The platform features a modern, dark-optimized creative tool aesthetic inspired by professional AI creative platforms like Runway ML, Midjourney, and ElevenLabs.
 
 ## User Preferences
 
@@ -10,58 +10,263 @@ Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
-### Frontend
+### Frontend Architecture
 
-The frontend is built with React and TypeScript, using Vite for development. It leverages `shadcn/ui` (built on Radix UI) for components, Tailwind CSS for styling, and TanStack Query for server state management. Wouter handles client-side routing, and React Hook Form with Zod provides form handling and validation. The design emphasizes a dark-mode-first approach with a custom color palette (vibrant purple and cyan accents) and a content-first philosophy.
+**Framework**: React with TypeScript running on Vite
+- **UI Library**: shadcn/ui components built on Radix UI primitives
+- **Styling**: Tailwind CSS with custom design system using CSS variables
+- **State Management**: TanStack Query (React Query) for server state
+- **Routing**: Wouter for lightweight client-side routing
+- **Form Handling**: React Hook Form with Zod validation
 
-### Backend
+**Design System**:
+- Dark-mode-first approach with optional light mode support
+- Custom color palette featuring vibrant purple (primary) and cyan (secondary) accents
+- Comprehensive component library with consistent styling via class-variance-authority
+- Content-first philosophy putting generated media at center stage
 
-The backend utilizes Express.js with TypeScript (ESM modules). It features a RESTful API, with `esbuild` for production bundling and `tsx` for development. `express-session` with PostgreSQL storage manages sessions. Key architectural decisions include a monorepo structure with shared TypeScript types, type-safe API communication, and middleware-based request logging.
+### Backend Architecture
+
+**Server**: Express.js with TypeScript (ESM modules)
+- **API Pattern**: RESTful endpoints under `/api` prefix
+- **Build System**: esbuild for production bundling, tsx for development
+- **Development**: Vite integration for HMR and asset serving
+- **Session Management**: express-session with PostgreSQL storage via connect-pg-simple
+
+**Key Architectural Decisions**:
+- Monorepo structure with shared TypeScript types between client and server
+- Type-safe API communication using shared schemas
+- Middleware-based request logging for API routes
+- Raw body capture for webhook/special request handling
 
 ### Authentication & Authorization
 
-Authentication is handled via Replit Authentication (OpenID Connect) integrated with Passport.js. Session-based authentication uses a PostgreSQL-backed store. User profiles include basic information and a vocal gender preference. Security measures include HTTP-only, secure cookies, a 1-week session TTL, and CSRF protection.
+**Provider**: Replit Authentication (OpenID Connect)
+- OIDC discovery for dynamic configuration
+- Passport.js strategy integration
+- Session-based authentication with PostgreSQL-backed session store
+- User profile includes: email, first name, last name, profile image, username
+- Vocal gender preference stored per user (defaults to 'm')
+
+**Security Considerations**:
+- HTTP-only, secure cookies for session management
+- 1-week session TTL
+- CSRF protection through session secret
+- Authentication middleware (`isAuthenticated`) guards protected routes
 
 ### Data Storage
 
-PostgreSQL, accessed via the Neon serverless driver, serves as the primary database. Drizzle ORM is used for type-safe schema definitions and push-based schema updates. The database stores user profiles, sessions, and uploaded audio files (base64 encoded) for the Cover Audio feature. UUID-based primary keys and automatic timestamp tracking are implemented.
+**Database**: PostgreSQL via Neon serverless driver
+- **ORM**: Drizzle ORM with type-safe schema definitions
+- **Migration Strategy**: Push-based schema updates (`drizzle-kit push`)
+- **Connection Pooling**: Neon serverless connection pool with WebSocket support
 
-### Credit Management & Feature Restrictions
+**Schema Design**:
+- `users` table: Stores user profiles with vocal preference customization
+- `sessions` table: Required for Replit Auth session persistence
+- `uploaded_audio` table: Stores user-uploaded audio files for Cover Audio feature (base64-encoded)
+- UUID-based primary keys with automatic generation
+- Automatic timestamp tracking (createdAt, updatedAt)
 
-AetherWave Studio implements a four-tier subscription model (Free, Studio, Creator, All Access) and one-time credit bundles. A centralized credit deduction system (`storage.deductCredits()`) is used for all paid services (e.g., music generation, WAV conversion), with atomic operations and plan-based unlimited access where applicable. Server-side validation and frontend filtering (`usePlanFeatures` hook) enforce feature restrictions (e.g., music models, WAV conversion, video resolution, image engines) based on the user's plan. An `UpgradeTooltip` component provides non-intrusive upgrade prompts.
+**Rationale**: Neon serverless provides auto-scaling PostgreSQL without connection overhead, ideal for Replit deployments. Drizzle offers excellent TypeScript integration and flexible schema management.
 
-## External Dependencies
+**Recent Changes (Oct 23, 2025)**:
+- Fixed user preference persistence bug where `/api/user/preferences` routes were accessing `req.user?.sub` instead of `req.user?.claims?.sub`
+- Added file upload functionality for Cover Audio feature using multer and PostgreSQL storage
+- Changed "Audio URL to Cover" from text input to file upload button with database-backed storage
+- Audio files stored as base64 in PostgreSQL and served via `/api/audio/:id` endpoint
+- Implemented comprehensive credit management system with four-tier monetization (Free, Studio $20/mo, Creator $35/mo, All Access $50/mo)
+- Added server-side credit enforcement to all music generation endpoints
+- Free users receive 50 credits daily with automatic reset after 24 hours
+- Credits are deducted atomically on the server (5 credits per music generation)
+- Payment modal displays upgrade options when users run out of credits
+- Credits display shows real-time balance for authenticated users, hides for unauthenticated
+- **Implemented plan-based feature restrictions system**:
+  - Free users limited to lowest video resolution (720p), basic image engines (dall-e-2), and beginner music models (V3_5, V4)
+  - Paid users (Studio+) unlock all resolutions (1080p, 4K), all image engines, and premium music models (V4_5, V4_5PLUS, V5)
+  - Created reusable `UpgradeTooltip` component for non-intrusive upgrade prompts
+  - Added `usePlanFeatures` hook for filtering available options based on user plan
+  - Server-side validation functions prevent bypassing restrictions via API
+- **Added WAV conversion feature for paid users**:
+  - New `/api/convert-to-wav` endpoint converts generated music to high-quality WAV format
+  - Restricted to Studio, Creator, and All Access plans only
+  - Automatic callback URL generation for receiving conversion completion updates
+  - Polling endpoint `/api/wav-status/:taskId` for checking conversion status
+  - Callback endpoint `/api/wav-callback` receives SUNO completion notifications
 
-### Third-Party APIs
+### External Dependencies
 
-- **KIE.ai Music Generation API (SUNO)**: The core service for AI music generation, supporting various models, vocal gender selection, instrumental/vocal modes, custom mode, and Upload & Cover Audio features. It also provides a WAV conversion feature for paid users.
-- **Replit OIDC Provider**: Used for enterprise authentication via OpenID Connect, managing user logins and sessions.
-- **Stripe**: Integrated for secure one-time credit purchases, handling payment intents and webhooks for adding credits to user accounts.
+**Third-Party APIs**:
+- **KIE.ai Music Generation API** (SUNO_API_KEY): Primary music generation service
+  - Supports multiple models (V3_5, V4, V4_5, V4_5PLUS, V5)
+  - Vocal gender selection (male/female)
+  - Instrumental/vocal mode toggle
+  - Custom mode for advanced users (title, style parameters)
+  - Upload & Cover Audio: Transform existing audio into new style while preserving melody
+  - Advanced parameters: styleWeight, weirdnessConstraint, audioWeight
+  - **WAV Conversion**: Convert generated music to high-quality WAV format (paid users only)
+    - Endpoint: `/api/v1/wav/generate`
+    - Requires taskId and audioId from previous generation
+    - Callback-based or polling for completion status
+  - RESTful integration pattern with async taskId polling
 
-### Development Tools
+**Authentication**:
+- **Replit OIDC Provider**: Enterprise authentication service
+  - Issuer URL: `https://replit.com/oidc` (configurable)
+  - Client credentials via REPL_ID
+  - Token refresh and session management
 
-- **Replit Vite Plugins**: Provides development-time enhancements like runtime error overlays and development mapping.
-- **Google Fonts**: Utilized for various fonts including Inter, Architects Daughter, DM Sans, Fira Code, and Geist Mono.
-## Environment Variables
+**Development Tools**:
+- **Replit Vite Plugins**: Runtime error overlay, cartographer (development mapping), dev banner
+- **Fonts**: Google Fonts (Inter, Architects Daughter, DM Sans, Fira Code, Geist Mono)
 
-**Required**:
-- `DATABASE_URL`: PostgreSQL connection string
-- `SESSION_SECRET`: Session encryption key  
-- `SUNO_API_KEY`: KIE.ai music generation API key
-- `STRIPE_SECRET_KEY`: Stripe server-side API key (for payments)
-- `VITE_STRIPE_PUBLIC_KEY`: Stripe publishable key (for frontend payments)
+**Storage Abstraction**:
+- `IStorage` interface allows switching between in-memory (MemStorage) and database implementations
+- Currently uses in-memory storage with planned migration to Drizzle-based persistence
+- Supports user CRUD operations, vocal preference updates, and credit management
 
-**Optional**:
+### Credit Management System
+
+**Monetization Strategy**: Four-tier subscription model
+- **Free Plan**: 50 credits/day with automatic 24-hour reset, basic music generation
+- **Studio ($20/month)**: Unlimited music credits, HD audio quality, priority generation, commercial license
+- **Creator ($35/month)**: Everything in Studio + 100 media credits/month for video & image generation
+- **All Access ($50/month)**: Everything in Creator + unlimited video/image generation, 4K video, API access
+
+**Credit System Architecture**:
+- **Centralized Deduction System**: All paid services use unified `storage.deductCredits()` function with service-type routing
+- **Service Type Configuration**: Each service (music_generation, video_generation, image_generation, wav_conversion) has defined credit costs
+- **Atomic Operations**: Credit checks and deductions are atomic, preventing race conditions
+- **Plan-Based Unlimited Access**: Services define which plans have unlimited access (e.g., music generation unlimited for Studio+)
+- **Type-Safe Results**: Credit operations return structured `CreditCheckResult` and `CreditDeductionResult` with comprehensive error info
+
+**Service Credit Costs** (defined in `shared/schema.ts`):
+- `music_generation`: 5 credits
+- `video_generation`: 10 credits (future)
+- `image_generation`: 3 credits (future)
+- `wav_conversion`: 2 credits
+
+**Unlimited Service Access**:
+- `music_generation`: Studio, Creator, All Access
+- `video_generation`: All Access only
+- `image_generation`: All Access only
+- `wav_conversion`: Studio, Creator, All Access (free for paid users)
+
+**Storage Layer Functions**:
+- `checkCredits(userId, serviceType)`: Pre-validates credit availability without deduction
+- `deductCredits(userId, serviceType)`: Atomically deducts credits or bypasses for unlimited plans
+
+**Credit Management Routes**:
+- `GET /api/user/credits`: Fetch current credit balance and plan type
+- `POST /api/user/credits/check-reset`: Check and execute daily reset if 24+ hours elapsed
+- `POST /api/user/credits/check`: Pre-validate credit availability for a service type
+- `POST /api/user/credits/deduct`: Deduct credits for a specific service (accepts serviceType parameter)
+
+**Daily Reset Logic**: Free users automatically receive 50 credits every 24 hours (tracked via `lastCreditReset` timestamp)
+
+**Frontend Integration**: 
+- Real-time credits display in header for authenticated users
+- Payment modal with plan comparison shown when credits are insufficient
+- Credits automatically refresh after generation completes
+- Unauthenticated users see hidden credits indicator
+
+**Security Features**:
+- All credit routes protected by `isAuthenticated` middleware
+- Credit checks happen server-side, preventing client-side bypass
+- 403 responses trigger payment modal, 401 responses hide credits display
+- No path exists for unauthenticated or unpaid users to invoke generation endpoints
+
+**Scalability**:
+The credit system is designed to scale easily to new services:
+1. Add new service type to `ServiceType` enum in schema
+2. Define credit cost in `SERVICE_CREDIT_COSTS`
+3. Specify unlimited plans in `UNLIMITED_SERVICE_PLANS`
+4. Use `storage.deductCredits(userId, serviceType)` in your endpoint
+5. No additional credit management code needed
+
+### Plan-Based Feature Restrictions
+
+**Overview**: AetherWave implements a comprehensive tier-based restriction system ensuring free users receive basic/beginner features while paid users unlock premium quality and advanced engines.
+
+**Architecture**:
+- **Shared Types** (`shared/schema.ts`): Centralized `PLAN_FEATURES` object defining allowed options per plan
+- **Server Validation** (`server/routes.ts`): Validation functions prevent API bypass of restrictions
+- **Frontend Filtering** (`usePlanFeatures` hook): Automatically filters UI options based on user plan
+- **Upgrade UX** (`UpgradeTooltip` component): Non-intrusive tooltips encourage upgrades without blocking
+
+**Restriction Matrix**:
+
+| Feature | Free | Studio | Creator | All Access |
+|---------|------|--------|---------|------------|
+| **Music Models** | V3_5, V4 | All models | All models | All models |
+| **WAV Conversion** | ❌ | ✅ | ✅ | ✅ |
+| **Video Resolution** | 720p only | 720p, 1080p, 4K | 720p, 1080p, 4K | 720p, 1080p, 4K |
+| **Image Engines** | dall-e-2 only | All engines | All engines | All engines |
+| **Music Credits** | 50/day | Unlimited | Unlimited | Unlimited |
+| **Media Credits** | N/A | N/A | 100/month | Unlimited |
+| **Commercial License** | ❌ | ✅ | ✅ | ✅ |
+| **API Access** | ❌ | ❌ | ❌ | ✅ |
+
+**Implementation Guide** (for future video/image features):
+
+1. **Backend Endpoint**:
+```typescript
+// Example: Video generation endpoint
+app.post("/api/generate-video", isAuthenticated, async (req: any, res) => {
+  const user = await storage.getUser(req.user.claims.sub);
+  const { resolution } = req.body;
+  
+  // Validate resolution is allowed for user's plan
+  if (!validateVideoResolution(user.planType, resolution)) {
+    return res.status(403).json({
+      error: 'Resolution not allowed',
+      message: `Your ${user.planType} plan does not include ${resolution} resolution. Upgrade to unlock.`
+    });
+  }
+  
+  // Proceed with video generation...
+});
+```
+
+2. **Frontend Component**:
+```typescript
+import { usePlanFeatures } from '@/hooks/use-plan-features';
+import { UpgradeTooltip } from '@/components/UpgradeTooltip';
+
+function VideoGenerator() {
+  const { getAllowedVideoResolutions, isVideoResolutionAllowed, isPaid } = usePlanFeatures();
+  const allowedResolutions = getAllowedVideoResolutions();
+  
+  return (
+    <Select>
+      {['720p', '1080p', '4k'].map(res => {
+        const isAllowed = isVideoResolutionAllowed(res);
+        const option = (
+          <SelectItem 
+            value={res} 
+            disabled={!isAllowed}
+          >
+            {res}
+          </SelectItem>
+        );
+        
+        return isAllowed ? option : (
+          <UpgradeTooltip 
+            feature={`${res} Resolution`}
+            requiredPlan="Studio"
+          >
+            {option}
+          </UpgradeTooltip>
+        );
+      })}
+    </Select>
+  );
+}
+```
+
+**Environment Requirements**:
+- `DATABASE_URL`: PostgreSQL connection string (required)
+- `SESSION_SECRET`: Session encryption key (required)
+- `SUNO_API_KEY`: Music generation API key (required)
 - `REPLIT_DOMAINS`: Allowed domains for OIDC (required in production)
-- `ISSUER_URL`: OIDC provider URL (defaults to https://replit.com/oidc)
-
-## Recent Updates (Oct 23, 2025)
-
-- **Stripe Payment Integration**: Added one-time credit bundle purchases powered by Stripe
-  - 5 credit bundle tiers ranging from $4.99 (50 credits) to $99.99 (2000 credits + 500 bonus)
-  - `/checkout` page with Stripe Elements for secure payment processing
-  - `CreditBundlesModal` component for browsing and selecting bundles
-  - Webhook endpoint `/api/stripe-webhook` for automatic credit addition
-  - Fallback endpoint `/api/confirm-payment` for manual payment confirmation
-- **Payment Flow**: User selects bundle → Redirected to checkout → Stripe payment → Credits added automatically
-- **Critical Bug Fix**: Credits now deduct AFTER validation (prevents credit loss on invalid requests)
+- `ISSUER_URL`: OIDC provider URL (optional, defaults to Replit)
