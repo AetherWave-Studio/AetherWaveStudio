@@ -1274,7 +1274,7 @@
     <div class="panel panel-music">
     <div class="panel-header">
     <div class="music-panel-header">
-      <div class="credits-indicator" data-testid="credits-display" onclick="openCheckout()" title="Click to view plans and upgrade">
+      <div class="credits-indicator" data-testid="credits-display" onclick="showPaymentModal()" title="Click to view plans and upgrade">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
           <path d="M2 17l10 5 10-5"></path>
@@ -1823,20 +1823,6 @@
       }
     }
     
-    // Open checkout in new window
-    function openCheckout() {
-      // Open checkout page in new window with appropriate dimensions
-      const checkoutUrl = '/shop/';
-      const windowFeatures = 'width=1000,height=800,scrollbars=yes,resizable=yes,toolbar=no,menubar=no,location=yes,status=yes';
-      const checkoutWindow = window.open(checkoutUrl, 'AetherWaveCheckout', windowFeatures);
-      
-      if (checkoutWindow) {
-        checkoutWindow.focus();
-      } else {
-        // If popup was blocked, open in same tab
-        window.location.href = checkoutUrl;
-      }
-    }
     
     async function deductCredits(amount = 5) {
       try {
@@ -2067,15 +2053,6 @@
       }, 3000);
     }
     
-    // Add click handler to credits indicator to show payment modal
-    setTimeout(() => {
-      const creditsIndicator = document.querySelector('.credits-indicator');
-      if (creditsIndicator) {
-        creditsIndicator.style.cursor = 'pointer';
-        creditsIndicator.title = 'Click to upgrade';
-        creditsIndicator.addEventListener('click', showPaymentModal);
-      }
-    }, 1000);
     
     // Fetch credits on page load
     setTimeout(() => {
