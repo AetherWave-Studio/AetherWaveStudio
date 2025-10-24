@@ -844,42 +844,124 @@
     box-shadow: 0 4px 16px rgba(255, 46, 166, 0.4);
     }
 
+    /* Hamburger Menu */
+    .hamburger-menu {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      padding: 0.5rem;
+      z-index: 1000;
+    }
+    
+    .hamburger-menu span {
+      width: 24px;
+      height: 3px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    
+    .mobile-panel-nav {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 280px;
+      height: 100vh;
+      background: rgba(13, 11, 21, 0.98);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border-color);
+      z-index: 999;
+      padding: 5rem 1.5rem 2rem;
+      transition: left 0.3s ease;
+    }
+    
+    .mobile-panel-nav.open {
+      left: 0;
+    }
+    
+    .mobile-nav-item {
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    
+    .mobile-nav-item:hover {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: var(--aetherwave-purple);
+      transform: translateX(4px);
+    }
+    
+    .mobile-nav-item.active {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(255, 46, 166, 0.1));
+      border-color: var(--aetherwave-purple);
+    }
+
     @media (max-width: 1200px) {
     .panels-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
     }
     
     .hero-text {
-      grid-column: 1 / -1;
-      grid-row: auto;
-      padding: 1.5rem;
+      display: none; /* Hide hero on mobile */
     }
     
     .panel-music,
     .panel-chat,
     .panel-media {
-      grid-column: 1 / -1;
-      grid-row: auto;
+      min-height: calc(100vh - 80px); /* Full viewport height minus header */
+      height: auto;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .panel-content {
+      flex: 1;
+      overflow-y: auto;
     }
 
     main {
-    padding: 1rem;
+    padding: 0;
+    overflow: hidden;
+    }
+    
+    .hamburger-menu {
+      display: flex;
+    }
+    
+    .mobile-panel-nav {
+      display: block;
+    }
+    
+    /* Hide desktop nav links on mobile */
+    nav a:not(.nav-btn):not(#login-btn) {
+      display: none;
     }
     }
 
     @media (max-width: 768px) {
     header {
     padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
     }
 
     nav {
-    gap: 1rem;
-    }
-
-    nav a:not(.nav-btn) {
-    display: none;
+    gap: 0.5rem;
     }
 
     h1 {
@@ -896,6 +978,12 @@
 
     .panel-content {
     padding: 1rem;
+    }
+    
+    .panel-music,
+    .panel-chat,
+    .panel-media {
+      min-height: calc(100vh - 70px);
     }
     }
 
@@ -1246,11 +1334,31 @@
     <div class="orb orb-2"></div>
   </div>
 
+  <!-- Mobile Panel Navigation -->
+  <div class="mobile-panel-nav" id="mobile-nav">
+    <div class="mobile-nav-item active" data-panel="music" onclick="navigateToPanel('music')">
+      🎵 Music Generation
+    </div>
+    <div class="mobile-nav-item" data-panel="chat" onclick="navigateToPanel('chat')">
+      💬 AI Chat
+    </div>
+    <div class="mobile-nav-item" data-panel="media" onclick="navigateToPanel('media')">
+      🎬 Video & Images
+    </div>
+  </div>
+
   <header>
-    <a href="/" class="logo">
-    <div class="logo-icon2"><img class="logo-icon2" src='.\assets\Logo-SilverAlloy-Loop-1.gif'></div>
-    <span><img width='300px' height='50px' src='.\assets\aws-logo.png'></span>
-    </a>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div class="hamburger-menu" id="hamburger" onclick="toggleMobileNav()" data-testid="button-hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <a href="/" class="logo">
+        <div class="logo-icon2"><img class="logo-icon2" src='.\assets\Logo-SilverAlloy-Loop-1.gif'></div>
+        <span><img width='300px' height='50px' src='.\assets\aws-logo.png'></span>
+      </a>
+    </div>
     <nav>
     <a href="https://ai-hub.aetherwavestudio.com">AI Hub</a>
     <a href="/playlists/">Playlists</a>
@@ -2131,6 +2239,89 @@
       }, 3000);
     }
     
+    
+    // Mobile Navigation & Swipe Gestures
+    function toggleMobileNav() {
+      const mobileNav = document.getElementById('mobile-nav');
+      const hamburger = document.getElementById('hamburger');
+      mobileNav.classList.toggle('open');
+      hamburger.classList.toggle('open');
+    }
+    
+    function navigateToPanel(panelName) {
+      const panels = {
+        music: document.querySelector('.panel-music'),
+        chat: document.querySelector('.panel-chat'),
+        media: document.querySelector('.panel-media')
+      };
+      
+      const panel = panels[panelName];
+      if (panel) {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Update active state
+        document.querySelectorAll('.mobile-nav-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        document.querySelector(`[data-panel="${panelName}"]`).classList.add('active');
+        
+        // Close menu after navigation
+        toggleMobileNav();
+      }
+    }
+    
+    // Swipe gesture detection for panel navigation
+    let touchStartY = 0;
+    let touchEndY = 0;
+    
+    function handleSwipeGesture() {
+      const swipeThreshold = 50;
+      const swipeDistance = touchStartY - touchEndY;
+      
+      if (Math.abs(swipeDistance) > swipeThreshold) {
+        const panelsContainer = document.querySelector('.panels-container');
+        const currentScroll = panelsContainer.scrollTop;
+        const viewportHeight = window.innerHeight - 80;
+        
+        if (swipeDistance > 0) {
+          // Swipe up - go to next panel
+          const nextPanel = Math.ceil(currentScroll / viewportHeight) + 1;
+          const panels = ['music', 'chat', 'media'];
+          if (nextPanel < panels.length) {
+            navigateToPanel(panels[nextPanel]);
+          }
+        } else {
+          // Swipe down - go to previous panel
+          const prevPanel = Math.floor(currentScroll / viewportHeight) - 1;
+          const panels = ['music', 'chat', 'media'];
+          if (prevPanel >= 0) {
+            navigateToPanel(panels[prevPanel]);
+          }
+        }
+      }
+    }
+    
+    // Add touch event listeners for swipe gestures
+    document.addEventListener('touchstart', e => {
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+    
+    document.addEventListener('touchend', e => {
+      touchEndY = e.changedTouches[0].screenY;
+      handleSwipeGesture();
+    }, { passive: true });
+    
+    // Close mobile nav when clicking outside
+    document.addEventListener('click', e => {
+      const mobileNav = document.getElementById('mobile-nav');
+      const hamburger = document.getElementById('hamburger');
+      
+      if (mobileNav.classList.contains('open') && 
+          !mobileNav.contains(e.target) && 
+          !hamburger.contains(e.target)) {
+        toggleMobileNav();
+      }
+    });
     
     // Fetch credits on page load
     setTimeout(() => {
