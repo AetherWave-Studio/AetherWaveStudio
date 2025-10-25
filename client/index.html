@@ -2388,50 +2388,54 @@
 }
 
     // Custom Mode Toggle
-    customModeToggle.addEventListener('change', () => {
-    if (customModeToggle.checked) {
-    simpleModeFields.style.display = 'none';
-    customModeFields.style.display = 'block';
-    } else {
-    simpleModeFields.style.display = 'block';
-    customModeFields.style.display = 'none';
+    if (customModeToggle && simpleModeFields && customModeFields) {
+      customModeToggle.addEventListener('change', () => {
+        if (customModeToggle.checked) {
+          simpleModeFields.style.display = 'none';
+          customModeFields.style.display = 'block';
+        } else {
+          simpleModeFields.style.display = 'block';
+          customModeFields.style.display = 'none';
+        }
+      });
     }
-    });
         
 const advancedOptions = document.getElementById('advanced-options');
 
 // Show/hide Advanced Options based on custom mode
-customModeToggle.addEventListener('change', function() {
+if (customModeToggle && advancedOptions) {
+  customModeToggle.addEventListener('change', function() {
+    if (customModeToggle.checked) {
+      advancedOptions.style.display = 'block';
+    } else {
+      advancedOptions.style.display = 'none';
+    }
+  });
+
+  // Also set initial visibility at page load:
   if (customModeToggle.checked) {
     advancedOptions.style.display = 'block';
   } else {
     advancedOptions.style.display = 'none';
   }
-});
-
-
-
-// Also set initial visibility at page load:
-if (customModeToggle.checked) {
-  advancedOptions.style.display = 'block';
-} else {
-  advancedOptions.style.display = 'none';
 }
 
 // Gender Toggle Button Logic
 const genderToggleBtns = document.querySelectorAll('.gender-toggle-btn');
 const vocalGenderValue = document.getElementById('vocal-gender-value');
 
-genderToggleBtns.forEach(btn => {
-  btn.addEventListener('click', function() {
-    // Remove active from all buttons
-    genderToggleBtns.forEach(b => b.classList.remove('active'));
-    // Add active to clicked button
-    this.classList.add('active');
-    // Update hidden input value
-    vocalGenderValue.value = this.dataset.gender;
+if (genderToggleBtns.length > 0 && vocalGenderValue) {
+  genderToggleBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Remove active from all buttons
+      genderToggleBtns.forEach(b => b.classList.remove('active'));
+      // Add active to clicked button
+      this.classList.add('active');
+      // Update hidden input value
+      vocalGenderValue.value = this.dataset.gender;
+    });
   });
-});
+}
 
 // Slider live value update logic (with percentage display)
 ['style-weight', 'weirdness-constraint', 'audio-weight'].forEach(function(id) {
@@ -2491,13 +2495,19 @@ function updateRequiredFields() {
 }
 
 // Update required fields on mode/instrumental changes
-customModeToggle.addEventListener('change', updateRequiredFields);
-musicInstrumental.addEventListener('change', updateRequiredFields);
+if (customModeToggle) {
+  customModeToggle.addEventListener('change', updateRequiredFields);
+}
+if (musicInstrumental) {
+  musicInstrumental.addEventListener('change', updateRequiredFields);
+}
 
 // Update on file upload/clear
 const uploadUrlHidden = document.getElementById('upload-url');
-const observer = new MutationObserver(updateRequiredFields);
-observer.observe(uploadUrlHidden, { attributes: true, attributeFilter: ['value'] });
+if (uploadUrlHidden) {
+  const observer = new MutationObserver(updateRequiredFields);
+  observer.observe(uploadUrlHidden, { attributes: true, attributeFilter: ['value'] });
+}
 
 // Initial update
 updateRequiredFields();
@@ -2709,16 +2719,20 @@ window.premiumPlayer = {
 
 
     // Character counter for Simple Mode
-    musicPromptSimple.addEventListener('input', () => {
-    const charCount = musicPromptSimple.value.length;
-    simpleCharCount.textContent = `(${charCount}/199)`;
-    });
+    if (musicPromptSimple && simpleCharCount) {
+      musicPromptSimple.addEventListener('input', () => {
+        const charCount = musicPromptSimple.value.length;
+        simpleCharCount.textContent = `(${charCount}/199)`;
+      });
+    }
 
     // Character counter for Custom Mode Lyrics
-    musicLyrics.addEventListener('input', () => {
-    const charCount = musicLyrics.value.length;
-    customCharCount.textContent = `(${charCount}/3000)`;
-    });
+    if (musicLyrics && customCharCount) {
+      musicLyrics.addEventListener('input', () => {
+        const charCount = musicLyrics.value.length;
+        customCharCount.textContent = `(${charCount}/3000)`;
+      });
+    }
 
     // NEW Visual Generation System - Use Case Based
     //const mediaTypeBtns = document.querySelectorAll('.media-type-btn');
@@ -2801,8 +2815,9 @@ window.premiumPlayer = {
         });
 
         // Media type toggle
-    mediaTypeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
+    if (mediaTypeBtns.length > 0) {
+      mediaTypeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
     mediaTypeBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedMediaType = btn.dataset.type;
@@ -2830,12 +2845,14 @@ window.premiumPlayer = {
     if (selectedUseCase) {
     updateEnhancedPrompt();
     }
-    });
-    });
+        });
+      });
+    }
 
     // Use case selection
-    useCaseCards.forEach(card => {
-    card.addEventListener('click', () => {
+    if (useCaseCards.length > 0) {
+      useCaseCards.forEach(card => {
+        card.addEventListener('click', () => {
     useCaseCards.forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
     selectedUseCase = card.dataset.useCase;
@@ -2852,8 +2869,9 @@ window.premiumPlayer = {
     setTimeout(() => {
     generationSettings.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 100);
-    });
-    });
+        });
+      });
+    }
 
     // Update enhanced prompt based on use case and user vision
     function updateEnhancedPrompt() {
@@ -2867,20 +2885,25 @@ window.premiumPlayer = {
     }
 
     // User vision input updates prompt
-    userVision.addEventListener('input', updateEnhancedPrompt);
+    if (userVision) {
+      userVision.addEventListener('input', updateEnhancedPrompt);
+    }
 
     // Back button
-    backToUseCases.addEventListener('click', () => {
-    generationSettings.style.display = 'none';
-    useCaseCards.forEach(c => c.classList.remove('selected'));
-    selectedUseCase = null;
-    enhancedPrompt.value = '';
-    userVision.value = '';
-    mediaResult.style.display = 'none';
-    });
+    if (backToUseCases) {
+      backToUseCases.addEventListener('click', () => {
+        if (generationSettings) generationSettings.style.display = 'none';
+        useCaseCards.forEach(c => c.classList.remove('selected'));
+        selectedUseCase = null;
+        if (enhancedPrompt) enhancedPrompt.value = '';
+        if (userVision) userVision.value = '';
+        if (mediaResult) mediaResult.style.display = 'none';
+      });
+    }
 
     // Handle image upload for media generator
-    mediaImageUpload.addEventListener('change', (e) => {
+    if (mediaImageUpload) {
+      mediaImageUpload.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -2937,16 +2960,19 @@ window.premiumPlayer = {
     alert('Failed to read image file. Please try again.');
     };
     reader.readAsDataURL(file);
-    });
+      });
+    }
 
     // Clear uploaded image
-    mediaClearImage.addEventListener('click', () => {
-    uploadedImageData = null;
-    mediaImageUpload.value = '';
-    mediaImagePreview.style.display = 'none';
-    mediaPreviewImg.src = '';
-    imageModeSelection.style.display = 'none';
-    });
+    if (mediaClearImage) {
+      mediaClearImage.addEventListener('click', () => {
+        uploadedImageData = null;
+        if (mediaImageUpload) mediaImageUpload.value = '';
+        if (mediaImagePreview) mediaImagePreview.style.display = 'none';
+        if (mediaPreviewImg) mediaPreviewImg.src = '';
+        if (imageModeSelection) imageModeSelection.style.display = 'none';
+      });
+    }
 
     // Handle audio file upload for music cover
     const uploadFileInput = document.getElementById('upload-file');
@@ -2954,11 +2980,14 @@ window.premiumPlayer = {
     const uploadFileName = document.getElementById('upload-file-name');
     const clearUploadBtn = document.getElementById('clear-upload-btn');
 
-    uploadFileBtn.addEventListener('click', () => {
-    uploadFileInput.click();
-    });
+    if (uploadFileBtn && uploadFileInput) {
+      uploadFileBtn.addEventListener('click', () => {
+        uploadFileInput.click();
+      });
+    }
 
-    uploadFileInput.addEventListener('change', async (e) => {
+    if (uploadFileInput) {
+      uploadFileInput.addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -3017,14 +3046,17 @@ window.premiumPlayer = {
       uploadFileBtn.disabled = false;
       uploadFileBtn.textContent = 'Choose Audio File';
     }
-    });
+      });
+    }
 
-    clearUploadBtn.addEventListener('click', () => {
-    uploadFileInput.value = '';
-    uploadUrlHidden.value = '';
-    uploadFileName.textContent = 'No file selected';
-    clearUploadBtn.style.display = 'none';
-    });
+    if (clearUploadBtn) {
+      clearUploadBtn.addEventListener('click', () => {
+        if (uploadFileInput) uploadFileInput.value = '';
+        if (uploadUrlHidden) uploadUrlHidden.value = '';
+        if (uploadFileName) uploadFileName.textContent = 'No file selected';
+        clearUploadBtn.style.display = 'none';
+      });
+    }
 
     // Helper function to download files properly (bypasses CORS and preview issues)
     async function downloadFile(url, filename) {
@@ -3614,7 +3646,9 @@ async function generateMedia() {
     }
 
     // Event listener for generate button
-    generateMediaBtn.addEventListener('click', generateMedia);
+    if (generateMediaBtn) {
+      generateMediaBtn.addEventListener('click', generateMedia);
+    }
 
     // OLD VIDEO GENERATION (keep for compatibility with music track buttons)
     async function generateVideo() {
@@ -3944,29 +3978,41 @@ async function generateMedia() {
     };
 
     // Event listeners - Chat
-    sendBtn.addEventListener('click', () => {
-    sendMessage(chatInput.value);
-    });
-
-    chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-    sendMessage(chatInput.value);
+    if (sendBtn && chatInput) {
+      sendBtn.addEventListener('click', () => {
+        sendMessage(chatInput.value);
+      });
     }
-    });
 
-    suggestionChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-    chatInput.value = chip.textContent;
-    sendMessage(chip.textContent);
-    });
-    });
+    if (chatInput) {
+      chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          sendMessage(chatInput.value);
+        }
+      });
+    }
+
+    if (suggestionChips.length > 0 && chatInput) {
+      suggestionChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chatInput.value = chip.textContent;
+          sendMessage(chip.textContent);
+        });
+      });
+    }
 
     // Event listeners - Music
-    generateMusicBtn.addEventListener('click', generateMusic);
+    if (generateMusicBtn) {
+      generateMusicBtn.addEventListener('click', generateMusic);
+    }
 
     // Event listeners - Visual (Art/Video)
-    generateArtBtn.addEventListener('click', generateArt);
-    generateVideoBtn.addEventListener('click', generateVideo);
+    if (generateArtBtn) {
+      generateArtBtn.addEventListener('click', generateArt);
+    }
+    if (generateVideoBtn) {
+      generateVideoBtn.addEventListener('click', generateVideo);
+    }
         
          // --- Place this block last ---
  

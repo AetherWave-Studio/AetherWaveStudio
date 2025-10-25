@@ -40,7 +40,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
+      let user = await storage.getUser(userId);
+      
+      // If user doesn't exist, create them from claims
+      if (!user) {
+        console.log('User not found in storage, creating from claims:', userId);
+        const claims = req.user.claims;
+        user = await storage.upsertUser({
+          id: claims.sub,
+          email: claims.email,
+          firstName: claims.first_name,
+          lastName: claims.last_name,
+          profileImageUrl: claims.profile_image_url,
+        });
+      }
+      
       res.json(user);
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -502,10 +516,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/user/credits', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
+      let user = await storage.getUser(userId);
       
+      // If user doesn't exist, create them from claims
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        console.log('User not found in storage for credits, creating from claims:', userId);
+        const claims = req.user.claims;
+        user = await storage.upsertUser({
+          id: claims.sub,
+          email: claims.email,
+          firstName: claims.first_name,
+          lastName: claims.last_name,
+          profileImageUrl: claims.profile_image_url,
+        });
       }
       
       res.json({ 
